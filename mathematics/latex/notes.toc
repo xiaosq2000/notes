@@ -1,33 +1,33 @@
-\contentsline {section}{如何讲好故事}{5}{section*.3}%
-\contentsline {part}{I\hspace {1em}高等数学}{9}{part.1}%
-\contentsline {chapter}{实数、复数、Euclidean空间}{11}{chapter*.5}%
-\contentsline {section}{实数}{11}{section*.6}%
-\contentsline {section}{复数}{11}{section*.7}%
-\contentsline {section}{Euclidean空间}{11}{section*.8}%
-\contentsline {chapter}{拓扑基础}{13}{chapter*.9}%
-\contentsline {section}{可数集与不可数集}{13}{section*.10}%
-\contentsline {section}{度量空间}{13}{section*.11}%
-\contentsline {section}{紧集}{13}{section*.12}%
-\contentsline {chapter}{序列与级数}{15}{chapter*.13}%
-\contentsline {section}{序列}{15}{section*.14}%
-\contentsline {section}{级数}{15}{section*.15}%
-\contentsline {chapter}{连续}{17}{chapter*.16}%
-\contentsline {chapter}{导数}{19}{chapter*.17}%
-\contentsline {chapter}{Riemann-Stieltjes积分}{21}{chapter*.18}%
-\contentsline {part}{II\hspace {1em}线性代数}{23}{part.2}%
-\contentsline {chapter}{线性映射}{25}{chapter*.19}%
-\contentsline {section}{线性映射的概念}{25}{section*.20}%
-\contentsline {section}{线性映射构成的线性空间}{25}{section*.21}%
-\contentsline {section}{有限维线性映射的基本定理}{25}{section*.22}%
-\contentsline {section}{线性映射的矩阵}{25}{section*.23}%
-\contentsline {section}{线性变换与其逆的概念}{25}{section*.24}%
-\contentsline {section}{积空间与商空间}{25}{section*.25}%
-\contentsline {section}{对偶与秩}{25}{section*.26}%
-\contentsline {chapter}{特征值、特征向量与不变子空间}{27}{chapter*.27}%
-\contentsline {chapter}{内积空间}{29}{chapter*.28}%
-\contentsline {section}{正交基}{30}{section*.29}%
-\contentsline {section}{内积空间的线性泛函}{30}{section*.30}%
-\contentsline {section}{正交补与最优化问题}{30}{section*.31}%
-\contentsline {chapter}{内积空间上的线性变换}{33}{chapter*.32}%
-\contentsline {section}{自伴和正规变换}{33}{section*.33}%
+\contentsline {section}{如何讲好故事}{5}{section*.3}
+\contentsline {part}{I\hspace {1em}高等数学}{9}{part.1}
+\contentsline {chapter}{实数、复数、Euclidean空间}{11}{chapter*.5}
+\contentsline {section}{实数}{11}{section*.6}
+\contentsline {section}{复数}{11}{section*.7}
+\contentsline {section}{Euclidean空间}{11}{section*.8}
+\contentsline {chapter}{拓扑基础}{13}{chapter*.9}
+\contentsline {section}{可数集与不可数集}{13}{section*.10}
+\contentsline {section}{度量空间}{13}{section*.11}
+\contentsline {section}{紧集}{13}{section*.12}
+\contentsline {chapter}{序列与级数}{15}{chapter*.13}
+\contentsline {section}{序列}{15}{section*.14}
+\contentsline {section}{级数}{15}{section*.15}
+\contentsline {chapter}{连续}{17}{chapter*.16}
+\contentsline {chapter}{导数}{19}{chapter*.17}
+\contentsline {chapter}{Riemann-Stieltjes积分}{21}{chapter*.18}
+\contentsline {part}{II\hspace {1em}线性代数}{23}{part.2}
+\contentsline {chapter}{线性映射}{25}{chapter*.19}
+\contentsline {section}{线性映射的概念}{25}{section*.20}
+\contentsline {section}{线性映射构成的线性空间}{25}{section*.21}
+\contentsline {section}{有限维线性映射的基本定理}{25}{section*.22}
+\contentsline {section}{线性映射的矩阵}{25}{section*.23}
+\contentsline {section}{线性变换与其逆的概念}{25}{section*.24}
+\contentsline {section}{积空间与商空间}{25}{section*.25}
+\contentsline {section}{对偶与秩}{25}{section*.26}
+\contentsline {chapter}{特征值、特征向量与不变子空间}{27}{chapter*.27}
+\contentsline {chapter}{内积空间}{29}{chapter*.28}
+\contentsline {section}{正交基}{30}{section*.29}
+\contentsline {section}{内积空间的线性泛函}{30}{section*.30}
+\contentsline {section}{正交补与最优化问题}{30}{section*.31}
+\contentsline {chapter}{内积空间上的线性变换}{33}{chapter*.32}
+\contentsline {section}{自伴和正规变换}{33}{section*.33}
 \contentsfinish 
