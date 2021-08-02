@@ -305,7 +305,7 @@ Cauchy中值定理
 }，掌握其应用。
 \par 导数未必连续，但必有介值性。
 \par 定义高阶导数。
-\par L'Hospital's法则提供了某种不定式极限的考察方法，注意其应用条件。\sidenote{L'Hospital's法则
+\par L'Hospital's法则提供了某些不定式极限的考察方法，注意其应用条件。\sidenote{L'Hospital's法则
     \begin{itemize}
         \item \(a\in\overline{\mathrm{R}}\)，\(f(x)\)和\(g(x)\)都在\(a\)点的单侧开邻域可导
         \item \(\lim_{x\to a}\dfrac{f^\prime(x)}{g^\prime(x)}\)存在
@@ -355,64 +355,6 @@ Cauchy中值定理
     首先，变上限积分是一个函数，是借助R-S可积函数自然构造出来的一个函数。它的性质很好：在整个闭区间上连续；若被积函数在某处连续，则它在该处可导。
 }以后，微积分基本定理呼之欲出。
 \par 分部积分公式对应的是乘法的导数运算。
-% \section{序列的极限}
-
-% \subsection{定义}
-
-% \[ \{p_n\} \subset X \]
-% \[\lim_{n\to \infty} p_n = p := \forall \epsilon>0\;\exists N\in\mathbb{N}\;\forall n>N\;(\operatorname{d}_X(p_n,p) < \epsilon)\]
-
-% % \[\lim_{n\to \infty} p_n = p := \forall \epsilon>0 \exists N\in\mathbb{N} \forall n>N (\vert p_n-p \vert < \epsilon)\]
-
-% \marginnote{
-%     利用定义证明极限时常用的三角不等式
-%     \[
-%         \begin{aligned}
-%             \vert a \vert + \vert b \vert \geq \vert a + b \vert \\
-%             \vert a \vert + \vert b \vert \geq \vert a - b \vert \\
-%             \vert a \vert - \vert b \vert \leq \vert a + b \vert \\
-%             \vert a \vert - \vert b \vert \leq \vert a - b \vert \\
-%         \end{aligned}
-%     \]
-% }
-
-% \subsection{性质}
-
-% \begin{table}
-%     \centering
-%     \begin{tabular}{cccc}
-%         \toprule
-%                  & 内容                  & 应用 & 证明 \\
-%         \midrule
-%         通用性质 & \makecell{有限值/聚点               \\唯一性\\有界性\\有限项可去} &  &    \\
-%         算术运算 & 传递性                &      &      \\
-%         不等式   & 传递性                &      &      \\
-%         \bottomrule
-%     \end{tabular}
-% \end{table}
-
-% \subsection{判定}
-
-% \begin{table}[htbp]
-%     \centering
-%     \begin{tabular}{cccc}
-%         \toprule
-%                      & 内容                         & 应用 & 证明 \\
-%         \midrule
-%         柯西收敛定理 & 柯西列与收敛性等价           &      &      \\
-%         单调收敛定理 & 对于单调序列，收敛等价于有界 &             \\
-%         \bottomrule
-%     \end{tabular}
-% \end{table}
-
-% \subsection{例子}
-
-% \[\lim_{n\to\infty}\frac{n}{q^n}=0 \quad(q>1)\]
-% \[\lim_{n\to\infty}\sqrt[n]{n}=1\]
-% \[\lim_{n\to\infty}\sqrt[n]{a}=1 \quad (a>0)\]
-% \[\lim_{n\to\infty}\frac{q^n}{n!}=0 \quad(q\in\mathbb{R})\]
-
-
 
 \part{线性代数}
 
@@ -622,18 +564,17 @@ Cauchy中值定理
 \begin{itemize}
     \item 伴随映射是线性映射\(T^\ast \in \mathcal{L}(W,V)\)
 \end{itemize}
-% \begin{margintable}
-%     \centering
-%     \begin{tabular}{cc}
-%         \toprule
-%         命名 & 内容 \\
-%         \midrule
-%         \bottomrule
-%     \end{tabular}
-% \end{margintable}
+
+\part{电路}
+\chapter{大局观}
+真实世界\(\overset{}{\longrightarrow}\)电磁场模型\(\overset{}{\longrightarrow}\)电路模型\(\overset{}{\longrightarrow}\)数学模型
+麦克斯韦、欧姆定律、基尔霍夫定律
+图论；线性系统理论
+线性方程组、状态空间、传递函数、频率响应
+列方程组：独立变量
+第二章：拓扑等效
 \backmatter
 % % \bibliography{}
 % % \bibliographystyle{plainnat}
 \printindex
-
 \end{document}
