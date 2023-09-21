@@ -1,0 +1,392 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PREAMBLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[utf-8, 10pt, aspectratio=169]{beamer}
+\usetheme[
+background=light,
+block=fill,
+]{metropolis}
+
+\usepackage{appendixnumberbeamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% basics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fontawesome5}
+
+\usepackage{xcolor}
+    % ref: http://zhongguose.com
+    \definecolor{kongquelan}{RGB}{14,176,201}
+    \definecolor{kongquelan}{RGB}{14,176,201}
+    \definecolor{koushaolv}{RGB}{93,190,138}
+    \definecolor{yingwulv}{RGB}{91,174,35}
+    \definecolor{shenhuilan}{RGB}{19,44,51}
+    \definecolor{jianniaolan}{RGB}{20,145,168}
+    \definecolor{jiguanghong}{RGB}{243,59,31}
+    \definecolor{xiangyehong}{RGB}{240,124,130}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=.,
+    anchorcolor=.,
+    filecolor=.,
+    menucolor=.,
+    runcolor=.,
+    urlcolor=kongquelan!80,
+    citecolor=xiangyehong!60,
+}
+\usepackage{footnotebackref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% typefaces %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage[no-math]{fontspec}
+   \setmainfont{Source Serif 4}
+   \setsansfont{Source Sans 3}
+   \setmonofont{Source Code Pro}
+\usepackage{xeCJK}
+    \setCJKmainfont{思源宋体}
+    \setCJKsansfont{思源黑体}
+    \setCJKmonofont{思源等宽}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% annotated equations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usetikzlibrary{calc,tikzmark}
+\usepackage{tcolorbox}
+    \colorlet{blue_marknode_color}{kongquelan!50}
+    \colorlet{blue_annotate_color}{kongquelan}
+    \colorlet{green_marknode_color}{yingwulv!50}
+    \colorlet{green_annotate_color}{yingwulv}
+    \colorlet{red_marknode_color}{jiguanghong!40}
+    \colorlet{red_annotate_color}{jiguanghong!80}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% maths %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{cases}
+\usepackage{empheq}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% bibliography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[backend=biber,natbib=true,style=ieee]{biblatex}
+\addbibresource{references.bib}
+\renewcommand*{\bibfont}{\normalfont\small}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INFO  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Kalman Filter}
+\author{shuqi}
+\date{\today}
+\institute{
+    \faGithub\;\href{https://github.com/xiaosq2000}{xiaosq2000}
+    \quad
+    \faEnvelope\;\href{xiaosq2000@gmail.com}{xiaosq2000@gmail.com}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents[hideallsubsections]
+\end{frame}
+
+\begin{frame}{TL; DR}
+	\par Kalman filter is a recursive, linear-quardratic estimator\footnote{thus, alias \alert{LQE}} for a dynamic system, which is optimal under certain assumptions.
+	\vspace*{\fill}
+
+	\begin{quote}
+		In summary, the following assumptions are made about random processes: Physical random phenomena may be thought of as due to primary random sources exciting dynamic systems. The primary sources are assumed to be independent Gaussian random processes with zero mean; the dynamic systems will be linear.\supercite{kalman_new_1960}
+		\flushright ---\;\textrm{Rudolf\ E.\ Kálmán}
+	\end{quote}
+\end{frame}
+
+\section{State-space representation of dynamic systems}
+
+\begin{frame}[c,allowframebreaks]{State-space representation\supercite{enwiki:1136534469} of dynamic systems}
+	\vspace*{\fill}
+	The classic one,
+	\vspace*{2em}
+	\begin{figure}[htbp]
+		\begin{numcases}{}
+			\dot{\mathbf{x}}(\tikzmarknode{time}{\colorbox{blue_marknode_color}{\(t\)}}) = \tikzmarknode{system_matrix}{\colorbox{green_marknode_color}{\(\mathbf{A}\)}}(t) \tikzmarknode{state_vector}{\colorbox{blue_marknode_color}{\(\mathbf{x}\)}}(t) + \tikzmarknode{control_matrix}{\colorbox{green_marknode_color}{\(\mathbf{B}\)}}(t) \tikzmarknode{input_vector}{\colorbox{blue_marknode_color}{\(\mathbf{u}\)}}(t) \\
+			\tikzmarknode{output_vector}{\colorbox{blue_marknode_color}{\(\mathbf{y}\)}}(t) = \tikzmarknode{measurement_matrix}{\colorbox{green_marknode_color}{\(\mathbf{C}\)}}(t) \mathbf{x}(t) + \tikzmarknode{feedforward_matrix}{\colorbox{green_marknode_color}{\(\mathbf{D}\)}}(t) \mathbf{u}(t)
+		\end{numcases}
+		\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+			\path (time.north) ++ (0em,0.5em) node[anchor=south east,color=blue_annotate_color] (time_annotate) {\footnotesize{\(\in \mathbb{R}\), time}};
+			\draw [color=blue_annotate_color] (time.north) |- (time_annotate.south west);
+
+			\path (system_matrix.north) ++ (0,2em) node[anchor=south east,color=green_annotate_color] (system_green_annotate) {\footnotesize{\(\in \mathcal{M}(n,n)\), system matrix }};
+			\draw [color=green_annotate_color] (system_matrix.north) |- (system_green_annotate.south west);
+
+			\path (state_vector.north) ++ (0em,3.5em) node[anchor=south east,color=blue_annotate_color] (state_blue_annotate) {\footnotesize{\(\in \mathbb{R}^n\), state vector}};
+			\draw [color=blue_annotate_color] (state_vector.north) |- (state_blue_annotate.south west);
+
+			\path (control_matrix.north) ++ (0em,2.8em) node[anchor=south west,color=green_annotate_color] (control_green_annotate) {\footnotesize{\(\in \mathcal{M}(n,p)\), input/control matrix}};
+			\draw [color=green_annotate_color] (control_matrix.north) |- (control_green_annotate.south east);
+
+			\path (input_vector.north) ++ (0em,1.5em) node[anchor=south west,color=blue_annotate_color] (input_blue_annotate) {\footnotesize{\(\in \mathbb{R}^p\), input/control vector}};
+			\draw [color=blue_annotate_color] (input_vector.north) |- (input_blue_annotate.south east);
+
+			\path (output_vector.south) ++ (0em,-1.5em) node[anchor=north east,color=blue_annotate_color] (output_blue_annotate) {\footnotesize{\(\in \mathbb{R}^q\), output/measurement vector}};
+			\draw [color=blue_annotate_color] (output_vector.south) |- (output_blue_annotate.south west);
+
+			\path (measurement_matrix.south) ++ (0em,-2.8em) node[anchor=north west,color=green_annotate_color] (measurement_green_annotate) {\footnotesize{\(\in \mathcal{M}(q,n)\), output/measurement matrix}};
+			\draw [color=green_annotate_color] (measurement_matrix.south) |- (measurement_green_annotate.south east);
+
+			\path (feedforward_matrix.south) ++ (0em,-1.5em) node[anchor=north west,color=green_annotate_color] (feedforward_green_annotate) {\footnotesize{\(\in \mathcal{M}(q,p)\), feedforward matrix}};
+			\draw [color=green_annotate_color] (feedforward_matrix.south) |- (feedforward_green_annotate.south east);
+		\end{tikzpicture}
+		\vspace*{2.5em}
+		\caption{continuous-time, deterministic, time-variant, linear dynamic system}
+	\end{figure}
+	\framebreak
+	\vspace*{\fill}
+	The underlying dynamic model of Kalman filter is a time-discreted one with additive Gaussian white noises\footnote{the feedforward part is omitted for convenience}.
+	\begin{figure}
+		\begin{numcases}{}
+			\mathbf{x}_{k} =  \mathbf{A}\tikzmarknode{index}{\colorbox{blue_marknode_color}{\(_k\)}} \mathbf{x}_{k-1} + \mathbf{B}_k\mathbf{u}_{k} + \tikzmarknode{process_noise}{\colorbox{red_marknode_color}{\(\mathbf{v}_k\)}} \\
+			\mathbf{y}_{k} = \mathbf{C}_k\mathbf{x}_k + \tikzmarknode{measurement_noise}{\colorbox{red_marknode_color}{\(\mathbf{w}_k\)}}
+		\end{numcases}
+		\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+			\path (index.north) ++ (0em,2.5em) node[anchor=south west,color=blue_annotate_color] (index_annotate) {\footnotesize{\(\in \mathbb{N}\), index/timestamp}};
+			\draw [color=blue_annotate_color] (index.north) |- (index_annotate.south east);
+			\path (process_noise.north) ++ (0em,1em) node[anchor=south west,color=red_annotate_color] (process_red_annotate) {\footnotesize{\(\sim \mathcal{N}(\mathbf{0}, \mathbf{Q}_k)\), process noise}};
+			\draw [color=red_annotate_color] (process_noise.north) |- (process_red_annotate.south east);
+			\path (measurement_noise.south) ++ (0em,-1em) node[anchor=north west,color=red_annotate_color] (measurement_red_annotate) {\footnotesize{\(\sim \mathcal{N}(\mathbf{0}, \mathbf{R}_k)\), measurement noise}};
+			\draw [color=red_annotate_color] (measurement_noise.south) |- (measurement_red_annotate.south east);
+		\end{tikzpicture}
+		\vspace*{2em}
+		\caption{discrete-time, random, time-variant, linear dynamic system}
+	\end{figure}
+
+	\framebreak
+	It's a huge transition that the states and measurements are Gaussian distributions now.
+
+	\begin{minipage}[t]{0.48\textwidth}
+		\begin{numcases}{}
+			\operatorname{E}\left(\mathbf{x}_k\right) = \mathbf{A}_k \operatorname{E}\left( \mathbf{x}_{k-1} \right) + \mathbf{B}_k \mathbf{u}_k \\
+			\operatorname{Cov}\left(\mathbf{x}_k\right) = \mathbf{A}_k \operatorname{Cov}\left(\mathbf{x}_{k-1}\right) \mathbf{A}_k ^{\mathrm{T}} + \mathbf{Q}_k
+		\end{numcases}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.48\textwidth}
+		\begin{numcases}{}
+			\operatorname{E}\left(\mathbf{y}_k\right) = \mathbf{C}_k \operatorname{E}\left( \mathbf{x}_{k} \right) \\
+			\operatorname{Cov}\left(\mathbf{y}_k\right) = \mathbf{C}_k \operatorname{Cov}\left(\mathbf{x}_{k}\right) \mathbf{C}_k ^{\mathrm{T}} + \mathbf{R}_k
+		\end{numcases}
+	\end{minipage}
+
+\end{frame}
+
+\section{Linear quardratic estimation}
+
+\begin{frame}{Problem formulation}
+	Given the state-space dynamic model and
+	\begin{table}
+		\begin{tabular}{cc}
+			\toprule
+			\(\hat{\mathbf{x}}_0\)                     & prior estimated distribution of the initial state \\
+			\(\mathbf{Q}_0, \cdots, \mathbf{Q}_{k-1}\) & prior knowledge of the process noise              \\
+			\(\mathbf{R}_0, \cdots, \mathbf{R}_{k-1}\) & prior knowledge of the measurement noise          \\
+			\(\mathbf{u}_0, \cdots, \mathbf{u}_{k-1}\) & control signals (deterministic) up to now         \\
+			\(\mathbf{y}_0, \cdots, \mathbf{y}_{k-1}\) & measurements up to now                            \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	to estimate \(\mathbf{x}_{k}\) and its uncertainties\footnote{Attributes about randomness, i.e., expectation and covariance in this Gaussian model. Actually, the state estimate is based on the estimated expectation of the state, so only the covariance is viewed as a measure of uncertainty} in a linear and quardratic method.
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Predict \& Correct}
+	\vspace*{\fill}
+	The Kalman filter is usually conceptualized as two distinct phases, of which names are enough enlightening.
+	\begin{figure}[htbp]
+		\vspace*{-1em}
+		\begin{numcases}{}
+			\hat{\mathbf{x}}_{k \vert k-1} = \mathbf{A}_k \hat{\mathbf{x}}_{k-1\vert k-1} + \mathbf{B}_{k} \mathbf{u}_k& \small predict\\
+			\hat{\mathbf{x}}_{k \vert k} = \hat{\mathbf{x}}_{k \vert k-1} + \tikzmarknode{gain}{\colorbox{green_marknode_color}{\(\mathbf{K}_k\)}} \left(\tikzmarknode{innovation}{\colorbox{blue_marknode_color}{\(\mathbf{y}_{k} - \mathbf{C}_{k} \hat{\mathbf{x}}_{k|k-1}\)}}\right) & \small update/correct
+		\end{numcases}
+		\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+			\path (gain.south) ++ (0em,-1em) node[anchor=north east,color=green_annotate_color] (gain_annotate) {\footnotesize{Kalman gain}};
+			\draw [color=green_annotate_color] (gain.south) |- (gain_annotate.south west);
+			\path (innovation.south) ++ (0em,-1em) node[anchor=north west,color=blue_annotate_color] (innovation_annotate) {\footnotesize{\(=: \tilde{y}_{k\vert k-1} \), innovation/measurement pre-fit residual}};
+			\draw [color=blue_annotate_color] (innovation.south) |- (innovation_annotate.south east);
+		\end{tikzpicture}
+		\vspace*{1em}
+		\caption{the estimated state update equations in the two phases of Kalman filter}
+	\end{figure}
+	\vspace*{\fill}
+
+	\framebreak
+
+	\vspace*{\fill}
+	\begin{block}{Remark on the Kalman gain}
+		Intuitively, it's like a weight coefficient to emphasize or weaken the information from real measurements, and the weighted difference between prediction and measurements (measurement pre-fit residual) is added to correct the prediction.
+		\vspace{1em}
+		\par It certainly cannot be chosen arbitrarily. How? Stay tuned.
+	\end{block}
+	\vspace*{\fill}
+
+	\framebreak
+
+	\par For the predict-phase,
+	\begin{figure}[htbp]
+		\vspace*{-1em}
+		\begin{numcases}{}
+			\hat{\operatorname{E}}\left(\mathbf{x}_{k\vert k-1}\right) = \mathbf{A}_k \hat{\operatorname{E}}\left(\mathbf{x}_{k-1\vert k-1}\right)  + \mathbf{B}_{k} \mathbf{u}_k\\
+			\tikzmarknode{priori_covariance}{\colorbox{blue_marknode_color}{\(\hat{\operatorname{Cov}}\left(\mathbf{x}_{k\vert k-1}\right)\)}} = \mathbf{A}_k \hat{\operatorname{Cov}}\left(\mathbf{x}_{k-1\vert k-1}\right)\mathbf{A}_k ^{\mathrm{T}} + \mathbf{Q}_k
+		\end{numcases}
+		\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+			\path (priori_covariance.south) ++ (0em,-0.5em) node[anchor=north west,color=blue_annotate_color] (priori_covariance_annotate) {\footnotesize{\(=: \hat{\mathbf{P}}_{k\vert k-1}\), priori/predicted covariance}};
+			\draw [color=blue_annotate_color] (priori_covariance.south) |- (priori_covariance_annotate.south east);
+		\end{tikzpicture}
+		\vspace*{1em}
+		\caption{the priori covariance update equation in the predict-phase}
+	\end{figure}
+
+	\framebreak
+
+	\vspace*{\fill}
+	\begin{block}{Remark}
+		Be cautious. It's easy to confuse ``the estimator of the covariance'' and ``the covariance of the estimator''. Take the predict-phase for example,
+	\end{block}
+	\begin{figure}[htbp]
+		\vspace*{-2em}
+		\begin{numcases}{}
+			\operatorname{E}\left(\hat{\mathbf{x}}_{k\vert k-1}\right) = \mathbf{A}_k \operatorname{E}\left(\hat{\mathbf{x}}_{k-1\vert k-1}\right)  + \mathbf{B}_{k} \mathbf{u}_k \\
+			\operatorname{Cov}\left(\hat{\mathbf{x}}_{k\vert k-1}\right) = \mathbf{A}_k \operatorname{Cov}\left(\hat{\mathbf{x}}_{k-1\vert k-1}\right)\mathbf{A}_k ^{\mathrm{T}}
+		\end{numcases}
+		\caption{the expectation/covariance of the estimator}
+	\end{figure}
+	\vspace*{\fill}
+
+	\framebreak
+	\vspace*{\fill}
+	For the correct-phase,
+	\begin{figure}[htbp]
+		\vspace*{-2em}
+		\begin{align}
+			\tikzmarknode{innovation_covariance}{\colorbox{red_marknode_color}{\(\mathbf{S}_{k\vert k-1}\)}} := \operatorname{Cov}\left(\tilde{\mathbf{y}}_{k\vert k-1}\right) & = \operatorname{Cov}\left(\mathbf{C}_k \mathbf{x}_k + \mathbf{w}_k - \mathbf{C}_k \hat{\mathbf{x}}_{k\vert k-1}\right)                                                 \\
+			                                                                                                                                                                   & = \mathbf{C}_k \operatorname{Cov}\left( \mathbf{x}_k - \hat{\mathbf{x}}_{k\vert k-1} \right) \mathbf{C}_k ^{\mathrm{T}} + \operatorname{Cov}\left(\mathbf{w}_k\right)  \\
+			                                                                                                                                                                   & =: \mathbf{C}_k \tikzmarknode{priori_error_covariance}{\colorbox{green_marknode_color}{\(\tilde{\mathbf{P}}_{k\vert k-1}\)}} \mathbf{C}_k ^{\mathrm{T}} + \mathbf{R}_k
+		\end{align}
+		\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+			\path (priori_error_covariance.south) ++ (0em,-1em) node[anchor=north east,color=green_annotate_color] (priori_error_covariance_annotate) {\footnotesize{priori error covariance}};
+			\draw [color=green_annotate_color] (priori_error_covariance.south) |- (priori_error_covariance_annotate.south west);
+		\end{tikzpicture}
+		\caption{the innovation covariance}
+	\end{figure}
+	\vspace*{\fill}
+\end{frame}
+
+\section{Derivation of the optimal Kalman gain}
+\begin{frame}[allowframebreaks]{Derivation of the optimal Kalman gain}
+	\begin{block}{Remark}
+		We are actually designing an estimator with a well-formed structure as mentioned above，but the parameter \(\mathbf{K}_k\) hasn't been decided yet.
+
+	\end{block}
+
+	\framebreak
+	\alert{MMSE} (Minimum mean square error) is chosen as our rule for optimality, i.e., the optimal Kalman gain
+	\begin{figure}[htbp]
+		\vspace*{-2em}
+		\begin{equation}
+			\mathbf{K}_k := \underset{\mathbf{K}_k}{\operatorname{argmin}} \operatorname{E} \left(\Vert \tikzmarknode{error}{\colorbox{red_marknode_color}{\(\tilde{\mathbf{x}}_k\)}} \Vert_2\right)
+		\end{equation}
+		\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+			\path (error.south) ++ (0em,-1em) node[anchor=north east,color=red_annotate_color] (error_annotate) {\footnotesize{\(=: \hat{\mathbf{x}}_k - \mathbf{x}_k\), error}};
+			\draw [color=red_annotate_color] (error.south) |- (error_annotate.south west);
+		\end{tikzpicture}
+		\caption{minimum expectation of L2-norm of the error from a Bayesian approach}
+	\end{figure}
+	Some tricks here,
+	\begin{equation}
+		\underset{\mathbf{K}_k}{\operatorname{argmin}} \operatorname{E} \left(\Vert \tilde{\mathbf{x}}_k \Vert_2\right) = \underset{\mathbf{K}_k}{\operatorname{argmin}} \operatorname{E} \left(\Vert \tilde{\mathbf{x}}_k \Vert_2^2 \right)
+	\end{equation}
+	\begin{align}
+		\operatorname{E} \left(\Vert \tilde{\mathbf{x}}_k \Vert_2^2\right) & = \operatorname{E} \left( \tilde{\mathbf{x}}_k ^{\mathrm{T}} \tilde{\mathbf{x}}_k \right)                                \\
+		                                                                   & = \operatorname{E} \left( \operatorname{Tr} \left(\tilde{\mathbf{x}}_k^{\mathrm{T}} \tilde{\mathbf{x}}_k \right) \right) \\
+		                                                                   & = \operatorname{E} \left( \operatorname{Tr} \left(\tilde{\mathbf{x}}_k \tilde{\mathbf{x}}_k^{\mathrm{T}} \right) \right) \\
+		                                                                   & = \operatorname{Tr} \left( \operatorname{E} \left(\tilde{\mathbf{x}}_k \tilde{\mathbf{x}}_k^{\mathrm{T}} \right) \right)
+	\end{align}
+
+	\framebreak
+	\vspace*{1em}
+	And let's assume that our prior knowledge is \(100\%\) accurate, the dynamic model, \( \hat{\mathbf{x}}_0 = \mathbf{x}_0 \) etc., then there are some \textbf{invariants},
+	\begin{numcases}{}
+		\operatorname{E}\left(\tilde{y}_{k\vert k-1}\right) = \mathbf{0} \\
+		\operatorname{E}\left(\tilde{\mathbf{x}}_k\right) = \mathbf{0}
+	\end{numcases}
+	thus,
+	\begin{figure}[htbp]
+		\vspace*{-3em}
+		\begin{equation}
+			\operatorname{E} \left(\tilde{\mathbf{x}}_k \tilde{\mathbf{x}}_k^{\mathrm{T}} \right) = \tikzmarknode{error_covariance}{\colorbox{red_marknode_color}{\(\operatorname{Cov}\left(\tilde{\mathbf{x}}_k\right)\)}}
+		\end{equation}
+		\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+			\path (error_covariance.north) ++ (0em,1em) node[anchor=south west,color=red_annotate_color] (error_covariance_annotate) {\footnotesize{\(:= \tilde{\mathbf{P}}_{k}\ \text{or}\ \tilde{\mathbf{P}}_{k\vert k}\), (posterior) error covariance }};
+			\draw [color=red_annotate_color] (error_covariance.north) |- (error_covariance_annotate.south east);
+		\end{tikzpicture}
+	\end{figure}
+	\vspace*{-2em}
+
+	\framebreak
+	The optimal Kalman gain becomes the solution of
+	\begin{equation}
+		\frac{\partial}{\partial \mathbf{K}_k} \operatorname{Tr} \left(\tilde{\mathbf{P}}_k\right) = \mathbf{0}
+	\end{equation}
+
+	Hold on! I know you can't wait to roll up your sleeves, expand out the terms and play with the messy matrix calculus, but the following \alert{Joseph form} of the posterior error covariance will save you a lot of trouble.
+
+	\framebreak
+	\begin{align}
+		\tilde{\mathbf{P}}_k & = \operatorname{Cov}\left(\hat{\mathbf{x}}_k - \mathbf{x}_k \right)                                                                                                                                                                                                                                                                                           \\
+		                     & = \operatorname{Cov}\left(\hat{\mathbf{x}}_{k\vert k-1} + \mathbf{K}_k \left(\mathbf{y}_k - \mathbf{C}_k \hat{\mathbf{x}}_{k\vert k-1}\right) - \mathbf{x}_k \right)                                                                                                                                                                                          \\
+		                     & = \operatorname{Cov}\left(\hat{\mathbf{x}}_{k\vert k-1} + \mathbf{K}_k \left(\mathbf{C}_k \mathbf{x}_k + \mathbf{w}_k - \mathbf{C}_k \hat{\mathbf{x}}_{k\vert k-1}\right) - \mathbf{x}_k \right)                                                                                                                                                              \\
+		                     & = \operatorname{Cov}\left( \left(\mathbf{I} - \mathbf{K}_k \mathbf{C}_k\right) \hat{\mathbf{x}}_{k \vert k-1} - \left( \mathbf{I} - \mathbf{K}_k \mathbf{C}_k \right) \mathbf{x}_k + \mathbf{K}_k \mathbf{w}_k \right)                                                                                                                                        \\
+		                     & = \operatorname{Cov}\left( \left(\mathbf{I} - \mathbf{K}_k \mathbf{C}_k\right) \hat{\mathbf{x}}_{k \vert k-1} - \left( \mathbf{I} - \mathbf{K}_k \mathbf{C}_k \right) \mathbf{x}_k \right) + \operatorname{Cov} \left( \mathbf{K}_k \mathbf{w}_k \right)                                                                                                      \\
+		                     & = \tikzmarknode{joseph_form}{\colorbox{blue_marknode_color}{\(\left(\mathbf{I} - \mathbf{K}_k \mathbf{C}_k\right) \tilde{\mathbf{P}}_{k\vert k-1} \left(\mathbf{I} - \mathbf{K}_k \mathbf{C}_k\right) ^{\mathrm{T}}  + \mathbf{K}_k \mathbf{R}_k \mathbf{K}_k ^{\mathrm{T}}\)}}                                                                               \\
+		                     & = \tilde{\mathbf{P}}_{k\vert k-1} -\mathbf{K}_k \mathbf{C}_k \tilde{\mathbf{P}}_{k\vert k-1} - \tilde{\mathbf{P}}_{k\vert k-1} \mathbf{C}_k ^{\mathrm{T}} \mathbf{K}_k ^{\mathrm{T}} + \mathbf{K}_k \mathbf{C}_k \tilde{\mathbf{P}}_{k\vert k-1} \mathbf{C}_k ^{\mathrm{T}} \mathbf{K}_k ^{\mathrm{T}} + \mathbf{K}_k \mathbf{R}_k \mathbf{K}_k ^{\mathrm{T}} \\
+		                     & = \tilde{\mathbf{P}}_{k\vert k-1} -\mathbf{K}_k \mathbf{C}_k \tilde{\mathbf{P}}_{k\vert k-1} - \tilde{\mathbf{P}}_{k\vert k-1} \mathbf{C}_k ^{\mathrm{T}} \mathbf{K}_k ^{\mathrm{T}} + \mathbf{K}_k \mathbf{S}_{k\vert k-1} \mathbf{K}_k ^{\mathrm{T}}
+	\end{align}
+	\vspace*{\fill}
+
+	\framebreak
+	Ready to go,
+	\begin{equation}
+		\frac{\partial \operatorname{Tr}\left(\tilde{\mathbf{P}}_k\right)}{\partial \mathbf{K}_k} = -2 \tilde{\mathbf{P}}_{k\vert k-1} \mathbf{C}_k ^{\mathrm{T}} + 2 \mathbf{S}_{k\vert k-1} \mathbf{K}_k = \mathbf{0}
+	\end{equation}
+	Finally,
+	\begin{equation}
+		\tikzmarknode{optial_kalman_gain}{\colorbox{red_marknode_color}{\(\mathbf{K}_k = \tilde{\mathbf{P}}_{k\vert k-1} \mathbf{C}_k ^{\mathrm{T}} \mathbf{S}_{k\vert k-1}^{-1}\)}}
+	\end{equation}
+\end{frame}
+
+\section{Example application}
+
+\appendix
+\begin{frame}[allowframebreaks]{References}
+	\printbibliography[heading=none]
+\end{frame}
+\end{document}

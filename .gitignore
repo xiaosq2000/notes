@@ -1,0 +1,4 @@
+kalman_filter/*
+!kalman_filter/*.tex
+!kalman_filter/*.bib
+!kalman_filter/*.pdf
