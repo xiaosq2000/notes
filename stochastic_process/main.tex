@@ -1,0 +1,390 @@
+%! TeX root: ./main.tex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PREAMABLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[utf-8, 10pt, aspectratio=1610]{beamer}
+\mode<presentation>
+\usetheme[
+background=light,
+titleformat=regular,
+subsectionpage=progressbar,
+block=fill,
+]{metropolis}
+\usepackage{appendixnumberbeamer}
+\usepackage{fontawesome5}
+\usepackage{xcolor}
+    % ref: http://zhongguose.com
+    \definecolor{kongquelan}{RGB}{14,176,201}
+    \definecolor{shenhuilan}{RGB}{19,44,51}
+    \definecolor{jianniaolan}{RGB}{20,145,168}
+    \definecolor{koushaolv}{RGB}{93,190,138}
+    \definecolor{yingwulv}{RGB}{91,174,35}
+    \definecolor{jiguanghong}{RGB}{243,59,31}
+    \definecolor{xiangyehong}{RGB}{240,124,130}
+\usepackage{tikz}
+\usetikzlibrary{calc,tikzmark}
+\usepackage{tcolorbox}
+\colorlet{red_marknode}{xiangyehong!50}
+\colorlet{red_annotate}{xiangyehong}
+\colorlet{blue_marknode}{jianniaolan!50}
+\colorlet{blue_annotate}{jianniaolan}
+\colorlet{green_marknode}{yingwulv!50}
+\colorlet{green_annotate}{yingwulv}
+\usepackage{booktabs}
+\usepackage{caption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% title page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Stochastic Process}
+\subtitle{A rigorous but painless introduction}
+\author{shuqi}
+\date{\today}
+\institute{
+    \faGithub\;
+    \href{https://github.com/xiaosq2000}{xiaosq2000}
+    \quad
+    \faEnvelope\;
+    \href{xiaosq2000@gmail.com}{xiaosq2000@gmail.com}
+}
+\usepackage[backend=biber,natbib=true,style=ext-numeric-comp,sorting=none,backref=true]{biblatex}
+\addbibresource{references.bib}
+\renewcommand*{\bibfont}{\normalfont\small}
+\DeclareOuterCiteDelims{cite}{\textcolor{yingwulv}{\bibopenbracket}}{\textcolor{yingwulv}{\bibclosebracket}}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=jianniaolan,
+    anchorcolor=.,
+    filecolor=.,
+    menucolor=.,
+    runcolor=.,
+    urlcolor=jianniaolan,
+    citecolor=yingwulv,
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Prerequistes \& Gains}
+	Readers are assumed to have an undergraduate-level basic understanding of
+	\begin{itemize}
+		\item Multivariate Probability Theory
+		\item Linear Algebra
+		\item Matrix Caculus
+		\item Fourier Analysis
+	\end{itemize}
+	\vspace*{\fill}
+	\par You are expected to learn diverse related knowledge, such as measure theory, Lebesgue integration, power spectral density, and white noise.
+\end{frame}
+
+\begin{frame}{Outline}
+	\setbeamertemplate{section in toc}[sections numbered]
+	% \tableofcontents[hideallsubsections]
+	\tableofcontents
+\end{frame}
+
+\section{Basic concepts of measure and probability}
+\begin{frame}[allowframebreaks]{Measure theory}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% measure %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\vspace*{\fill}
+	\begin{block}{Remark\ (motivation of measure)}
+		A measure is a generalization and formalization of geometrical measures (length, area, volume) and other common notions, such as magnitude, mass, and probability of events. It is fundamental in many mathematical fields, such as probability theory and integration theory.
+	\end{block}
+
+	\vspace*{\fill}
+
+	\begin{definition}[measure]
+		Let \(X\) be a set and \(\mathcal{F}\) a \(\sigma \text{-algebra} \) over \(X\). A function \(\mu:\mathcal{F}\mapsto \mathbb{R}_{\infty}^{1}\), where \(\mathbb{R}_{\infty}^{1}\) is the extended real number field, is called a measure if the following three conditions hold:
+		\begin{enumerate}
+			\item empty-is-zero: \(\mu \left(\emptyset\right) = 0\)
+			\item non-negativity: \(\forall\, E \in \mathcal{F} \left( \mu\left(E\right) \geq 0 \right) \)
+			\item countable-additivity: \(\mu\left(\bigcup_{k=1}^{\infty} E_k\right) = \Sigma_{k=1}^{\infty} \mu \left(E_k\right)\), where \(\left\{E_k\right\}^{\infty}_{k=1} \) is all countable collections of pairwise disjoint sets in \(\mathcal{F}\)
+		\end{enumerate}
+	\end{definition}\label{def:measure}
+
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sigma-algebra %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{block}{Remark\ (\(\sigma \text{-algebra} \))}
+		\par The ``\(\sigma \text{-algebra} \)'' and ``countable'' (actually, closely related to \(\sigma \text{-algebra} \)) make the rigorous definition of measure (def.~\ref{def:measure}) peculiar.
+		\par You can check out the definition of \(\sigma \text{-algebra}\) and motivations about it in measure theory on Wikipedia \cite{enwiki:1173641705} , which is quite enlightening. In summary,
+		\begin{itemize}
+			\item Introducing the \href{https://en.wikipedia.org/wiki/Field_of_sets}{set algebra} to deliver the addition-preserving property of a measure is natural, and \(\sigma \text{-algebra} \) is a set algebra with countable-additivity, alias \(\sigma \text{-additivity} \). But why countable? \cite{566154}  is a good explanation.
+			\item \href{https://en.wikipedia.org/wiki/Zermelo-Fraenkel_set_theory}{ZFC} (precisely, \href{https://en.wikipedia.org/wiki/Axiom_of_choice}{axiom of choice}) entails \href{https://en.wikipedia.org/wiki/Non-measurable_set}{non-measurable set} of \(\mathbb{R}^n\), i.e., it is actually impossible to assign a length to all subsets of \(\mathbb{R}\) in a way that preserves some natural additivity and translation invariance properties.   The \href{https://en.wikipedia.org/wiki/Vitali_set}{Vitali set} and the \href{https://en.wikipedia.org/wiki/Banach-Tarski_paradox}{Banach–Tarski paradox} are famous examples.
+		\end{itemize}
+	\end{block}
+
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%% measurable space and measure space %%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{definition}[measurable space and measure space]
+		\begin{minipage}[t]{0.4\linewidth}
+			\begin{figure}[htbp]
+				\caption*{measurable space}
+				\vspace*{-1.5em}
+				\begin{equation}
+					\overbrace{\left(\tikzmarknode{set}{\colorbox{red_marknode}{\(X\)}}, \tikzmarknode{sigma-algebra}{\colorbox{green_marknode}{\(\mathcal{F}\)}} \right)}^{\text{tuple}}
+				\end{equation}
+				\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+					\path (set.south) ++ (0em,-0.5em) node[anchor=north east,color=red_annotate] (set_annotate) {\footnotesize{a set}};
+					\draw [color=red_annotate] (set.south) |- (set_annotate.south west);
+					\path (sigma-algebra.south) ++ (0em,-1.5em) node[anchor=north east,color=green_annotate] (sigma-algebra_annotate) {\footnotesize{a \( \sigma\text{-algebra}\) on \(X\)}};
+					\draw [color=green_annotate] (sigma-algebra.south) |- (sigma-algebra_annotate.south west);
+				\end{tikzpicture}
+			\end{figure}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.4\linewidth}
+			\begin{figure}[htbp]
+				\caption*{measure space}
+				\vspace*{-1.5em}
+				\begin{equation}
+					\overbrace{\left(\tikzmarknode{set}{\colorbox{red_marknode}{\(X\)}}, \tikzmarknode{sigma-algebra}{\colorbox{green_marknode}{\(\mathcal{F}\)}}, \tikzmarknode{measure}{\colorbox{blue_marknode}{\(\mu\)}}\right)}^{\text{triple}}
+				\end{equation}
+				\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+					\path (set.south) ++ (0em,-0.5em) node[anchor=north east,color=red_annotate] (set_annotate) {\footnotesize{a set}};
+					\draw [color=red_annotate] (set.south) |- (set_annotate.south west);
+					\path (sigma-algebra.south) ++ (0em,-1.5em) node[anchor=north east,color=green_annotate] (sigma-algebra_annotate) {\footnotesize{a \( \sigma\text{-algebra}\) on \(X\)}};
+					\draw [color=green_annotate] (sigma-algebra.south) |- (sigma-algebra_annotate.south west);
+					\path (measure.south) ++ (0em,-2.5em) node[anchor=north east,color=blue_annotate] (measure_annotate) {\footnotesize{a measure on \(\left(X,\mathcal{F}\right)\)}};
+					\draw [color=blue_annotate] (measure.south) |- (measure_annotate.south west);
+				\end{tikzpicture}
+			\end{figure}
+		\end{minipage}
+		\vspace*{2em}
+	\end{definition}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%% measurable function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+
+	\begin{definition}[measurable function]
+		Let \(\left(X,\Sigma\right)\) and \(\left(Y,T\right)\) be measurable spaces. A function \(f:X\mapsto Y\) is measurable if and only if
+		\begin{equation}
+			\forall\, E \in T \left( f^{-1}(E) \in \Sigma\right)
+		\end{equation}
+	\end{definition}
+
+	\vspace*{\fill}
+
+	\begin{corollary}[]
+		\begin{equation}
+			f \text{ is measurable}  \Leftrightarrow\sigma\left(f\right) \subset \Sigma,
+		\end{equation}
+		where \(\sigma\left(f\right)\) is the \href{https://en.wikipedia.org/wiki/\%CE\%A3-algebra\#\%CF\%83-algebra\_generated\_by\_a\_function}{\(\sigma \text{-algebra} \) generated by \(f\)}.
+	\end{corollary}
+
+	\vspace*{\fill}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Probability theory}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kolmogorov Axioms %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\vspace*{\fill}
+	\begin{definition}[probability]
+		\begin{figure}[htbp]
+			\caption*{Kolmogorov Axioms}
+			\vspace*{-1.5em}
+			\begin{equation}
+				\overbrace{\left(\tikzmarknode{sample_space}{\colorbox{red_marknode}{\(\Omega\)}},\tikzmarknode{event_space}{\colorbox{green_marknode}{\(\mathcal{F}\)}},\tikzmarknode{probability_measure}{\colorbox{blue_marknode}{\(P\)}}\right)}^{\text{probability space}}
+			\end{equation}
+			\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+				\path (sample_space.south) ++ (0em,-0.5em) node[anchor=north east,color=red_annotate] (sample_space_annotate) {\footnotesize{sample space}};
+				\draw [color=red_annotate] (sample_space.south) |- (sample_space_annotate.south west);
+				\path (event_space.south) ++ (0em,-1.75em) node[anchor=north east,color=green_annotate] (event_space_annotate) {\footnotesize{event space}};
+				\draw [color=green_annotate] (event_space.south) |- (event_space_annotate.south west);
+				\path (probability_measure.south) ++ (0em,-0.5em) node[anchor=north west,color=blue_annotate] (probability_measure_annotate) {\footnotesize{probability measure}};
+				\draw [color=blue_annotate] (probability_measure.south) |- (probability_measure_annotate.south east);
+			\end{tikzpicture}
+		\end{figure}
+		the probability is a measure with two additional properties,
+
+		\begin{enumerate}
+			\item finiteness: \(\forall E\in \mathcal{F} \left( P(E) \in \mathbb{R}\right)\)
+			\item unitarity: \(P(\Omega) = 1\)
+		\end{enumerate}
+
+	\end{definition}
+
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% random variable %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{definition}[random variable]
+		\begin{figure}[htbp]
+			\begin{equation}
+				\tikzmarknode{random_variable}{\colorbox{blue_marknode}{\(X\)}}:\tikzmarknode{sample_space}{\colorbox{red_marknode}{\(\Omega\)}} \mapsto \tikzmarknode{state_space}{\colorbox{green_marknode}{\(S\)}}
+			\end{equation}
+			\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+				\path (random_variable.north) ++ (0em,+1em) node[anchor=south east,color=blue_annotate] (random_variable_annotate) {\footnotesize{measurable function}};
+				\draw [color=blue_annotate] (random_variable.north) |- (random_variable_annotate.south west);
+				\path (sample_space.south) ++ (0em,-0.5em) node[anchor=north east,color=red_annotate] (sample_space_annotate) {\footnotesize{sample space}};
+				\draw [color=red_annotate] (sample_space.south) |- (sample_space_annotate.south west);
+				\path (state_space.south) ++ (0em,-0.5em) node[anchor=north west,color=green_annotate] (state_space_annotate) {\footnotesize{state space}};
+				\draw [color=green_annotate] (state_space.south) |- (state_space_annotate.south east);
+			\end{tikzpicture}
+		\end{figure}
+	\end{definition}
+
+	\vspace*{\fill}
+
+	\begin{block}{Remark\ (random variable)}
+		\par It is a function named "variable" to refer to the state space(codomain), usually subsets of \(\mathbb{R}^n\) or \(\mathbb{Z}^n\), which is more convenient for manipulation than the abstract sample space. For example, the event \(E:= \left\{\omega \in \Omega: u < X(\omega) \leq v\right\}\) is usually denoted by \(u < X \leq v\), since \(\omega \in X^{-1}\left(\left(u,v\right]\right) \Leftrightarrow u < X \left( \omega\right) \leq v  \).
+	\end{block}
+\end{frame}
+
+\section{Basic concepts of stochastic process}
+\begin{frame}[allowframebreaks]{Stochastic process}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% stochastic process %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\vspace*{\fill}
+	\begin{definition}[stochastic process]
+		A stochastic process is collection of indexed random variables, denoted by
+		\begin{equation}
+			\left\{X(t): t\in T\right\},
+		\end{equation}
+		where \(T\) is the index/parameter set.
+	\end{definition}
+	\vspace*{\fill}
+	\begin{block}{Remark\ (index set)}
+		\(t \) usually has a physical meaning of time(continuous) or timestamp(discrete).
+	\end{block}
+	\vspace*{\fill}
+\end{frame}
+
+\begin{frame}{Autocorrelation and autocovariance}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% autocorrelation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\vspace*{\fill}
+	Let \(\mathbf{x}(\omega, t): \Omega\times \mathbb{R}\mapsto \mathbb{R}^n\) be a continuous-time multivariate real-valued stochastic process\footnote{Due to the author's background, continuous-time multivariate real-valued stochastic processes are more common, on which the following definitions, remarks, etc., are based if not mentioned.},
+
+	\begin{definition}[autocorrelation]
+		\begin{equation}
+			\mathbf{R}_{\mathbf{x}\mathbf{x}}(t_1,t_2) = \operatorname{E}\left(\mathbf{x}(t_1) \mathbf{x}(t_2)^{\mathrm{T}}\right)
+		\end{equation}
+	\end{definition}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% autocovariance %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{definition}[autocovariance]
+		\begin{equation}
+			\mathbf{K}_{\mathbf{x}\mathbf{x}}(t_1,t_2) = \operatorname{Cov}\left(\mathbf{x}(t_1), \mathbf{x}(t_2)\right) = \operatorname{E}\left(\left(\mathbf{x}(t_1) - \operatorname{E}\left(\mathbf{x}(t_1)\right)\right)\left(\mathbf{x}(t_2) - \operatorname{E}\left(\mathbf{x}(t_2)\right)\right)^{\mathrm{T}}\right)
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Stationary process}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%% strict stationary process %%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\vspace*{\fill}
+
+	\begin{definition}[strict stationary process]
+		\par Let \(F_X\left(X_{t_1+\tau},\cdots,X_{t_n+\tau}\right)\) be the cumulative distribution function(CDF) of the unconditional joint distribution of the stochastic process \(\left\{X_t\right\}\) at times \(t_1+\tau,\cdots,t_n+\tau\).
+		\par \(\left\{X_t\right\}\) is a (strict(ly)/strong(ly)) stationary process, if the unconditional joint CDF does not change when shifted in time, i.e.
+		\begin{equation}
+			\left(\forall\, \tau,t_1,\cdots,t_n\in \mathbb{R}\right)\left(\forall\,n\in \mathbb{N}_{+}\right)\left(F_X\left(x_{t_1+\tau},\cdots,x_{t_n+\tau}\right)\right)
+		\end{equation}
+	\end{definition}
+
+	\vspace*{\fill}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%% wide stationary process %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\framebreak
+	\vspace*{\fill}
+
+	\begin{definition}[wide stationary process]
+		A wide/weak stationary process loosens the constraints on CDF to the following first two conditions, with an additional "finite second-moment" condition.
+		\begin{align}
+			 & \operatorname{E}\left(\mathbf{x}(t+\tau)\right) = \operatorname{E}\left(\mathbf{x}(t)\right),                                  & \forall\, t,\tau \in \mathbb{R}  \\
+			 & \operatorname{K}_{\mathbf{x}\mathbf{x}}\left(t_1, t_2\right) = \operatorname{K}_{\mathbf{x}\mathbf{x}}\left(t_1-t_2, 0\right), & \forall\, t_1,t_2 \in \mathbb{R} \\
+			 & \operatorname{E}\left(\vert \mathbf{x}_t \vert^2 \right) < \infty,                                                             & \forall\, t \in \mathbb{R}
+		\end{align}
+	\end{definition}
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+	\begin{corollary}[wide stationary process]
+		\begin{itemize}
+			\item The expectation is always a constant.
+			\item The autocovariance and autocorrelation are better indexed by one variable instead of two.
+			\item Any strictly stationary process which has a finite mean and a covariance is also a wide-sense stationary process.
+		\end{itemize}
+	\end{corollary}
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+	\begin{block}{Remark\ (motivation of wide-sense stationarity, WSS)}
+		\par If you have learned some advanced linear algebra or functional analysis and are good at associating, the "finite second-moment" condition may remind you about Hilbert space. 
+        \par The Wikipedia \cite{enwiki:1166251052} has a wonderful explanation of its mathematical motivation and the reason why the WSS assumption is widely employed in signal processing algorithms.
+        In summary,
+        \begin{itemize}
+            \item Under the zero-mean assumption, the autocovariance, also the autocorrelation is an inner product in the Hilbert space, to be precise, \(L^2\) Lebesgue space.
+        \end{itemize} 
+	\end{block}
+	\vspace*{\fill}
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Spectral density}
+	\begin{definition}[energy]
+		the energy \(E\) of a signal \(x(t): \mathbb{R} \mapsto \mathbb{R}\) is
+		\begin{equation}
+			E := \int_{-\infty}^{+\infty} \vert x(t) \vert^2 \operatorname{d}\! t
+		\end{equation}
+	\end{definition}
+	\begin{theorem}[Parseval's theorem]
+		\begin{equation}
+			\int_{-\infty}^{+\infty} \vert x(t) \vert^2 \operatorname{d}\! t = \int_{-\infty}^{+\infty} \vert \hat{x}(f) \vert^2 \operatorname{d}\! f,
+		\end{equation}
+		where \(\hat{x}(f)\) is the Fourier transform of \(x(t)\), i.e.,
+		\begin{equation}
+			\hat{x}(f) = \int_{-\infty}^{+\infty} \mathrm{e}^{-\mathrm{i}2\pi f t} x(t) \operatorname{d}\! t
+		\end{equation}
+	\end{theorem}
+
+	\framebreak
+	\begin{definition}[energy spectral density]
+		\begin{equation}
+			\bar{S}_{xx} := \vert \hat{x}(f) \vert^2
+		\end{equation}
+	\end{definition}
+	\begin{theorem}[Wiener–Khinchin theorem]
+
+	\end{theorem}
+\end{frame}
+\appendix
+\section{References}
+\begin{frame}[allowframebreaks]{References}
+	\printbibliography[heading=none]
+\end{frame}
+\end{document}
