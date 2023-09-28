@@ -5,7 +5,7 @@ Some notes and slides are made when I try to learn everything with the Feynman T
 ## What is inside this repo?
 
 A series of rigorous but painless introductions of some theoretical stuff for roboticists is currently a work in progress,
-- [Probability and Stochastic Process](https://github.com/xiaosq2000/notes/blob/main/stochastic_process/main.pdf)
-- [Basics and Variants of Kalman filter](https://github.com/xiaosq2000/notes/blob/main/kalman_filter/main.pdf)
-- [Quaternions, Lie Algebra and Topology]
-- [FEJ-MSCKF for GNSS-Visual-Inertial Navigation], attached with C++ implementation and a simulation demo
+- Probability and Stochastic Process [PDF](https://github.com/xiaosq2000/notes/blob/main/stochastic_process/main.pdf)
+- Basics and Variants of Kalman filter [PDF](https://github.com/xiaosq2000/notes/blob/main/kalman_filter/main.pdf)
+- Quaternions, Lie Algebra and Topology
+- FEJ-MSCKF for GNSS-Visual-Inertial Navigation, attached with C++ implementation and a simulation demo
