@@ -14,6 +14,9 @@ block=fill,
 ]{metropolis}
 \usepackage{appendixnumberbeamer}
 \usepackage{fontawesome5}
+% fontspec is preloaded
+    \setmainfont{Source Serif 4}
+
 \usepackage{xcolor}
     % ref: http://zhongguose.com
     \definecolor{kongquelan}{RGB}{14,176,201}
@@ -36,9 +39,39 @@ block=fill,
 \usepackage{booktabs}
 \usepackage{caption}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% title page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[backend=biber,natbib=true,style=ext-numeric-comp,sorting=none,backref=true]{biblatex}
+\addbibresource{references.bib}
+\renewcommand*{\bibfont}{\normalfont\small}
+\DeclareOuterCiteDelims{cite}{\textcolor{yingwulv}{\bibopenbracket}}{\textcolor{yingwulv}{\bibclosebracket}}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{cases} % numcases
+% ref: https://tex.stackexchange.com/a/602213/240783
+\usepackage{empheq}
+\usepackage{eqparbox}
+\newcommand{\eqmath}[3][c]{%
+  % #1 = alignment, default c, #2 = label, #2 = math material
+  \eqmakebox[#2][#1]{$\displaystyle#3$}%
+}
+\newcommand{\eqtext}[3][c]{%
+  % #1 = alignment, default c, #2 = label, #2 = text material
+  \eqmakebox[#2][#1]{#3}%
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=xinghuang!80,
+    anchorcolor=.,
+    filecolor=.,
+    menucolor=.,
+    runcolor=.,
+    urlcolor=jianniaolan,
+    citecolor=yingwulv,
+}
+
 \title{Measure, Probability and Stochastic Process}
 \subtitle{A rigorous but painless introduction}
 \author{shuqi}
@@ -50,21 +83,7 @@ block=fill,
     \faEnvelope\;
     \href{xiaosq2000@gmail.com}{xiaosq2000@gmail.com}
 }
-\usepackage[backend=biber,natbib=true,style=ext-numeric-comp,sorting=none,backref=true]{biblatex}
-\addbibresource{references.bib}
-\renewcommand*{\bibfont}{\normalfont\small}
-\DeclareOuterCiteDelims{cite}{\textcolor{yingwulv}{\bibopenbracket}}{\textcolor{yingwulv}{\bibclosebracket}}
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=xinghuang!80,
-    anchorcolor=.,
-    filecolor=.,
-    menucolor=.,
-    runcolor=.,
-    urlcolor=jianniaolan,
-    citecolor=yingwulv,
-}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,11 +107,13 @@ block=fill,
 
 \begin{frame}[allowframebreaks]{Outline}
 	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents[sections={1}]
+	\framebreak
+	\tableofcontents[sections={2-3}]
 	% \tableofcontents[hideallsubsections]
-	\tableofcontents
 \end{frame}
 
-\section{Measure Theory}
+\section{Measure Theory and Lebesgue Integration}
 
 \subsection{Measure}
 \begin{frame}{Measure}
@@ -124,8 +145,8 @@ block=fill,
 	\end{block}
 \end{frame}
 
-\subsection{Other basic concepts}
-\begin{frame}[allowframebreaks]{Other basic concepts}
+\subsection{Measurable space and measure space}
+\begin{frame}[allowframebreaks]{Measurable space and measure space}
 	\vspace*{\fill}
 	\begin{definition}[measurable space and measure space]
 		\begin{minipage}[t]{0.4\linewidth}
@@ -164,8 +185,9 @@ block=fill,
 		\vspace*{2em}
 	\end{definition}
 	\vspace*{\fill}
-
-	\framebreak
+\end{frame}
+\subsection{Measurable function}
+\begin{frame}{Measurable function}
 	\vspace*{\fill}
 	\begin{definition}[measurable function]
 		Let \(\left(X,\Sigma\right)\) and \(\left(Y,T\right)\) be measurable spaces. A function \(f:X\mapsto Y\) is measurable if and only if
@@ -182,6 +204,165 @@ block=fill,
 	\end{corollary}
 	\vspace*{\fill}
 \end{frame}
+
+\subsection{Lebesgue Measure}
+\begin{frame}[allowframebreaks]{Lebesgue measure}
+	\vspace*{\fill}
+	\begin{block}{Remark\ (motivation)}
+		Lebesgue measure is the formalized way of assigning a volume to subsets of \(\mathbb{R}^n\), and coincides with the standard measure of length \((\mathbb{R})\), area \((\mathbb{R}^2)\), or volume \((\mathbb{R}^3)\).
+	\end{block}
+	\vspace*{\fill}
+	\begin{definition}[length of an interval]
+		For any interval \(\mathrm{I}=\left[a,b\right]\) or \(\left(a,b\right) \subset \mathbb{R}\), let \(\mathfrak{l}\left(\mathrm{I}\right) = b - a \) denote its length.
+	\end{definition}
+	\vspace*{\fill}
+
+	\framebreak
+	\vspace*{\fill}
+	\begin{definition}[Lebesgue outer measure]
+		For any subset \(\mathrm{E} \subseteq \mathbb{R}\), its Lebesgue outer measure \(\lambda^{\ast} : \mathfrak{p}\left(\mathbb{R}\right) \mapsto \left[0,+\infty\right]\) is defined as\footnote{\(\mathfrak{p}\left(\circ\right)\) denotes the power set of \(\circ\).}
+		\begin{equation}
+			\lambda^\ast \left(\mathrm{E}\right) := \operatorname{inf}\left\{\sum_{k=1}^{\infty} \mathfrak{l}\left(\mathrm{I}_k\right): \left\{\mathrm{I}_k\right\}_{k\in \mathbb{N}} \text{ is a sequence of open intervals with } \mathrm{E} \subset \bigcup_{k=1}^{\infty}  \mathrm{I}_k\right\}
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+	\begin{definition}[Carathéodory's criterion]
+		\begin{equation}
+			\lambda^{\ast} \left(\mathrm{E}\right) = \lambda^{\ast} \left(\mathrm{E} \cap \mathrm{A}\right) + \lambda^{\ast} \left(\mathrm{E} \cap \mathrm{A}^c \right),\quad \forall\, \mathrm{A} \subset \mathbb{R}
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+
+	\framebreak
+	\vspace*{\fill}
+	\begin{definition}[Lebesgue measure]
+		The set of all such \(\mathrm{E}\subseteq \mathbb{R}\) that fulfills the Carathéodory criterion forms a \(\sigma \text{-algebra} \), its Lebesgue measure is defined to be its Lebesgue outer measure,
+		\begin{equation}
+			\lambda \left(\mathrm{E}\right) = \lambda^\ast \left(\mathrm{E}\right)
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+	\begin{block}{Remark\ (motivation of an outer measure and a criterion)}
+		There are four intuitive requirements of a Lebesgue measure, but they are incompatible due to \(ZFC\). The purpose of constructing an outer measure on all subsets is to pick out a class of subsets to be called measurable, in such a way (the criterion) to satisfy the countable additivity property. Check out \cite{enwiki:1171717640} for details.
+	\end{block}
+	\vspace*{\fill}
+\end{frame}
+
+\subsection{Lebesgue integral}
+\begin{frame}[allowframebreaks]{Lebesgue integral}
+	\vspace*{\fill}
+	\begin{block}{Remark}
+		Like step functions in Riemann-Darboux's approach, the concept of Lebesgue integration is built on indicator functions.
+	\end{block}
+	\vspace*{\fill}
+	\begin{definition}[indicator function]
+		A indicator function of a subset \(S\) of a set \(X\) is denoted by \(\operatorname{1}_S: X \mapsto \left\{0,1\right\}\), defined as
+		\begin{empheq}[left={\eqmath[r]{A}{\operatorname{1}_S(x):=}\empheqlbrace}]{alignat=2}
+			&\eqmath[l]{B}{1,} & \eqtext[l]{C}{\(x\in S\)} \\
+			&\eqmath[l]{B}{0,} & \eqtext[l]{C}{\(x\notin S\)}
+		\end{empheq}
+	\end{definition}
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+	\begin{definition}[Lebesgue integral of an indicator function]
+		If the subset \(S\) is measurable consistent with a given measure \(\mu\), the Lebesgue integral of the indicator function is defined as
+		\begin{equation}
+			\int_{X}^{} \operatorname{1}_S \operatorname{d}\!\mu := \int_{S}^{} \operatorname{1}_S \operatorname{d}\!\mu := \mu \left(S\right)
+		\end{equation}
+		Note that the integral may be equal to \(\infty\), unless \(\mu\) is a finite measure.
+		\par If \(T\) is another measurable subset of \(X\),
+		\begin{equation}
+			\int_{T}^{} \operatorname{1}_S \operatorname{d}\!\mu := \mu \left(S \cap T\right)
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+	\begin{definition}[simple function]
+		A simple function is a finite linear combination of indicator functions
+		\begin{equation}
+			\Sigma_{k=0}^N a_k \operatorname{1}_{S_k}
+		\end{equation}
+		If \(a_k\in \mathbb{R}\) and \(S_k\) are disjoint measureable sets, it is called a measurable simple function.
+	\end{definition}
+	\vspace*{\fill}
+	\begin{definition}[Lebesgue integral of a measurable simple function]
+		Linearity is a desired property for Lebesgue integrals, i.e.,its Lebesgue outer measure is defined as
+		\vspace*{-1.5em}
+		\begin{figure}[htbp]
+			\begin{equation}
+				\int_{X}^{} \Sigma_{k=1}^N a_k \operatorname{1}_{S_k} \operatorname{d}\! \mu := \Sigma_{k=1}^N a_k \int_{X}^{} \operatorname{1}_{S_k} \operatorname{d}\! \mu = \Sigma_{k=1}^N a_k \mu \left(S_k\right), \quad \text{if } \tikzmarknode{condition}{\colorbox{green_marknode}{\(\left(\forall\,k : \mu_k = \infty \Rightarrow a_k = 0 \right)\)}}
+			\end{equation}
+			\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+				\path (condition.south) ++ (0em,-1em) node[anchor=north west,color=green_annotate] (condition_annotate) {\footnotesize{to avoid \(\infty-\infty\)}};
+				\draw [color=green_annotate] (condition.south) |- (condition_annotate.south east);
+			\end{tikzpicture}
+		\end{figure}
+	\end{definition}
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+	\begin{quote}
+		To compute the Riemann integral of \(f\), one partitions the domain \([a, b]\) into subintervals; while in the Lebesgue integral, one is in effect partitioning the range of \(f\).
+		\flushright ---\;\textrm{Folland}
+	\end{quote}
+	\vspace*{\fill}
+	\begin{definition}[Lebesgue integral of a non-negative measurable function]
+		\begin{equation}
+			\int_{E}^{} f \operatorname{d}\! \mu := \operatorname{sup}\left\{ \int_{E}^{} s \operatorname{d}\! \mu: 0<s<f\,\wedge\,s \text{ is simple} \right\}
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+	\begin{definition}[Lebesgue integral of a measurable function]
+		\begin{equation}
+			f = f^{\,+} + f^{\,-}
+		\end{equation}, where
+		\par \nointerlineskip
+		\begin{minipage}[t]{0.47\linewidth}
+			\begin{empheq}[left={\eqmath[r]{A}{f^{\,+} := }\empheqlbrace}]{alignat=2}
+				&\eqmath[l]{B}{f(x)} ,\quad& \eqtext[l]{C}{\(f(x)>0\)} \\
+				&\eqmath[l]{B}{0} ,\quad& \eqtext[l]{C}{otherwise}
+			\end{empheq}
+		\end{minipage}
+		\hspace*{\fill}
+		\begin{minipage}[t]{0.47\linewidth}
+			\begin{empheq}[left={\eqmath[r]{A}{f^{\,-} :=}\empheqlbrace}]{alignat=2}
+				&\eqmath[l]{B}{-f(x)} ,\quad & \eqtext[l]{C}{\(f(x)<0\)} \\
+				&\eqmath[l]{B}{0} ,\quad & \eqtext[l]{C}{otherwise}
+			\end{empheq}
+		\end{minipage}
+		\par Then,
+		\vspace*{-2\baselineskip}
+		\begin{figure}[htbp]
+			\begin{equation}
+				\int_{}^{} f \operatorname{d}\! \mu := \int_{}^{} f^{\,+} \operatorname{d}\! \mu - \int_{}^{} f^{\,-} \operatorname{d}\! \mu, \quad \text{if } \tikzmarknode{at_least_one_finite}{\colorbox{green_marknode}{\(\displaystyle \operatorname{min} \left(\int_{}^{} f^+ \operatorname{d}\! \mu , \int_{}^{} f^- \operatorname{d}\! \mu \right) < \infty\)}}
+			\end{equation}
+			\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+				\path (at_least_one_finite.south) ++ (0em,-1em) node[anchor=north east,color=green_annotate] (at_least_one_finite_annotate) {\footnotesize{at least one is finite, to avoid \(\infty-\infty\)}};
+				\draw [color=green_annotate] (at_least_one_finite.south) |- (at_least_one_finite_annotate.south west);
+			\end{tikzpicture}
+		\end{figure}
+	\end{definition}
+\end{frame}
+
+\subsection{Radon–Nikodym theorem}
+\begin{frame}[allowframebreaks]{Radon–Nikodym theorem}
+	\vspace*{\fill}
+	\begin{definition}[absolute continuity of measures]
+
+	\end{definition}
+	\vspace*{\fill}
+	\framebreak
+	\vspace*{\fill}
+	\begin{definition}[Radon–Nikodym theorem]
+
+	\end{definition}
+	\vspace*{\fill}
+\end{frame}
+
 
 \section{Probability Theory}
 \subsection{Probability}
@@ -310,7 +491,7 @@ block=fill,
 	\framebreak
 	\vspace*{\fill}
 	\begin{block}{Remark\ (motivation of wide-sense stationarity, WSS)}
-		\par The ``finite second-moment'' condition(eq.~\ref{eq:finite-second-moment}) may remind you of the \href{https://en.wikipedia.org/wiki/Hilbert_space}{Hilbert space}.
+		\par The ``finite second-moment'' condition(eq.~\ref{eq:finite-second-moment}) may remind you of the \href{https://en.wikipedia.org/wiki/Hilbert_space}{Hilbert space}, if you are good at associating.
 		\par The Wikipedia \cite{enwiki:1166251052} has a wonderful explanation of its mathematical motivation and the reason why the WSS assumption is widely employed in signal processing algorithms.
 	\end{block}
 	\vspace*{\fill}
