@@ -1,0 +1,266 @@
+\documentclass[10pt,aspectratio=1610]{beamer}
+\usetheme[subsectionpage=progressbar,progressbar=frametitle,block=fill]{moloch}
+\mode<presentation>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% personal modification of the beamer theme %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% make footnotesize smaller
+\let\oldfootnotesize\footnotesize
+\renewcommand*{\footnotesize}{\oldfootnotesize\tiny}
+% footnote without counter
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+% footnotetext without counter
+\newcommand\blfootnotetext[1]{%
+  \begingroup
+  \renewcommand\thefootnotetext{}\footnotetext{#1}%
+  \addtocounter{footnotetext}{-1}%
+  \endgroup
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{booktabs}
+
+% ref: https://tex.stackexchange.com/a/614273/240783
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% caption %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{caption}
+\captionsetup{font={scriptsize},
+              labelfont={scriptsize},
+              textfont={scriptsize},
+              % hypcap=false,
+              % format=hang,
+              % margin=1cm
+             }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% glyph %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fontawesome5}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\usepackage{romannum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% color %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+    % ref: http://zhongguose.com
+    \definecolor{kongquelan}{RGB}{14,176,201}
+    \definecolor{koushaolv}{RGB}{93,190,138}
+    \definecolor{yingwulv}{RGB}{91,174,35}
+    \definecolor{shenhuilan}{RGB}{19,44,51}
+    \definecolor{jianniaolan}{RGB}{20,145,168}
+    \definecolor{jiguanghong}{RGB}{243,59,31}
+    \definecolor{xiangyehong}{RGB}{240,124,130}
+    \definecolor{red}{HTML}{E9002D}
+    \definecolor{amber}{HTML}{FFAA00}
+    \definecolor{green}{HTML}{00B000}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% graphics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{graphicx} % pre-loaded by beamer
+    \graphicspath{{../images}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% figure annotation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{tikz} % pre-loaded by beamer
+
+%\annotatedFigureBoxCustom{bottom-left}{top-right}{label}{label-position}{box-color}{label-color}{border-color}{text-color}
+\newcommand*\annotatedFigureBoxCustom[8]{
+    \draw[#5,thick,rounded corners] (#1) rectangle (#2); 
+    \node at (#4) [fill=#6,thick,shape=circle,draw=#7,inner sep=2pt,font=\sffamily,text=#8] { \textbf{#3} };
+}
+%\annotatedFigureBox{bottom-left}{top-right}{label}{label-position}
+\newcommand*\annotatedFigureBox[4]{
+    \annotatedFigureBoxCustom{#1}{#2}{#3}{#4}{red!40}{red!20}{red!20}{black}
+}
+\newcommand*\annotatedFigureText[4]{\node[draw=none, anchor=south west, text=#2, inner sep=0, text width=#3\linewidth,font=\sffamily] at (#1){#4};}
+\newenvironment{annotatedFigure}[1]{
+    \centering
+    \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] (image) at (0,0) { #1 };
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+}
+{
+    \end{scope}
+    \end{tikzpicture}
+}
+%\figureBox{bottom-left}{top-right}{color}{thickness}
+\newcommand*\figureBox[4]{\draw[#3,#4,rounded corners] (#1) rectangle (#2);}
+
+\usetikzlibrary{calc,tikzmark}
+\usepackage{tcolorbox}
+\colorlet{marknode_color}{cyan!30}
+\colorlet{annotate_color}{cyan!60}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pdf, svg, animation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pdfpages}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% others %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{lipsum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{url}
+\usepackage[natbib=true, backend=biber, style=authoryear-icomp, useprefix=true, style=ieee]{biblatex}
+\addbibresource{references.bib}
+\AtBeginBibliography{\scriptsize}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=.,
+    anchorcolor=.,
+    filecolor=.,
+    menucolor=.,
+    runcolor=.,
+    urlcolor=cyan,
+    citecolor=.,
+}
+
+\title{Information Theory}
+\subtitle{Study notes}
+\author{Shuqi XIAO}
+
+\begin{document}
+\maketitle
+\begin{frame}{Outline}
+	\tableofcontents
+\end{frame}
+
+\section{Basic Concepts}
+\begin{frame}{Self-information: Motivation}
+	\vspace*{\fill}
+	\par What is information?
+	\vspace*{\fill}
+	\par How can we define ``informational value'' of ``messages''?
+	\vspace*{1.5ex}
+	\begin{itemize}
+		\setlength{\itemsep}{1.5ex}
+		\item Messages are defined as \textbf{events} in Probability Theory.
+		\item Informational value is defined by \textbf{three axioms}.
+	\end{itemize}
+	\blfootnote{Why is it called `self-information' instead of a simple `information'? Stay tuned.}
+	\vspace*{\fill}
+\end{frame}
+
+\begin{frame}{Self-information: Definition (\Romannum{1})}
+	\vspace*{\fill}
+	\begin{enumerate}
+		\setlength{\itemsep}{1.5ex}
+		\item A certain event carries no information.
+		\item The less probable an event is, the more information it yields.
+		\item If two independent events occur, the total information is the sum of each.
+	\end{enumerate}
+	\vspace*{\fill}
+	\begin{definition}[the self-information of an event]
+		For an event \(X\) with the probability measure \(P\), the self-information is
+		\begin{equation}
+			I\left(X\,\right) := -\log \tikzmarknode{base}{\colorbox{cyan!30}{\(_{b}\)}} \left[ P\left(X\,\right) \right]
+		\end{equation}
+		\begin{figure}[htbp]
+			\centering
+			\begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+				\path (base.south) ++ (0em,-0.5em) node[anchor=north east,color=cyan!60] (base_annotate) {\scriptsize{\(<1\), base}};
+				\draw [color=cyan!60] (base.south) |- (base_annotate.south west);
+			\end{tikzpicture}
+		\end{figure}
+	\end{definition}
+	\blfootnote{If \(b=2\), the unit is the shannon (symbol \(\mathrm{Sh}\)), often called a `bit'; if \(b=\mathrm{e}\), the unit is the natural unit of information (\(\mathrm{nat}\)); \(b=10\), the hartley (\(\mathrm{Hart}\)).}
+	\vspace*{\fill}
+\end{frame}
+
+\begin{frame}{Self-information: Definition (\Romannum{2})}
+	\vspace*{\fill}
+	\begin{proof}[Proof (Axiom 3)]
+		\begin{equation}
+			I\,\left(XY\,\right) = - \log \left[P(XY\,)\right] = - \log \left[P(X\,)P(Y\,)\right] = - \log \left[P(X\,)\right] - \log \left[P(Y\,)\right] = I\,\left(X\,\right) + I\,\left(Y\,\right)
+		\end{equation}
+	\end{proof}
+	\vspace*{\fill}
+	\begin{definition}[the self-information of a random variable]
+		For a random variable \(X\) with the probability measure \(P\), the self-information is a function of the random variable,
+		\begin{equation}
+			I_X\left(x\,\right) := -\log_b\left[ P\left(X=x\,\right) \right]
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+\end{frame}
+
+\begin{frame}{Entropy}
+	\vspace*{\fill}
+	What is the average level of information needed to describe a random variable?
+	\vspace*{\fill}
+	\begin{definition}[entropy]
+		For a discrete random variable \(X\) with probability distribution \(p:\mathcal{X} \mapsto [0,1]\), the entropy is
+		\begin{equation}
+			H\,(X) := \mathbb{E} \left(I\,(x\,)\right) = -\sum_{x \,\in\mathcal{X}} p\,(x\,) \log \left[\,p\,(x\,)\right]
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+	\blfootnote{What is the average level of information that a random variable can offer?}
+\end{frame}
+
+\begin{frame}{Conditional Entropy}
+	\vspace*{\fill}
+	What is the average level of information needed to describe one random variable if another random variable is known?
+	\vspace*{\fill}
+	\begin{definition}[conditional entropy]
+		\begin{equation}
+			H\,\left(Y\,\vert X\,\right) = -\sum_{x\,\in \mathcal{X}, y\,\in \mathcal{Y}} p\left(x, y\right) p\left(y\,\vert x\right)
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+\end{frame}
+
+\begin{frame}{Relative Entropy}
+	\vspace*{\fill}
+	On average, how much information do you need to realize that you previously misidentified one random variable \(P\) as another \(Q\)?
+	\vspace*{\fill}
+	\begin{definition}[relative entropy; Kullback–Leibler divergence]
+		For discrete probability distributions \(P\) and \(Q\) defined on the same sample space \(\mathcal{X}\), the relative entropy from \(Q\) to \(P\) is
+		\begin{equation}
+			D_{KL} (P\,\Vert Q) = -\sum_{x\,\in \mathcal{X}} P(x\,) \log \left( \frac{Q(x\,)}{P(x\,)}\right)
+		\end{equation}
+	\end{definition}
+	\vspace*{\fill}
+	\blfootnote{On average, how much information do you gain if you are told that you previously misidentified one random variable \(P\) as another \(Q\)?}
+\end{frame}
+
+\begin{frame}{Mutual-information}
+	\vspace*{\fill}
+	How much information can we obtain about one random variable by observing the other random variable?
+	\vspace*{\fill}
+	\begin{definition}[mutual-information]
+		TODO
+	\end{definition}
+\end{frame}
+
+\section{References}
+\begin{frame}[allowframebreaks]
+	\frametitle{References}
+	\nocite{*}
+	\printbibliography[heading=none]
+\end{frame}
+\end{document}
