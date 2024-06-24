@@ -1,0 +1,765 @@
+\documentclass[
+    10pt,
+    aspectratio=1610,
+    xcolor={dvipsnames,pst},
+    % handout
+]{beamer}
+\usetheme[
+    subsectionpage=progressbar,
+    progressbar=frametitle,
+    block=transparent
+]{moloch}
+\mode<presentation>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% personal modification of the moloch/metropolis theme %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% frametitle with right-aligned "section, subsection"
+\newenvironment{Frame}[1]{
+    \begin{frame}{#1 \hspace{0pt plus 1filll} \scriptsize \(\triangleleft\)\;\subsecname\;\(\triangleleft\)\;\secname}\vspace*{\fill}
+}{\vspace*{\fill}\end{frame}}
+
+% inner theme
+\useinnertheme{rectangles}
+
+% color palette
+\definecolor{um-blue}{HTML}{002855}
+\definecolor{um-gold}{HTML}{84754E}
+\definecolor{um-red}{HTML}{Ef3340}
+\definecolor{um-yellow}{HTML}{84754E}
+% color theme
+\colorlet{color-frametitle}{um-blue}
+\colorlet{color-progressbar}{um-gold}
+
+\setbeamercolor{frametitle}{fg=black!2, bg=color-frametitle}
+\setbeamercolor{progress bar}{fg=color-progressbar, bg=color-progressbar!20}
+\setbeamercolor{item projected}{fg=black!2, bg=color-progressbar}
+\setbeamercolor{itemize item}{fg=color-progressbar}
+
+% make progress bar's width larger
+\makeatletter
+\setlength{\moloch@titleseparator@linewidth}{2.5pt}
+\setlength{\moloch@progressonsectionpage@linewidth}{2.5pt}
+\setlength{\moloch@progressinheadfoot@linewidth}{2.5pt}
+\makeatother
+
+% make footnotesize smaller
+\let\oldfootnotesize\footnotesize
+\renewcommand*{\footnotesize}{\oldfootnotesize\tiny}
+
+% footnote without counter
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+% footnotetext without counter
+\newcommand\blfootnotetext[1]{%
+  \begingroup
+  \renewcommand\thefootnotetext{}\footnotetext{#1}%
+  \addtocounter{footnotetext}{-1}%
+  \endgroup
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% fonts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xeCJK}
+\setCJKmainfont{思源宋体}
+\setCJKsansfont{思源黑体}
+\setCJKmonofont{思源等宽}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% color %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolorseries{marknode-color-series}{hsb}{last}[hsb]{0.0,0.12,0.95}[hsb]{0.95,0.12,0.95}
+\definecolorseries{annotation-color-series}{hsb}{last}[hsb]{0.0,0.8,0.65}[hsb]{0.95,0.8,0.65}
+\resetcolorseries[8]{marknode-color-series}
+\resetcolorseries[8]{annotation-color-series}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% glyph %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fontawesome5}
+\usepackage{bbding}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\usepackage{romannum}
+\usepackage{stmaryrd} % for \mapsfrom (inverse of \mapsto)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{booktabs}
+
+% ref: https://tex.stackexchange.com/a/614273/240783
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% caption %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{caption}
+\captionsetup{font={scriptsize},
+              labelfont={scriptsize},
+              textfont={scriptsize},
+              % hypcap=false,
+              % format=hang,
+              % margin=1cm
+             }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% graphics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{graphicx} % pre-loaded by beamer
+\graphicspath{{./images}}
+
+\usepackage{forest} % mindmap
+
+% \usetikzlibrary{calc,tikzmark,arrows.meta,fit,positioning,decorations.markings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%% equation annotation by TikZ %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{tikz}
+% \usepackage[dvipsnames]{xcolor}
+\usetikzlibrary{calc,tikzmark}
+% \usepackage{tcolorbox}
+\usepackage{makecell}
+\usepackage{xstring}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Usage:
+% \annotatedEquation{1: color/colorseries}{2: node name}{3: node direction}{4: x shift}{5: y shift}{6: anchor direction}{7: color/colorseries name}{8: annotation}{9: baseline direction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{annotatedEquationEnv}{
+    \begin{tikzpicture}[
+        overlay, remember picture,
+        >=stealth, <-,
+        nodes={align=left,inner ysep=1pt},
+    ]
+}
+{
+    \end{tikzpicture}
+}
+\newcommand*{\annotatedEquation}[9]{%
+     \IfEqCase{#1}{%
+        {color}{%
+            \path (#2.#3) ++ (#4,#5) node [anchor=#6] (#2-annotate) { \color{#7} \scriptsize \makecell[l]{#8} };%
+            \draw [#7] (#2.#3) |- (#2-annotate.south #9);%
+        }%
+        {colorseries}{%
+            \path (#2.#3) ++ (#4,#5) node [anchor=#6] (#2-annotate) { \color{#7!!} \scriptsize \makecell[l]{#8} };%
+            \draw [#7!!] (#2.#3) |- (#2-annotate.south #9);%
+            \textcolor{#7!!+}{}%
+        }%
+    }[\PackageError{annotatedEquation}{Undefined option to annotatedEquation #1}{}]%
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% figure annotation by TikZ  %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{tikz}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Usage:
+% \begin{annotatedFigureEnv}
+%     {\includegraphics[width=0.5\linewidth]{example-image}}
+%     \annotatedFigureBox{bottom-left}{top-right}{label}{label-position}
+% \end{annotatedFigureEnv}
+% Usage:
+% \annotatedFigure{bottom-left}{top-right}{label}{label-position}
+% Usage:
+% \annotatedFigureImpl{1: bottom-left}{2: top-right}{3: label}{4: label-position}{5: box-color}{6: label-color}{7: border-color}{8: text-color}
+% Usage:
+% \figureBox{bottom-left}{top-right}{color}{thickness}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*\annotatedFigureImpl[8]{
+    \draw [#5, ultra thick] (#1) rectangle (#2); 
+    \node at (#4) [fill=#6, thick, shape=rectangle, draw=#7, inner sep=2.5pt, font=\small\sffamily, text=#8] { #3 };
+}
+\newcommand*\annotatedFigure[4]{
+    \annotatedFigureImpl{#1}{#2}{#3}{#4}{color-progressbar}{color-progressbar}{color-progressbar}{black!2}
+}
+\newcommand*\annotatedFigureText[4]{
+    \node[draw=none, anchor=south west, text=#2, inner sep=0, text width=#3\linewidth,font=\sffamily] at (#1) {#4};
+}
+\newenvironment{annotatedFigureEnv}[1]{
+    \centering
+    \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] (image) at (0,0) { #1 };
+        \begin{scope}[x={(image.south east)},y={(image.north west)}]
+}
+{
+        \end{scope}
+    \end{tikzpicture}
+}
+\newcommand*\figureBox[4]{\draw[#3,#4,rounded corners] (#1) rectangle (#2);}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Taxonomy by TikZ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ref: https://tex.stackexchange.com/a/112471/240783
+% ref: https://tex.stackexchange.com/a/357412/240783
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetikzlibrary{shadows}
+\makeatletter
+\def\tikzopacityregister{.2} % the opacity of the shadows
+\tikzset{
+  opacity/.append code={
+    \pgfmathsetmacro\tikzopacityregister{#1*\tikzopacityregister}
+  },
+  opacity aux/.code={ % this is the original definition of opacity
+    \tikz@addoption{\pgfsetstrokeopacity{#1}\pgfsetfillopacity{#1}}
+  },
+  every shadow/.style={opacity aux=\tikzopacityregister}
+}
+\makeatother
+\tikzset{
+    my node for tree/.style={
+            text=black,
+            draw=lightgray!50,
+            fill=lightgray!20,
+            % inner color=lightgray!5,
+            % outer color=lightgray!20,
+            thick,
+            minimum width=12mm,
+            minimum height=6mm,
+            rounded corners=3,
+            text height=1.5ex,
+            text depth=0ex,
+            font={\sffamily},
+            drop shadow,
+        },
+    invisible/.style={opacity=0,text opacity=0},
+    visible on/.style={alt=#1{}{invisible}},
+    alt/.code args={<#1>#2#3}{%
+      \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+    },
+}
+\forestset{
+    visible on/.style={
+        for tree={
+            /tikz/visible on={#1},
+            edge+={/tikz/visible on={#1}},
+        }
+    },
+    my tree/.style={
+            my node for tree,
+            s sep+=4pt,
+            l sep+=10pt,
+            grow'=east,
+            edge+={lightgray},
+            parent anchor=east,
+            child anchor=west,
+            edge path={
+                    \noexpand\path [draw, \forestoption{edge}] (!u.parent anchor) -- +(10pt,0) |- (.child anchor)\forestoption{edge label};
+                },
+            if={isodd(n_children())}{
+                    for children={
+                            if={equal(n,(n_children("!u")+1)/2)}{calign with current}{}
+                        }
+                }{},
+        }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pdf, svg, animation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pdfpages}
+\usepackage{svg}
+\usepackage{animate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% others %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{lipsum}
+
+\usepackage{adjustbox}
+
+% Usage: Map numbers to alphabets
+% Example: \Letter{1} prints A, \Letter{2} prints B
+\makeatletter
+\newcommand{\Letter}[1]{\@Alph{#1}}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[backref=true, natbib=true, backend=biber, style=authoryear-icomp, useprefix=true, style=ieee]{biblatex}
+\AtBeginBibliography{\scriptsize}
+\addbibresource{sample.bib}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=.,
+    anchorcolor=.,
+    filecolor=.,
+    menucolor=.,
+    runcolor=.,
+    urlcolor=cyan,
+    citecolor=cyan,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% meta info %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Academic Slides}
+\subtitle{a template based on Beamer, TikZ, ...}
+\author{Shuqi XIAO}
+% \logo{
+%     \includegraphics[width=1.5cm]{example-image}
+% }
+% \titlegraphic{
+%     \begin{tikzpicture}[remember picture, overlay]
+%         \usetikzlibrary{calc}
+%         \node [anchor=north east] at ($(current page.north east)+(-2.5em,-2.5em)$) {
+%             \includegraphics[width=3cm]{example-image}
+%         };
+%     \end{tikzpicture}
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Outline}
+	\tableofcontents
+\end{frame}
+
+\section{Basic Examples}
+
+\subsection{Text}
+\begin{Frame}{中文}
+	\par 测试
+	\begin{itemize}
+		\setlength{\itemsep}{1.5ex}
+		\item 蔽芾甘棠，\textbf{勿}翦{\large 勿}伐，{\scriptsize 召}伯所{\huge 茇}。
+	\end{itemize}
+\end{Frame}
+\subsection{Color}
+\begin{Frame}{Color}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.7\linewidth]{OLxcolorList2.png}
+		\vspace*{0.5ex}
+		\caption{Colors supported by \texttt{xcolor} package with \texttt{dvipsnames} option}
+	\end{figure}
+	\blfootnote{\href{https://es.overleaf.com/learn/latex/Using_colors_in_LaTeX}{A tutorial from overleaf: using colors in \LaTeX}}
+\end{Frame}
+
+\subsection{Figure}
+\begin{Frame}{Figure}
+	Look at figure~\ref{fig:example-image-a} and \ref{fig:example-image-b}.
+	\vspace*{1em}
+	\begin{figure}[htbp]
+		\begin{minipage}[c]{0.45\linewidth}
+			\centering
+			\includegraphics[width=0.7\linewidth]{example-image-a}
+			\vspace*{0.5ex}
+			\caption{Image A}
+			\label{fig:example-image-a}
+		\end{minipage}
+		\hspace{\fill}
+		\begin{minipage}[c]{0.45\linewidth}
+			\centering
+			\includegraphics[width=0.7\linewidth]{example-image-b}
+			\vspace*{0.5ex}
+			\caption{Image B}
+			\label{fig:example-image-b}
+		\end{minipage}
+		\vspace*{0.5ex}
+		\caption*{Example Images}
+		\label{fig:example-images}
+	\end{figure}
+\end{Frame}
+
+\subsection{Table}
+\begin{Frame}{Table}
+	\begin{table}[htbp]
+		\centering
+		\scriptsize
+		\begin{tblr}{p{2cm}|XXXX|X|X|X}
+			\toprule
+			Methods       & LPIPS \(\downarrow\) & SSIM \(\uparrow\) & PSNR \(\mathrm{dB}\uparrow\) & {Depth                          \\L1 \\ \(\mathrm{cm}\downarrow\)} & ATE RMSE \(\mathrm{cm}\downarrow\) & {mIoU         \\ \(\%\uparrow\)} & {FPS\\ \(\mathrm{Hz}\uparrow\)} \\
+			\midrule
+			NIDS-SLAM     & {0.011}              & {0.980}           & {35.76}                      & 0.56   & 0.80   & 82.37   & -   \\
+			DNS-SLAM      & 0.119                & 0.963             & 22.96                        & 3.16   & 0.45   & 84.77   & -   \\
+			SNI-SLAM      & 0.235                & 0.935             & 29.43                        & 0.77   & 0.46   & 87.41   & -   \\
+			\midrule[dashed]
+			MonoGS        & {0.068}              & 0.954             & {34.83}                      & -      & 0.58   & N/A     & 1.7 \\
+			SplaTAM       & 0.10                 & 0.97              & 34.11                        & {0.49} & {0.36} & N/A     & 1.1 \\
+			\midrule[dashed]
+			NEDS-SLAM     & 0.088                & 0.962             & 34.76                        & {0.47} & {0.35} & {90.78} & -   \\
+			SemGauss-SLAM & {0.062}              & {0.982}           & {35.03}                      & 0.50   & {0.33} & {94.22} & -   \\
+			SGS-SLAM      & 1.096                & {0.973}           & 34.15                        & {0.36} & 0.41   & {92.72} & -   \\
+			\textbf{Ours} & 0.086                & {0.975}           & 34.73                        & {-}    & 0.67   & {91.14} & 0.8 \\
+			\bottomrule
+		\end{tblr}
+		\caption{Comparison of average performance on Replica dataset}
+		% \label{table:}
+	\end{table}
+\end{Frame}
+
+\subsection{Animation}
+
+\begin{Frame}{Text}
+	TODO
+\end{Frame}
+
+\begin{Frame}{Movie}
+	TODO
+\end{Frame}
+
+\section{Tikz Examples}
+
+\subsection{Figure Annotation}
+\begin{Frame}{Figure Annotation}
+	\begin{figure}[htbp]
+		\centering
+		\begin{annotatedFigureEnv}
+			{\includegraphics[width=0.4\linewidth]{example-image}}
+			\annotatedFigure{0.1,0.2}{0.3,0.4}{1}{0.1,0.2}
+			\annotatedFigure{0.6,0.6}{0.9,0.9}{2}{0.6,0.6}
+		\end{annotatedFigureEnv}
+	\end{figure}
+	\vspace*{\fill}
+	\begin{enumerate}
+		\setlength{\itemsep}{1.5ex}
+		\item Hello
+		\item Hi
+	\end{enumerate}
+\end{Frame}
+
+\subsection{Equation Annotation}
+
+\begin{Frame}{Equation Annotation \romannum{1}}
+	\vspace*{-10em}
+	\begin{block}{Recommendations on Color Palette}
+		\vspace*{1.5ex}
+		\begin{itemize}
+			\setlength{\itemsep}{1.5ex}
+			\item Marknode: super-low saturation \& super-high brightness.
+			\item Annotation: high saturation \& low brightness.
+		\end{itemize}
+	\end{block}
+	\vspace*{-2em}
+	\begin{figure}[htbp]
+		\centering
+		\begin{equation}
+			\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\Theta\)}}
+			\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(_{k}\)}}
+			=
+			\left\{
+			\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathbf{x}\)}}_k,
+			\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mathbf{q}\)}}_k,
+			\tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(\mathbf{s}\)}}_k,
+			\tikzmarknode{n5}{\colorbox{marknode-color-series!![5]}{\(\alpha\)}}_k,
+			\tikzmarknode{n6}{\colorbox{marknode-color-series!![6]}{\(\mathbf{c}\)}}_k,
+			\tikzmarknode{n7}{\colorbox{marknode-color-series!![7]}{\(\mathbf{f}\)}}_k
+			\right\}
+		\end{equation}
+		\begin{annotatedEquationEnv}
+			\annotatedEquation{colorseries}{n0}{south}{0}{-0.5em}{north east}{annotation-color-series}{optimizable attributes}{west}
+			\annotatedEquation{colorseries}{n1}{south}{0}{-2.5em}{north east}{annotation-color-series}{\(\in \left\{0,1,\cdots,N\right\}\), \\[1ex]index of Gaussians}{west}
+			\annotatedEquation{colorseries}{n2}{south}{0}{-8em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3\), position}{east}
+			\annotatedEquation{colorseries}{n3}{south}{0}{-6.5em}{north west}{annotation-color-series}{\(\in \mathrm{SO}(3)\), orientation}{east}
+			\annotatedEquation{colorseries}{n4}{south}{0}{-5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{3}\), scale}{east}
+			\annotatedEquation{colorseries}{n5}{south}{0}{-3.5em}{north west}{annotation-color-series}{\(\in [0,1]\), opacity}{east}
+			\annotatedEquation{colorseries}{n6}{south}{0}{-2em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{3n}\), color}{east}
+			\annotatedEquation{colorseries}{n7}{south}{0}{-0.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{D}\), semantic embedding}{east}
+		\end{annotatedEquationEnv}
+	\end{figure}
+\end{Frame}
+
+\begin{Frame}{Equation Annotation \romannum{2}}
+	\vspace*{-3em}
+	A counter-example,
+	\vspace*{-2em}
+	\begin{figure}[htbp]
+		\centering
+		\begin{equation}
+			\tikzmarknode{n0}{\colorbox{annotation-color-series!![0]}{\(\Theta\)}}
+			\tikzmarknode{n1}{\colorbox{annotation-color-series!![1]}{\(_{k}\)}}
+			=
+			\left\{
+			\tikzmarknode{n2}{\colorbox{annotation-color-series!![2]}{\(\mathbf{x}\)}}_k,
+			\tikzmarknode{n3}{\colorbox{annotation-color-series!![3]}{\(\mathbf{q}\)}}_k,
+			\tikzmarknode{n4}{\colorbox{annotation-color-series!![4]}{\(\mathbf{s}\)}}_k,
+			\tikzmarknode{n5}{\colorbox{annotation-color-series!![5]}{\(\alpha\)}}_k,
+			\tikzmarknode{n6}{\colorbox{annotation-color-series!![6]}{\(\mathbf{c}\)}}_k,
+			\tikzmarknode{n7}{\colorbox{annotation-color-series!![7]}{\(\mathbf{f}\)}}_k
+			\right\}
+		\end{equation}
+		\begin{annotatedEquationEnv}
+			\annotatedEquation{colorseries}{n0}{south}{0}{-0.5em}{north east}{marknode-color-series}{optimizable attributes}{west}
+			\annotatedEquation{colorseries}{n1}{south}{0}{-2.5em}{north east}{marknode-color-series}{\(\in \left\{0,1,\cdots,N\right\}\), \\[1ex]index of Gaussians}{west}
+			\annotatedEquation{colorseries}{n2}{south}{0}{-8em}{north west}{marknode-color-series}{\(\in \mathbb{R}^3\), position}{east}
+			\annotatedEquation{colorseries}{n3}{south}{0}{-6.5em}{north west}{marknode-color-series}{\(\in \mathrm{SO}(3)\), orientation}{east}
+			\annotatedEquation{colorseries}{n4}{south}{0}{-5em}{north west}{marknode-color-series}{\(\in \mathbb{R}^{3}\), scale}{east}
+			\annotatedEquation{colorseries}{n5}{south}{0}{-3.5em}{north west}{marknode-color-series}{\(\in [0,1]\), opacity}{east}
+			\annotatedEquation{colorseries}{n6}{south}{0}{-2em}{north west}{marknode-color-series}{\(\in \mathbb{R}^{3n}\), color}{east}
+			\annotatedEquation{colorseries}{n7}{south}{0}{-0.5em}{north west}{marknode-color-series}{\(\in \mathbb{R}^{D}\), semantic embedding}{east}
+		\end{annotatedEquationEnv}
+	\end{figure}
+\end{Frame}
+
+\subsection{Mindmap}
+\begin{Frame}{Mindmap (Concept)}
+	\centering
+	\definecolor{0_color_mindmap}{HTML}{F6A4E2}
+	\definecolor{1_color_mindmap}{HTML}{F6E1A4}
+	\definecolor{2_color_mindmap}{HTML}{A4F6B8}
+	\definecolor{3_color_mindmap}{HTML}{A4B9F6}
+	\par \resizebox{!}{0.6\textheight}{
+		\begin{tikzpicture}
+			\usetikzlibrary{mindmap}
+			\path[
+				mindmap,
+				grow cyclic,
+				every node/.style={concept},
+				text=black,
+				root concept/.append style={
+						concept color=color-frametitle,
+						font=\Huge\bfseries,
+						text width=15em,
+						text=white,
+					},
+				level 1 concept/.append style={
+						font=\Huge\bfseries,
+						text width=20em,
+						% sibling angle=360/4,
+						% rotate=45,
+						level distance=25em,
+					},
+				accuracy/.append style={concept color=0_color_mindmap},
+				efficiency/.append style={concept color=1_color_mindmap},
+				consistency/.append style={concept color=2_color_mindmap},
+				interactivity/.append style={concept color=3_color_mindmap},
+				level 2 concept/.append style={
+						font=\Large\bfseries,
+						level distance=15em,
+					},
+				level 3 concept/.append style={
+						font=\large\bfseries,
+					},
+			]
+			node[root concept] {Semantic\\[1ex]NeRF/3DGS} [clockwise from=-90] {
+				child[accuracy] {
+						node[concept] {Accuracy} [counterclockwise from=180] {
+								% child {node[concept] {1}}
+								% child {node[concept] {2}}
+								% child {node[concept] {3}}
+								% child {node[concept] {4}}
+							}
+					}
+				child[efficiency] {
+						node[concept] {Efficiency} [counterclockwise from=90] {
+								% child {node[concept] {1}}
+								% child {node[concept] {2}}
+								% child {node[concept] {3}}
+								% child {node[concept] {4}}
+							}
+					}
+				child[consistency] {
+						node[concept] {Consistency} [counterclockwise from=0] {
+								% child {node[concept] {1}}
+								% child {node[concept] {2}}
+								% child {node[concept] {3}}
+								% child {node[concept] {4}}
+							}
+					}
+				child[interactivity] {
+						node[concept] {Interactivity} [counterclockwise from=-90] {
+								% child {node[concept] {1}}
+								% child {node[concept] {2}}
+								% child {node[concept] {3}}
+								% child {node[concept] {4}}
+							}
+					}
+			};
+		\end{tikzpicture}
+	}
+\end{Frame}
+
+\begin{Frame}{Mindmap (Taxonomy)}
+	\tikzset{
+		key/.style={
+				draw=OrangeRed,
+			},
+		convention/.style={
+				draw=Cyan,
+			},
+		trick/.style={
+				draw=YellowGreen,
+			},
+	}
+	\resizebox{0.85\textwidth}{!}{
+		\begin{forest}
+			for tree={my tree}
+			[
+			MonoGS
+				[
+					Visual Odometry,for children={visible on=<1->}
+						[
+							Tracking,for children={visible on=<2->}
+								[
+									Inverse Rendering,font=\bf,for children={visible on=<3->}
+										[
+											Analytical Jacobians Derivation,key
+										]
+										[
+											Photometric Appearance \& Depth Loss,convention
+										]
+										[
+											Optimizable Exposure,trick
+										]
+										[
+											Pixel-wise Penalization,trick
+										]
+								]
+						]
+						[
+							Mapping,for children={visible on=<2->}
+								[
+									Bundle Adjustment,font=\bf,for children={visible on=<3->}
+										[
+											Photometric Appearance \& Depth Loss,convention
+										]
+										[
+											Isotropic Regularization,key
+										]
+										[
+											Random Recall,trick
+										]
+								]
+						]
+				]
+				[
+					Online Pipeline,for children={visible on=<1->}
+						[
+							Keyframe Management,for children={visible on=<2->}
+								[
+									Registration,for children={visible on=<3->}
+										[
+											Gaussian Covisibility,key
+										]
+										[
+											Relative Translation,convention
+										]
+								]
+								[
+									Removal,for children={visible on=<3->}
+										[
+											Gaussian Overlap Coefficient,key
+										]
+								]
+						]
+						[
+							Gaussian Management,for children={visible on=<2->}
+								[
+									Insertion,for children={visible on=<3->}
+										[
+											Keyframing,convention
+										]
+								]
+								[
+									Pruning,for children={visible on=<3->}
+										[
+											Gaussian Covisibility,key
+										]
+								]
+						]
+				]
+			]
+		\end{forest}
+	}
+	\resizebox{0.08\textwidth}{!}{
+		\begin{tikzpicture}[visible on=<3->]
+			\node [my node for tree, draw=YellowGreen] (trick node) {trick};
+			\node [my node for tree, draw=OrangeRed, above of = trick node] {key method};
+			\node [my node for tree, draw=Cyan, below of = trick node] (convention) {convention};
+		\end{tikzpicture}
+	}
+	\blfootnote{powered by \texttt{forest} package}
+	\blfootnote{thanks to \href{https://tex.stackexchange.com/a/556837/240783}{Drawing Taxonomy Diagram in Latex}}
+\end{Frame}
+
+\subsection{Timeline}
+\begin{Frame}{Timeline}
+	\centering
+	\begin{tikzpicture}
+		\pgfmathsetmacro{\dy}{0.3cm/1pt};
+		\pgfmathsetmacro{\nodeNum}{3};
+		\pgfmathsetmacro{\sepNum}{\nodeNum-1};
+		\pgfmathsetmacro{\length}{0.8*\linewidth/1pt};
+		\pgfmathsetmacro{\edgeLength}{1cm/1pt};
+		\pgfmathsetmacro{\dx}{(\length-\edgeLength-\edgeLength)/\sepNum};
+		\pgfmathsetmacro{\xShift}{0};
+		\tikzset{
+			note/.style={
+					anchor=north, align=center, text width=\dx, yshift=-\dy/3, font={\scriptsize}
+				},
+			time/.style={
+					anchor=south, font={\scriptsize\bf}
+				},
+		};
+
+		\coordinate (start) at (0 pt,0 pt);
+		\coordinate (end) at (\length pt,0 pt);
+		\draw [line width=1.5pt,-stealth] (start) -- (end);
+
+		\foreach \counter in {0,...,\sepNum} {
+				\coordinate (s\counter) at (\edgeLength+\counter*\dx pt,0);
+				\coordinate (t\counter) at ($(s\counter)+(0,\dy pt)$);
+				\draw [line width=1.5pt] (s\counter) -- (t\counter);
+			}
+
+		\node [time] at (t0.north) {
+			11/2023 - 12/2024
+		};
+		\node [note] at (s0.south) {
+			LEGS~\autocite{shiLanguageEmbedded3D2023nov}\\[1ex]
+			LangSplat~\autocite{qinLangSplat3DLanguage2023}\\[1ex]
+			Feature 3DGS~\autocite{zhouFeature3DGSSupercharging2024apr}\\[1ex]
+			Gaussian Grouping~\autocite{yeGaussianGroupingSegment2023}\\[1ex]
+			Segment Any Gaussian~\autocite{cenSegmentAny3D2023}\\[1ex]
+		};
+		\node [time] at (t1.north) {
+			01/2024 - 04/2024
+		};
+		\node [note] at (s1.south) {
+			CoSSegGaussians~\autocite{douCoSSegGaussiansCompactSwift2024jan}\\[1ex]
+			Semantic Gaussians~\autocite{guoSemanticGaussiansOpenVocabulary2024mar}\\[1ex]
+			Feature Splating~\autocite{qiuFeatureSplattingLanguageDriven2024apr}\\[1ex]
+			CLIP-GS~\autocite{liaoCLIPGSCLIPInformedGaussian2024apr}
+		};
+		\node [time] at (t2.north) {
+			05/2024 - 06/2024
+		};
+		\node [note] at (s2.south) {
+			GOI~\autocite{quGOIFind3D2024may}\\[1ex]
+			RT-GS2~\autocite{jurcaRTGS2RealTimeGeneralizable2024may}\\[1ex]
+			SA-GS~\autocite{xiongSAGSSemanticAwareGaussian2024may}\\[1ex]
+			Fast-LGS~\autocite{jiFastLGSSpeedingLanguage2024jun}
+		};
+	\end{tikzpicture}
+\end{Frame}
+
+\appendix
+
+\section{\appendixname}
+
+\subsection{References}
+
+\begin{frame}[allowframebreaks]
+	\frametitle{References}
+	\nocite{*}
+	\printbibliography[heading=none]
+\end{frame}
+
+\end{document}
