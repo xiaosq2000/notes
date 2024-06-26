@@ -364,29 +364,29 @@
 \end{Frame}
 
 \begin{Frame}{Keyframe Management: Prerequistes}
-	\begin{enumerate}[<+- |alert@+>]
+	\begin{enumerate}
 		\setlength{\itemsep}{3ex}
-		\item What is keyframing?
-		      \vspace*{1.5ex}
-		      \begin{itemize}
-			      \setlength{\itemsep}{1.5ex}
-			      \item A strategy of selecting and utilizing a subset of frames that matters.
-		      \end{itemize}
-		\item Why do we need keyframing?
-		      \vspace*{1.5ex}
-		      \begin{itemize}
-			      \setlength{\itemsep}{1.5ex}
-			      \item Infeasible to optimize jointly on all frames online.
-			      \item Trade-off between efficiency and accuracy/robustness/...
-		      \end{itemize}
-		\item How should we select keyframes? (What is an ideal keyframe selection?)
-		      \vspace*{1.5ex}
-		      \begin{itemize}
-			      \setlength{\itemsep}{1.5ex}
-			      \item a small sliding window.
-			      \item non-redundant and observing the same area.
-			      \item spanning a wide baseline for better multi-view constraints.
-		      \end{itemize}
+		\item<+-> \alert<.>{What} is keyframing?
+			\vspace*{1.5ex}
+			\begin{itemize}
+				\setlength{\itemsep}{1.5ex}
+				\item<+-> A strategy of selecting and utilizing a subset of frames.
+			\end{itemize}
+		\item<+-> \alert<.>{Why} do we need keyframing?
+			\vspace*{1.5ex}
+			\begin{itemize}
+				\setlength{\itemsep}{1.5ex}
+				\item<+-> A \alert<.>{trade-off} between efficiency and accuracy/robustness/...
+					\vspace*{1.5ex}
+					\visible<+->{\par \alert<.>{infeasible} to optimize jointly on all frames online.}
+			\end{itemize}
+		\item<+-> \alert<.>{How} should we select keyframes?
+			\vspace*{1.5ex}
+			\begin{itemize}
+				\setlength{\itemsep}{1.5ex}
+				\item<+-> \alert<.>{non-redundant} and observing the \alert<.>{same area}.
+				\item<+-> spanning a \alert<.>{wide baseline} for better multi-view constraints.
+			\end{itemize}
 	\end{enumerate}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
@@ -394,9 +394,9 @@
 \begin{Frame}{Keyframe Management: Registration}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 	\begin{overprint}[\textheight]
-		\par \alert<+>{If any of the following conditions is true...}
+		\par If \alert<+>{any} of the following conditions \alert<.>{is true}...
 		\vspace*{\fill}
-		\begin{block}{\alert<.>{Small Gaussian Covisibility}\hfill Condition \romannum{1}, Keyframe Registration}<+->
+		\begin{block}<+->{\alert<.>{Small Gaussian Covisibility}\hfill Condition \romannum{1}, Keyframe Registration}
 			Gaussian covisibility between the current frame and the previous keyframe drops below a threshold.
 			\begin{figure}[htbp]
 				\centering
@@ -422,7 +422,7 @@
 			\end{figure}
 		\end{block}
 		\vspace*{\fill}
-		\begin{block}{\alert<.>{Large Relative Translation}\hfill Condition \romannum{2}, Keyframe Registration}<.->
+		\begin{block}<.->{\alert<.>{Large Relative Translation}\hfill Condition \romannum{2}, Keyframe Registration}
 			Translation from the previous keyframe w.r.t. to the median depth reaches a threshold.
 			\begin{figure}[htbp]
 				\centering
@@ -451,22 +451,24 @@
 \end{Frame}
 
 \begin{Frame}{Keyframe Management: Removal}
-	\par If any of the following conditions is true,
-	\vspace*{\fill}
-	\begin{block}{\alert<.>{Beyond Window Capacity}\hfill Condition \romannum{1}, Keyframe Removal}<+->
-		Remove the earliest keyframe out of the sliding window if the capacity is exceeded.
-		\begin{equation}
-			\vert \mathcal{W} \vert < \tau_3
-		\end{equation}
-	\end{block}
-	\vspace*{\fill}
-	\begin{block}{\alert<.>{Low Gaussian Overlap Coefficient}\hfill Condition \romannum{2}, Keyframe Removal}<+->
-		Remove the previous keyframe if the ``Gaussian overlap coefficient'' between the previous frame and the new keyframe drops below a threshold.
-		\begin{equation}
-			\frac{\vert \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert}{\min \left(\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \vert, \vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert\right)} < \tau_4
-		\end{equation}
-	\end{block}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
+	\begin{overprint}[\textheight]
+		\par If \alert<+>{any} of the following conditions \alert<.>{is true}...
+		\vspace*{\fill}
+		\begin{block}{\alert<.>{Beyond Window Capacity}\hfill Condition \romannum{1}, Keyframe Removal}<+->
+			Remove the earliest keyframe out of the sliding window if the capacity is exceeded.
+			\begin{equation}
+				\vert \mathcal{W} \vert < \tau_3
+			\end{equation}
+		\end{block}
+		\vspace*{\fill}
+		\begin{block}{\alert<.>{Low Gaussian Overlap Coefficient}\hfill Condition \romannum{2}, Keyframe Removal}<+->
+			Remove the previous keyframe if the ``Gaussian overlap coefficient'' between the previous frame and the new keyframe drops below a threshold.
+			\begin{equation}
+				\frac{\vert \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert}{\min \left(\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \vert, \vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert\right)} < \tau_4
+			\end{equation}
+		\end{block}
+	\end{overprint}
 \end{Frame}
 
 \begin{Frame}{Gaussian Management: Insertion}
@@ -623,7 +625,7 @@
 				\item<+-> \alert<.>{Analysis:} no constraints on the elongation along the viewing ray direction, \textbf{even with depth}.
 			\end{itemize}
 	\end{itemize}
-    \vspace*{\fill}
+	\vspace*{\fill}
 	\begin{block}{Isotropic Regularization}
 		\vspace*{0.5ex}
 		\begin{equation}
