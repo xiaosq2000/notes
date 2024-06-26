@@ -1,0 +1,605 @@
+
+@misc{yan_gs-slam_2023,
+    title = {{GS}-{SLAM}: Dense Visual {SLAM} with 3D Gaussian Splatting},
+    url = {http://arxiv.org/abs/2311.11700},
+    shorttitle = {{GS}-{SLAM}},
+    abstract = {In this paper, we introduce \${\textbackslash}textbf\{{GS}-{SLAM
+                }\}\$ that first utilizes 3D Gaussian representation in the
+                Simultaneous Localization and Mapping ({SLAM}) system. It
+                facilitates a better balance between efficiency and accuracy.
+                Compared to recent {SLAM} methods employing neural implicit
+                representations, our method utilizes a real-time differentiable
+                splatting rendering pipeline that offers significant speedup to
+                map optimization and {RGB}-D re-rendering. Specifically, we
+                propose an adaptive expansion strategy that adds new or deletes
+                noisy 3D Gaussian in order to efficiently reconstruct new
+                observed scene geometry and improve the mapping of previously
+                observed areas. This strategy is essential to extend 3D Gaussian
+                representation to reconstruct the whole scene rather than
+                synthesize a static object in existing methods. Moreover, in the
+                pose tracking process, an effective coarse-to-fine technique is
+                designed to select reliable 3D Gaussian representations to
+                optimize camera pose, resulting in runtime reduction and robust
+                estimation. Our method achieves competitive performance compared
+                with existing state-of-the-art real-time methods on the Replica,
+                {TUM}-{RGBD} datasets. The source code will be released soon.},
+    number = {{arXiv}:2311.11700},
+    publisher = {{arXiv}},
+    author = {Yan, Chi and Qu, Delin and Wang, Dong and Xu, Dan and Wang,
+              Zhigang and Zhao, Bin and Li, Xuelong},
+    urldate = {2023-12-26},
+    date = {2023-11-21},
+    eprinttype = {arxiv},
+    eprint = {2311.11700 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/8MZKGU77/Yan et al. -
+            2023 - GS-SLAM Dense Visual SLAM with 3D Gaussian
+            Splatt.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/M9AXVPSY/2311.html:text/html},
+}
+
+@misc{yugay_gaussian-slam_2024,
+    title = {Gaussian-{SLAM}: Photo-realistic Dense {SLAM} with Gaussian
+             Splatting},
+    url = {http://arxiv.org/abs/2312.10070},
+    shorttitle = {Gaussian-{SLAM}},
+    abstract = {We present a dense simultaneous localization and mapping ({SLAM}
+                ) method that uses 3D Gaussians as a scene representation. Our
+                approach enables interactive-time reconstruction and
+                photo-realistic rendering from real-world single-camera {RGBD}
+                videos. To this end, we propose a novel effective strategy for
+                seeding new Gaussians for newly explored areas and their
+                effective online optimization that is independent of the scene
+                size and thus scalable to larger scenes. This is achieved by
+                organizing the scene into sub-maps which are independently
+                optimized and do not need to be kept in memory. We further
+                accomplish frame-to-model camera tracking by minimizing
+                photometric and geometric losses between the input and rendered
+                frames. The Gaussian representation allows for high-quality
+                photo-realistic real-time rendering of real-world scenes.
+                Evaluation on synthetic and real-world datasets demonstrates
+                competitive or superior performance in mapping, tracking, and
+                rendering compared to existing neural dense {SLAM} methods.},
+    number = {{arXiv}:2312.10070},
+    publisher = {{arXiv}},
+    author = {Yugay, Vladimir and Li, Yue and Gevers, Theo and Oswald, Martin R.
+              },
+    urldate = {2024-03-27},
+    date = {2024-03-22},
+    eprinttype = {arxiv},
+    eprint = {2312.10070 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/VWCWLECW/Yugay et al.
+            - 2024 - Gaussian-SLAM Photo-realistic Dense SLAM with
+            Gau.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/EA5YP6K3/2312.html:text/html},
+}
+
+@misc{deng_compact_2024,
+    title = {Compact 3D Gaussian Splatting For Dense Visual {SLAM}},
+    url = {http://arxiv.org/abs/2403.11247},
+    abstract = {Recent work has shown that 3D Gaussian-based {SLAM} enables
+                high-quality reconstruction, accurate pose estimation, and
+                real-time rendering of scenes. However, these approaches are
+                built on a tremendous number of redundant 3D Gaussian ellipsoids,
+                leading to high memory and storage costs, and slow training
+                speed. To address the limitation, we propose a compact 3D
+                Gaussian Splatting {SLAM} system that reduces the number and the
+                parameter size of Gaussian ellipsoids. A sliding window-based
+                masking strategy is first proposed to reduce the redundant
+                ellipsoids. Then we observe that the covariance matrix (geometry)
+                of most 3D Gaussian ellipsoids are extremely similar, which
+                motivates a novel geometry codebook to compress 3D Gaussian
+                geometric attributes, i.e., the parameters. Robust and accurate
+                pose estimation is achieved by a global bundle adjustment method
+                with reprojection loss. Extensive experiments demonstrate that
+                our method achieves faster training and rendering speed while
+                maintaining the state-of-the-art ({SOTA}) quality of the scene
+                representation.},
+    number = {{arXiv}:2403.11247},
+    publisher = {{arXiv}},
+    author = {Deng, Tianchen and Chen, Yaohui and Zhang, Leyan and Yang, Jianfei
+              and Yuan, Shenghai and Wang, Danwei and Chen, Weidong},
+    urldate = {2024-05-18},
+    date = {2024-03-17},
+    eprinttype = {arxiv},
+    eprint = {2403.11247 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/P7FXLS6X/Deng et al. -
+            2024 - Compact 3D Gaussian Splatting For Dense Visual
+            SLA.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/CZZKAFAQ/2403.html:text/html;Full
+            Text:/home/shuqi/Zotero/storage/ESX65JFD/Deng et al. - 2024 - Compact
+            3D Gaussian Splatting For Dense Visual SLA.pdf:application/pdf},
+}
+
+@misc{li_ngm-slam_2024,
+    title = {{NGM}-{SLAM}: Gaussian Splatting {SLAM} with Radiance Field Submap},
+    url = {http://arxiv.org/abs/2405.05702},
+    shorttitle = {{NGM}-{SLAM}},
+    abstract = {Gaussian Splatting has garnered widespread attention due to its
+                exceptional performance. Consequently, {SLAM} systems based on
+                Gaussian Splatting have emerged, leveraging its capabilities for
+                rapid real-time rendering and high-fidelity mapping. However,
+                current Gaussian Splatting {SLAM} systems usually struggle with
+                large scene representation and lack effective loop closure
+                adjustments and scene generalization capabilities. To address
+                these issues, we introduce {NGM}-{SLAM}, the first {GS}-{SLAM}
+                system that utilizes neural radiance field submaps for
+                progressive scene expression, effectively integrating the
+                strengths of neural radiance fields and 3D Gaussian Splatting. We
+                have developed neural implicit submaps as supervision and achieve
+                high-quality scene expression and online loop closure adjustments
+                through Gaussian rendering of fused submaps. Our results on
+                multiple real-world scenes and large-scale scene datasets
+                demonstrate that our method can achieve accurate gap filling and
+                high-quality scene expression, supporting both monocular, stereo,
+                and {RGB}-D inputs, and achieving state-of-the-art scene
+                reconstruction and tracking performance.},
+    number = {{arXiv}:2405.05702},
+    publisher = {{arXiv}},
+    author = {Li, Mingrui and Huang, Jingwei and Sun, Lei and Tian, Aaron
+              Xuxiang and Deng, Tianchen and Wang, Hongyu},
+    urldate = {2024-05-18},
+    date = {2024-05-09},
+    eprinttype = {arxiv},
+    eprint = {2405.05702 [cs]},
+    keywords = {Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/URW7K8MR/Li et al. -
+            2024 - NGM-SLAM Gaussian Splatting SLAM with Radiance
+            Fi.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/3SQSDCPZ/2405.html:text/html},
+}
+
+@misc{peng_rtg-slam_2024,
+    title = {{RTG}-{SLAM}: Real-time 3D Reconstruction at Scale using Gaussian
+             Splatting},
+    url = {http://arxiv.org/abs/2404.19706},
+    doi = {10.1145/3658233},
+    shorttitle = {{RTG}-{SLAM}},
+    abstract = {We present Real-time Gaussian {SLAM} ({RTG}-{SLAM}), a real-time
+                3D reconstruction system with an {RGBD} camera for large-scale
+                environments using Gaussian splatting. The system features a
+                compact Gaussian representation and a highly efficient on-the-fly
+                Gaussian optimization scheme. We force each Gaussian to be either
+                opaque or nearly transparent, with the opaque ones fitting the
+                surface and dominant colors, and transparent ones fitting
+                residual colors. By rendering depth in a different way from color
+                rendering, we let a single opaque Gaussian well fit a local
+                surface region without the need of multiple overlapping Gaussians
+                , hence largely reducing the memory and computation cost. For
+                on-the-fly Gaussian optimization, we explicitly add Gaussians for
+                three types of pixels per frame: newly observed, with large color
+                errors, and with large depth errors. We also categorize all
+                Gaussians into stable and unstable ones, where the stable
+                Gaussians are expected to well fit previously observed {RGBD}
+                images and otherwise unstable. We only optimize the unstable
+                Gaussians and only render the pixels occupied by unstable
+                Gaussians. In this way, both the number of Gaussians to be
+                optimized and pixels to be rendered are largely reduced, and the
+                optimization can be done in real time. We show real-time
+                reconstructions of a variety of large scenes. Compared with the
+                state-of-the-art {NeRF}-based {RGBD} {SLAM}, our system achieves
+                comparable high-quality reconstruction but with around twice the
+                speed and half the memory cost, and shows superior performance in
+                the realism of novel view synthesis and camera tracking accuracy.
+                },
+    author = {Peng, Zhexi and Shao, Tianjia and Liu, Yong and Zhou, Jingke and
+              Yang, Yin and Wang, Jingdong and Zhou, Kun},
+    urldate = {2024-05-18},
+    date = {2024-05-08},
+    eprinttype = {arxiv},
+    eprint = {2404.19706 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/SCX79E39/Peng et al. -
+            2024 - RTG-SLAM Real-time 3D Reconstruction at Scale
+            usi.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/LXWT58VP/2404.html:text/html},
+}
+
+@misc{ress_slam_2024,
+    title = {{SLAM} for Indoor Mapping of Wide Area Construction Environments},
+    url = {http://arxiv.org/abs/2404.17215},
+    abstract = {Simultaneous localization and mapping ({SLAM}), i.e., the
+                reconstruction of the environment represented by a (3D) map and
+                the concurrent pose estimation, has made astonishing progress.
+                Meanwhile, large scale applications aiming at the data collection
+                in complex environments like factory halls or construction sites
+                are becoming feasible. However, in contrast to small scale
+                scenarios with building interiors separated to single rooms, shop
+                floors or construction areas require measures at larger distances
+                in potentially texture less areas under difficult illumination.
+                Pose estimation is further aggravated since no {GNSS} measures
+                are available as it is usual for such indoor applications. In our
+                work, we realize data collection in a large factory hall by a
+                robot system equipped with four stereo cameras as well as a 3D
+                laser scanner. We apply our state-of-the-art {LiDAR} and visual {
+                SLAM} approaches and discuss the respective pros and cons of the
+                different sensor types for trajectory estimation and dense map
+                generation in such an environment. Additionally, dense and
+                accurate depth maps are generated by 3D Gaussian splatting, which
+                we plan to use in the context of our project aiming on the
+                automatic construction and site monitoring.},
+    number = {{arXiv}:2404.17215},
+    publisher = {{arXiv}},
+    author = {Ress, Vincent and Zhang, Wei and Skuddis, David and Haala, Norbert
+              and Soergel, Uwe},
+    urldate = {2024-05-18},
+    date = {2024-04-26},
+    eprinttype = {arxiv},
+    eprint = {2404.17215 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/E5DVPR8M/Ress et al. -
+            2024 - SLAM for Indoor Mapping of Wide Area Construction
+            .pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/JRKK9JCZ/2404.html:text/html},
+}
+
+@misc{lang_gaussian-lic_2024,
+    title = {Gaussian-{LIC}: Photo-realistic {LiDAR}-Inertial-Camera {SLAM} with
+             3D Gaussian Splatting},
+    url = {http://arxiv.org/abs/2404.06926},
+    shorttitle = {Gaussian-{LIC}},
+    abstract = {We present a real-time {LiDAR}-Inertial-Camera {SLAM} system
+                with 3D Gaussian Splatting as the mapping backend. Leveraging
+                robust pose estimates from our {LiDAR}-Inertial-Camera odometry,
+                Coco-{LIC}, an incremental photo-realistic mapping system is
+                proposed in this paper. We initialize 3D Gaussians from colorized
+                {LiDAR} points and optimize them using differentiable rendering
+                powered by 3D Gaussian Splatting. Meticulously designed
+                strategies are employed to incrementally expand the Gaussian map
+                and adaptively control its density, ensuring high-quality mapping
+                with real-time capability. Experiments conducted in diverse
+                scenarios demonstrate the superior performance of our method
+                compared to existing radiance-field-based {SLAM} systems.},
+    number = {{arXiv}:2404.06926},
+    publisher = {{arXiv}},
+    author = {Lang, Xiaolei and Li, Laijian and Zhang, Hang and Xiong, Feng and
+              Xu, Mu and Liu, Yong and Zuo, Xingxing and Lv, Jiajun},
+    urldate = {2024-05-18},
+    date = {2024-04-10},
+    eprinttype = {arxiv},
+    eprint = {2404.06926 [cs]},
+    keywords = {Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/EAXCL3L3/Lang et al. -
+            2024 - Gaussian-LIC Photo-realistic
+            LiDAR-Inertial-Camer.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/LIG6TLSF/2404.html:text/html},
+}
+
+@misc{sun_mm3dgs_2024,
+    title = {{MM}3DGS {SLAM}: Multi-modal 3D Gaussian Splatting for {SLAM} Using
+             Vision, Depth, and Inertial Measurements},
+    url = {http://arxiv.org/abs/2404.00923},
+    shorttitle = {{MM}3DGS {SLAM}},
+    abstract = {Simultaneous localization and mapping is essential for position
+                tracking and scene understanding. 3D Gaussian-based map
+                representations enable photorealistic reconstruction and
+                real-time rendering of scenes using multiple posed cameras. We
+                show for the first time that using 3D Gaussians for map
+                representation with unposed camera images and inertial
+                measurements can enable accurate {SLAM}. Our method, {MM}3DGS,
+                addresses the limitations of prior neural radiance field-based
+                representations by enabling faster rendering, scale awareness,
+                and improved trajectory tracking. Our framework enables
+                keyframe-based mapping and tracking utilizing loss functions that
+                incorporate relative pose transformations from pre-integrated
+                inertial measurements, depth estimates, and measures of
+                photometric rendering quality. We also release a multi-modal
+                dataset, {UT}-{MM}, collected from a mobile robot equipped with a
+                camera and an inertial measurement unit. Experimental evaluation
+                on several scenes from the dataset shows that {MM}3DGS achieves
+                3x improvement in tracking and 5\% improvement in photometric
+                rendering quality compared to the current 3DGS {SLAM}
+                state-of-the-art, while allowing real-time rendering of a
+                high-resolution dense 3D map. Project Webpage:
+                https://vita-group.github.io/{MM}3DGS-{SLAM}},
+    number = {{arXiv}:2404.00923},
+    publisher = {{arXiv}},
+    author = {Sun, Lisong C. and Bhatt, Neel P. and Liu, Jonathan C. and Fan,
+              Zhiwen and Wang, Zhangyang and Humphreys, Todd E. and Topcu, Ufuk},
+    urldate = {2024-05-18},
+    date = {2024-04-01},
+    eprinttype = {arxiv},
+    eprint = {2404.00923 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics, Computer Science - Artificial
+                Intelligence},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/8P84FPTK/Sun et al. -
+            2024 - MM3DGS SLAM Multi-modal 3D Gaussian Splatting
+            for.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/WFQWZX7P/2404.html:text/html},
+}
+
+@misc{hu_cg-slam_2024,
+    title = {{CG}-{SLAM}: Efficient Dense {RGB}-D {SLAM} in a Consistent
+             Uncertainty-aware 3D Gaussian Field},
+    url = {http://arxiv.org/abs/2403.16095},
+    shorttitle = {{CG}-{SLAM}},
+    abstract = {Recently neural radiance fields ({NeRF}) have been widely
+                exploited as 3D representations for dense simultaneous
+                localization and mapping ({SLAM}). Despite their notable
+                successes in surface modeling and novel view synthesis, existing
+                {NeRF}-based methods are hindered by their computationally
+                intensive and time-consuming volume rendering pipeline. This
+                paper presents an efficient dense {RGB}-D {SLAM} system, i.e., {
+                CG}-{SLAM}, based on a novel uncertainty-aware 3D Gaussian field
+                with high consistency and geometric stability. Through an
+                in-depth analysis of Gaussian Splatting, we propose several
+                techniques to construct a consistent and stable 3D Gaussian field
+                suitable for tracking and mapping. Additionally, a novel depth
+                uncertainty model is proposed to ensure the selection of valuable
+                Gaussian primitives during optimization, thereby improving
+                tracking efficiency and accuracy. Experiments on various datasets
+                demonstrate that {CG}-{SLAM} achieves superior tracking and
+                mapping performance with a notable tracking speed of up to 15 Hz.
+                We will make our source code publicly available. Project page:
+                https://zju3dv.github.io/cg-slam.},
+    number = {{arXiv}:2403.16095},
+    publisher = {{arXiv}},
+    author = {Hu, Jiarui and Chen, Xianhao and Feng, Boyin and Li, Guanglin and
+              Yang, Liangjing and Bao, Hujun and Zhang, Guofeng and Cui, Zhaopeng
+              },
+    urldate = {2024-05-18},
+    date = {2024-03-24},
+    eprinttype = {arxiv},
+    eprint = {2403.16095 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/K7PRJR2B/Hu et al. -
+            2024 - CG-SLAM Efficient Dense RGB-D SLAM in a
+            Consisten.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/5M6UQTD7/2403.html:text/html},
+}
+
+@misc{ha_rgbd_2024,
+    title = {{RGBD} {GS}-{ICP} {SLAM}},
+    url = {http://arxiv.org/abs/2403.12550},
+    abstract = {Simultaneous Localization and Mapping ({SLAM}) with dense
+                representation plays a key role in robotics, Virtual Reality ({VR
+                }), and Augmented Reality ({AR}) applications. Recent
+                advancements in dense representation {SLAM} have highlighted the
+                potential of leveraging neural scene representation and 3D
+                Gaussian representation for high-fidelity spatial representation.
+                In this paper, we propose a novel dense representation {SLAM}
+                approach with a fusion of Generalized Iterative Closest Point (G-
+                {ICP}) and 3D Gaussian Splatting (3DGS). In contrast to existing
+                methods, we utilize a single Gaussian map for both tracking and
+                mapping, resulting in mutual benefits. Through the exchange of
+                covariances between tracking and mapping processes with scale
+                alignment techniques, we minimize redundant computations and
+                achieve an efficient system. Additionally, we enhance tracking
+                accuracy and mapping quality through our keyframe selection
+                methods. Experimental results demonstrate the effectiveness of
+                our approach, showing an incredibly fast speed up to 107 {FPS}
+                (for the entire system) and superior quality of the reconstructed
+                map.},
+    number = {{arXiv}:2403.12550},
+    publisher = {{arXiv}},
+    author = {Ha, Seongbo and Yeon, Jiung and Yu, Hyeonwoo},
+    urldate = {2024-05-18},
+    date = {2024-03-22},
+    eprinttype = {arxiv},
+    eprint = {2403.12550 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/I8QAQWXT/Ha et al. -
+            2024 - RGBD GS-ICP SLAM.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/PC9NAETJ/2403.html:text/html},
+}
+
+@misc{hong_liv-gaussmap_2024,
+    title = {{LIV}-{GaussMap}: {LiDAR}-Inertial-Visual Fusion for Real-time 3D
+             Radiance Field Map Rendering},
+    url = {http://arxiv.org/abs/2401.14857},
+    shorttitle = {{LIV}-{GaussMap}},
+    abstract = {We introduce an integrated precise {LiDAR}, Inertial, and Visual
+                ({LIV}) multi-modal sensor fused mapping system that builds on
+                the differentiable surface splatting to improve the mapping
+                fidelity, quality, and structural accuracy. Notably, this is also
+                a novel form of tightly coupled map for {LiDAR}-visual-inertial
+                sensor fusion. This system leverages the complementary
+                characteristics of {LiDAR} and visual data to capture the
+                geometric structures of large-scale 3D scenes and restore their
+                visual surface information with high fidelity. The initial poses
+                for surface Gaussian scenes are obtained using a {LiDAR}-inertial
+                system with size-adaptive voxels. Then, we optimized and refined
+                the Gaussians by visual-derived photometric gradients to optimize
+                the quality and density of {LiDAR} measurements. Our method is
+                compatible with various types of {LiDAR}, including solid-state
+                and mechanical {LiDAR}, supporting both repetitive and
+                non-repetitive scanning modes. bolstering structure construction
+                through {LiDAR} and facilitating real-time generation of
+                photorealistic renderings across diverse {LIV} datasets. It
+                showcases notable resilience and versatility in generating
+                real-time photorealistic scenes potentially for digital twins and
+                virtual reality while also holding potential applicability in
+                real-time {SLAM} and robotics domains. We release our software
+                and hardware and self-collected datasets on Github{\textbackslash
+                }footnote[3]\{https://github.com/sheng00125/{LIV}-{GaussMap}\} to
+                benefit the community.},
+    number = {{arXiv}:2401.14857},
+    publisher = {{arXiv}},
+    author = {Hong, Sheng and He, Junjie and Zheng, Xinhu and Wang, Hesheng and
+              Fang, Hao and Liu, Kangcheng and Zheng, Chunran and Shen, Shaojie},
+    urldate = {2024-05-18},
+    date = {2024-01-26},
+    eprinttype = {arxiv},
+    eprint = {2401.14857 [cs]},
+    keywords = {Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/4WP8CIQP/Hong et al. -
+            2024 - LIV-GaussMap LiDAR-Inertial-Visual Fusion for
+            Rea.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/8U83T4T8/2401.html:text/html},
+}
+
+@misc{keetha_splatam_2024,
+    title = {{SplaTAM}: Splat, Track \& Map 3D Gaussians for Dense {RGB}-D {SLAM
+             }},
+    url = {http://arxiv.org/abs/2312.02126},
+    shorttitle = {{SplaTAM}},
+    abstract = {Dense simultaneous localization and mapping ({SLAM}) is crucial
+                for robotics and augmented reality applications. However, current
+                methods are often hampered by the non-volumetric or implicit way
+                they represent a scene. This work introduces {SplaTAM}, an
+                approach that, for the first time, leverages explicit volumetric
+                representations, i.e., 3D Gaussians, to enable high-fidelity
+                reconstruction from a single unposed {RGB}-D camera, surpassing
+                the capabilities of existing methods. {SplaTAM} employs a simple
+                online tracking and mapping system tailored to the underlying
+                Gaussian representation. It utilizes a silhouette mask to
+                elegantly capture the presence of scene density. This combination
+                enables several benefits over prior representations, including
+                fast rendering and dense optimization, quickly determining if
+                areas have been previously mapped, and structured map expansion
+                by adding more Gaussians. Extensive experiments show that {
+                SplaTAM} achieves up to 2x superior performance in camera pose
+                estimation, map construction, and novel-view synthesis over
+                existing methods, paving the way for more immersive high-fidelity
+                {SLAM} applications.},
+    number = {{arXiv}:2312.02126},
+    publisher = {{arXiv}},
+    author = {Keetha, Nikhil and Karhade, Jay and Jatavallabhula, Krishna Murthy
+              and Yang, Gengshan and Scherer, Sebastian and Ramanan, Deva and
+              Luiten, Jonathon},
+    urldate = {2024-05-20},
+    date = {2024-04-16},
+    eprinttype = {arxiv},
+    eprint = {2312.02126 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics, Computer Science - Artificial
+                Intelligence},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/FJ8S89VQ/Keetha et al.
+            - 2024 - SplaTAM Splat, Track & Map 3D Gaussians for
+            Dense.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/EQUIVEXC/2312.html:text/html},
+}
+
+@misc{matsuki_gaussian_2024,
+    title = {Gaussian Splatting {SLAM}},
+    url = {http://arxiv.org/abs/2312.06741},
+    abstract = {We present the first application of 3D Gaussian Splatting in
+                monocular {SLAM}, the most fundamental but the hardest setup for
+                Visual {SLAM}. Our method, which runs live at 3fps, utilises
+                Gaussians as the only 3D representation, unifying the required
+                representation for accurate, efficient tracking, mapping, and
+                high-quality rendering. Designed for challenging monocular
+                settings, our approach is seamlessly extendable to {RGB}-D {SLAM}
+                when an external depth sensor is available. Several innovations
+                are required to continuously reconstruct 3D scenes with high
+                fidelity from a live camera. First, to move beyond the original
+                3DGS algorithm, which requires accurate poses from an offline
+                Structure from Motion ({SfM}) system, we formulate camera
+                tracking for 3DGS using direct optimisation against the 3D
+                Gaussians, and show that this enables fast and robust tracking
+                with a wide basin of convergence. Second, by utilising the
+                explicit nature of the Gaussians, we introduce geometric
+                verification and regularisation to handle the ambiguities
+                occurring in incremental 3D dense reconstruction. Finally, we
+                introduce a full {SLAM} system which not only achieves
+                state-of-the-art results in novel view synthesis and trajectory
+                estimation but also reconstruction of tiny and even transparent
+                objects.},
+    number = {{arXiv}:2312.06741},
+    publisher = {{arXiv}},
+    author = {Matsuki, Hidenobu and Murai, Riku and Kelly, Paul H. J. and
+              Davison, Andrew J.},
+    urldate = {2024-05-20},
+    date = {2024-04-14},
+    eprinttype = {arxiv},
+    eprint = {2312.06741 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/KVFE778Q/Matsuki et
+            al. - 2024 - Gaussian Splatting SLAM.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/H38HPNCK/2312.html:text/html},
+}
+
+@misc{zhu_mgs-slam_2024,
+    title = {{MGS}-{SLAM}: Monocular Sparse Tracking and Gaussian Mapping with
+             Depth Smooth Regularization},
+    url = {http://arxiv.org/abs/2405.06241},
+    shorttitle = {{MGS}-{SLAM}},
+    abstract = {This letter introduces a novel framework for dense Visual
+                Simultaneous Localization and Mapping ({VSLAM}) based on Gaussian
+                Splatting. Recently Gaussian Splatting-based {SLAM} has yielded
+                promising results, but rely on {RGB}-D input and is weak in
+                tracking. To address these limitations, we uniquely integrates
+                advanced sparse visual odometry with a dense Gaussian Splatting
+                scene representation for the first time, thereby eliminating the
+                dependency on depth maps typical of Gaussian Splatting-based {
+                SLAM} systems and enhancing tracking robustness. Here, the sparse
+                visual odometry tracks camera poses in {RGB} stream, while
+                Gaussian Splatting handles map reconstruction. These components
+                are interconnected through a Multi-View Stereo ({MVS}) depth
+                estimation network. And we propose a depth smooth loss to reduce
+                the negative effect of estimated depth maps. Furthermore, the
+                consistency in scale between the sparse visual odometry and the
+                dense Gaussian map is preserved by Sparse-Dense Adjustment Ring (
+                {SDAR}). We have evaluated our system across various synthetic
+                and real-world datasets. The accuracy of our pose estimation
+                surpasses existing methods and achieves state-of-the-art
+                performance. Additionally, it outperforms previous monocular
+                methods in terms of novel view synthesis fidelity, matching the
+                results of neural {SLAM} systems that utilize {RGB}-D input.},
+    number = {{arXiv}:2405.06241},
+    publisher = {{arXiv}},
+    author = {Zhu, Pengcheng and Zhuang, Yaoming and Chen, Baoquan and Li, Li
+              and Wu, Chengdong and Liu, Zhanlin},
+    urldate = {2024-05-21},
+    date = {2024-05-10},
+    eprinttype = {arxiv},
+    eprint = {2405.06241 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Robotics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/X99PGYR8/Zhu et al. -
+            2024 - MGS-SLAM Monocular Sparse Tracking and Gaussian
+            M.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/RDZ4G84I/2405.html:text/html},
+}
+
+@misc{guo_motiongs_2024,
+    title = {{MotionGS} : Compact Gaussian Splatting {SLAM} by Motion Filter},
+    url = {http://arxiv.org/abs/2405.11129},
+    shorttitle = {{MotionGS}},
+    abstract = {With their high-fidelity scene representation capability, the
+                attention of {SLAM} field is deeply attracted by the Neural
+                Radiation Field ({NeRF}) and 3D Gaussian Splatting (3DGS).
+                Recently, there has been a Surge in {NeRF}-based {SLAM}, while
+                3DGS-based {SLAM} is sparse. A novel 3DGS-based {SLAM} approach
+                with a fusion of deep visual feature, dual keyframe selection and
+                3DGS is presented in this paper. Compared with the existing
+                methods, the proposed selectively tracking is achieved by feature
+                extraction and motion filter on each frame. The joint
+                optimization of pose and 3D Gaussian runs through the entire
+                mapping process. Additionally, the coarse-to-fine pose estimation
+                and compact Gaussian scene representation are implemented by dual
+                keyfeature selection and novel loss functions. Experimental
+                results demonstrate that the proposed algorithm not only
+                outperforms the existing methods in tracking and mapping, but
+                also has less memory usage.},
+    number = {{arXiv}:2405.11129},
+    publisher = {{arXiv}},
+    author = {Guo, Xinli and Han, Peng and Zhang, Weidong and Chen, Hongtian},
+    urldate = {2024-05-21},
+    date = {2024-05-17},
+    eprinttype = {arxiv},
+    eprint = {2405.11129 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/R29B4U84/Guo et al. -
+            2024 - MotionGS Compact Gaussian Splatting SLAM by
+            Moti.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/HCYFWYIV/2405.html:text/html},
+}
+
+@inproceedings{engel2016dso,
+    author = {J. Engel and V. Koltun and D. Cremers},
+    title = { Direct Sparse Odometry},
+    booktitle = {arXiv:1607.02565},
+    arxiv = { arXiv:1607.02565},
+    year = {2016},
+    month = {July},
+    keywords = {mono-ds,dso, vslam},
+}
