@@ -167,49 +167,45 @@
 		\mathcal{N}\left(\mu_w, \Sigma_w\right) \overset{\pi}{\mapsto} \mathcal{N}\left(\mu_i, \Sigma_i\right),
 	\end{equation}
 	is achieved by,
-	\begin{overprint}[0.8\textheight]
-		\usetikzlibrary{overlay-beamer-styles}
+	\begin{overprint}[\textheight]
 		\begin{figure}[htbp]
 			\centering
 			\begin{minipage}[c]{0.35\linewidth}
-				\begin{onlyenv}<1>
-					\begin{equation}
-						\mu_{i} = \pi \left( \mathbf{T}_{cw} \cdot \mu_{w} \right)
-					\end{equation}
-				\end{onlyenv}
-				\begin{onlyenv}<2->
-					\begin{equation*}
-						\resetcolorseries[4]{marknode-color-series}
-						\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mu_{i}\)}} = \tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\pi\)}} \left( \tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathbf{T}_{cw}\)}} \cdot \tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mu_{w}\)}} \right)
-					\end{equation*}
-					\begin{annotatedEquationEnv}
-						\resetcolorseries[4]{annotation-color-series}
-						\annotatedEquation{colorseries}{n0}{south}{0}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{P}^2\), 2D(image) mean}{east}
-						\annotatedEquation{colorseries}{n1}{south}{0em}{-5em}{north west}{annotation-color-series}{projection}{east}
-						\annotatedEquation{colorseries}{n2}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SE}(3)\), camera pose}{east}
-						\annotatedEquation{colorseries}{n3}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{P}^3\), 3D(world) mean}{east}
-					\end{annotatedEquationEnv}
-				\end{onlyenv}
+				\resetcolorseries[4]{marknode-color-series}
+				\resetcolorseries[4]{annotation-color-series}
+				\begin{align}
+					\alt<5->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mu_{i}\)}}}{\mu_{i}}
+					=
+					\alt<4->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\pi\)}}}{\pi}
+					\left(
+					\alt<3->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{T}_{cw}\)}}}{\mathbf{T}_{cw}}
+					\cdot
+					\alt<2->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mu_{w}\)}}}{\mu_{w}}
+					\right)
+				\end{align}
+				\begin{annotatedEquationEnv}
+					\only<2->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{P}^3\), 3D(world) mean}{east}}
+					\only<3->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SE}(3)\), camera pose}{east}}
+					\only<4->{\annotatedEquation{colorseries}{n2}{south}{0em}{-5em}{north west}{annotation-color-series}{projection}{east}}
+					\only<5->{\annotatedEquation{colorseries}{n3}{south}{0}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{P}^2\), 2D(image) mean}{east}}
+				\end{annotatedEquationEnv}
 			\end{minipage}
 			\begin{minipage}[c]{0.60\linewidth}
-				\begin{onlyenv}<1>
-					\begin{equation}
-						\Sigma_{i} = \mathbf{J}_{\pi} \mathbf{R}_{cw} \Sigma_{w} \mathbf{R}_{cw}^{\mathrm{T}} \mathbf{J}_{\pi}^{\mathrm{T}}
-					\end{equation}
-				\end{onlyenv}
-				\begin{onlyenv}<2->
-					\begin{equation*}
-						\resetcolorseries[4]{marknode-color-series}
-						\tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(\Sigma_{i}\)}} = \tikzmarknode{n5}{\colorbox{marknode-color-series!![5]}{\(\mathbf{J}_{\pi}\)}} \tikzmarknode{n6}{\colorbox{marknode-color-series!![6]}{\(\mathbf{R}_{cw}\)}} \tikzmarknode{n7}{\colorbox{marknode-color-series!![7]}{\(\Sigma_{w}\)}} \mathbf{R}_{cw}^{\mathrm{T}} \mathbf{J}_{\pi}^{\mathrm{T}}
-					\end{equation*}
-					\begin{annotatedEquationEnv}
-						\resetcolorseries[4]{annotation-color-series}
-						\annotatedEquation{colorseries}{n4}{south}{0em}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 2}\), 2D(image) covariance}{east}
-						\annotatedEquation{colorseries}{n5}{south}{0em}{-5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 3}\), Jacobian of the linear approximation of \(\pi\)}{east}
-						\annotatedEquation{colorseries}{n6}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SO(3)}\), rotation component of \(\mathbf{T}_{cw}\)}{east}
-						\annotatedEquation{colorseries}{n7}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{3\times 3}\), 3D(world) covariance}{east}
-					\end{annotatedEquationEnv}
-				\end{onlyenv}
+				\resetcolorseries[4]{marknode-color-series}
+				\resetcolorseries[4]{annotation-color-series}
+				\begin{align}
+					\alt<9->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\Sigma_{i}\)}}}{\Sigma_{i}}
+					=
+					\alt<8->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathbf{J}_{\pi}\)}}}{\mathbf{J}_{\pi}}
+					\alt<7->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{R}_{cw}\)}}}{\mathbf{R}_{cw}}
+					\alt<6->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\Sigma_{w}\)}}}{\Sigma_{w}}  \mathbf{R}_{cw}^{\mathrm{T}} \mathbf{J}_{\pi}^{\mathrm{T}}
+				\end{align}
+				\begin{annotatedEquationEnv}
+					\only<6->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{3\times 3}\), 3D(world) covariance}{east}}
+					\only<7->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SO(3)}\), rotation component of \(\mathbf{T}_{cw}\)}{east}}
+					\only<8->{\annotatedEquation{colorseries}{n2}{south}{0em}{-5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 3}\), Jacobian of the linear approximation of \(\pi\)}{east}}
+					\only<9->{\annotatedEquation{colorseries}{n3}{south}{0em}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 2}\), 2D(image) covariance}{east}}
+				\end{annotatedEquationEnv}
 			\end{minipage}
 		\end{figure}
 	\end{overprint}
@@ -282,12 +278,12 @@
 			\end{forest}
 		}
 	\end{figure}
-	\par Keyframe Management:
+	\par \alert<+|handout:0>{Keyframe Management}:
 	\vspace*{1.5ex}
-	\begin{itemize}[<+-| alert@+>]
+	\begin{itemize}[<+->]
 		\setlength{\itemsep}{1.5ex}
-		\item Classic keyframing strategies from DSO~\autocite{engel2016dso}.
-		\item Occlusion-aware Gaussian visibility is leveraged to construct covisibility and overlap metrics.
+		\item \alert<.|handout:0>{Classic} strategies, e.g. covisibility \& overlap, from DSO~\autocite{engel2016dso}.
+		\item \alert<.|handout:0>{Off-the-shelf} occlusion-aware Gaussian visibility is leveraged to construct metrics.
 	\end{itemize}
 	\blfootnote{
 		\begin{tikzpicture}
@@ -345,12 +341,12 @@
 			\end{forest}
 		}
 	\end{figure}
-	\par Gaussian Management:
+	\par \alert<+|handout:0>{Gaussian Management:}
 	\vspace*{1.5ex}
-	\begin{itemize}[<+-| alert@+>]
+	\begin{itemize}[<+->]
 		\setlength{\itemsep}{1.5ex}
-		\item Insertion is triggered by keyframing and means Gaussian initialization.
-		\item Pruning unstable/incorrect Gaussians by covisibility for better geometry in a monocular setting.
+		\item \alert<.>{Insertion:} triggered by \alert<.>{keyframing}, followed by \alert<.>{Gaussian initialization}.
+		\item \alert<.>{Pruning:} to remove unstable/incorrect Gaussians by covisibility in a monocular setting.
 	\end{itemize}
 	\blfootnote{
 		\begin{tikzpicture}
@@ -366,19 +362,19 @@
 \begin{Frame}{Keyframe Management: Prerequistes}
 	\begin{enumerate}
 		\setlength{\itemsep}{3ex}
-		\item<+-> \alert<.>{What} is keyframing?
+		\item<+-> \alert<.>{What} is keyframing or keyframe management?
 			\vspace*{1.5ex}
 			\begin{itemize}
 				\setlength{\itemsep}{1.5ex}
-				\item<+-> A strategy of selecting and utilizing a subset of frames.
+				\item<+-> A strategy of \alert<.>{selecting} and \alert<.>{utilizing} a \alert<.>{crucial subset} of frames.
 			\end{itemize}
 		\item<+-> \alert<.>{Why} do we need keyframing?
 			\vspace*{1.5ex}
 			\begin{itemize}
 				\setlength{\itemsep}{1.5ex}
-				\item<+-> A \alert<.>{trade-off} between efficiency and accuracy/robustness/...
+				\item<+-> \alert<.>{Infeasible} to optimize jointly on all frames online.
 					\vspace*{1.5ex}
-					\visible<+->{\par \alert<.>{infeasible} to optimize jointly on all frames online.}
+					\visible<+->{\par (a \alert<.>{trade-off} between efficiency and accuracy/robustness/...)}
 			\end{itemize}
 		\item<+-> \alert<.>{How} should we select keyframes?
 			\vspace*{1.5ex}
@@ -396,13 +392,14 @@
 	\begin{overprint}[\textheight]
 		\par If \alert<+>{any} of the following conditions \alert<.>{is true}...
 		\vspace*{\fill}
-		\begin{block}<+->{\alert<.>{Small Gaussian Covisibility}\hfill Condition \romannum{1}, Keyframe Registration}
+		\resetcolorseries[6]{marknode-color-series}
+		\resetcolorseries[6]{annotation-color-series}
+		\begin{block}<+->{\alert<.|handout:0>{Small Gaussian Covisibility}\hfill Condition \romannum{1}, Keyframe Registration}
 			Gaussian covisibility between the current frame and the previous keyframe drops below a threshold.
 			\begin{figure}[htbp]
 				\centering
-				\resetcolorseries[3]{marknode-color-series}
-				\resetcolorseries[3]{annotation-color-series}
 				\begin{onlyenv}<.>
+					\vspace*{-2em}
 					\begin{equation*}
 						\frac{\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right)\)}} \vert}{\vert\operatorname{v}\left(\mathcal{G}, \tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathcal{F}_{i}\)}}\right) \cup \operatorname{v}\left(\mathcal{G}, \tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathcal{F}_{j}\)}}\right) \vert} < \tau_1
 					\end{equation*}
@@ -412,7 +409,7 @@
 						\annotatedEquation{colorseries}{n2}{south}{0em}{-0.5em}{north west}{annotation-color-series}{the current frame}{east}
 					\end{annotatedEquationEnv}
 				\end{onlyenv}
-				\begin{onlyenv}<+->
+				\begin{onlyenv}<+-|handout:0>
 					\vspace*{-2em}
 					\begin{equation}
 						\frac{\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert}{\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cup \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert} < \tau_1
@@ -422,24 +419,22 @@
 			\end{figure}
 		\end{block}
 		\vspace*{\fill}
-		\begin{block}<.->{\alert<.>{Large Relative Translation}\hfill Condition \romannum{2}, Keyframe Registration}
+		\begin{block}<.->{\alert<.|handout:0>{Large Relative Translation}\hfill Condition \romannum{2}, Keyframe Registration}
 			Translation from the previous keyframe w.r.t. to the median depth reaches a threshold.
 			\begin{figure}[htbp]
 				\centering
-				\resetcolorseries[3]{marknode-color-series}
-				\resetcolorseries[3]{annotation-color-series}
 				\vspace*{-2em}
 				\begin{onlyenv}<.>
 					\begin{equation*}
-						\frac{\Vert \mathbf{t}_{\mathcal{F}_i \mathcal{F}_j} \Vert_2}{\bar{D}_{\mathcal{F}_i \mathcal{F}_j}} > \tau_2, \quad \bar{D}_{\mathcal{F}_i \mathcal{F}_j} = \frac{1}{2 \tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(H\)}} \tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(W\)}}} \sum^{\{\mathcal{F}_i,\mathcal{F}_j\}} \sum_{h=0}^{H} \sum_{w=0}^{W} \tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(d(h,w)\)}}
+						\frac{\Vert \mathbf{t}_{\mathcal{F}_i \mathcal{F}_j} \Vert_2}{\bar{D}_{\mathcal{F}_i \mathcal{F}_j}} > \tau_2, \quad \bar{D}_{\mathcal{F}_i \mathcal{F}_j} = \frac{1}{2 \tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(H\)}} \tikzmarknode{n5}{\colorbox{marknode-color-series!![5]}{\(W\)}}} \sum^{\{\mathcal{F}_i,\mathcal{F}_j\}} \sum_{h=0}^{H} \sum_{w=0}^{W} \tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(d(h,w)\)}}
 					\end{equation*}
 					\begin{annotatedEquationEnv}
-						\annotatedEquation{colorseries}{n0}{south}{0}{-0.5em}{north west}{annotation-color-series}{depth of pixel \((h,w)\)}{east}
-						\annotatedEquation{colorseries}{n1}{south}{0}{-0.5em}{north east}{annotation-color-series}{image height}{west}
-						\annotatedEquation{colorseries}{n2}{south}{0}{-0.5em}{north west}{annotation-color-series}{image width}{east}
+						\annotatedEquation{colorseries}{n3}{south}{0}{-0.5em}{north west}{annotation-color-series}{depth of pixel \((h,w)\)}{east}
+						\annotatedEquation{colorseries}{n4}{south}{0}{-0.5em}{north east}{annotation-color-series}{image height}{west}
+						\annotatedEquation{colorseries}{n5}{south}{0}{-0.5em}{north west}{annotation-color-series}{image width}{east}
 					\end{annotatedEquationEnv}
 				\end{onlyenv}
-				\begin{onlyenv}<+->
+				\begin{onlyenv}<+-|handout:0>
 					\begin{equation}
 						\frac{\Vert \mathbf{t}_{\mathcal{F}_i \mathcal{F}_j} \Vert_2}{\bar{D}_{\mathcal{F}_i \mathcal{F}_j}} > \tau_2, \quad \bar{D}_{\mathcal{F}_i \mathcal{F}_j} = \frac{1}{2 H W} \sum^{\{\mathcal{F}_i,\mathcal{F}_j\}} \sum_{h=0}^{H} \sum_{w=0}^{W} d(h,w)
 					\end{equation}
@@ -455,14 +450,14 @@
 	\begin{overprint}[\textheight]
 		\par If \alert<+>{any} of the following conditions \alert<.>{is true}...
 		\vspace*{\fill}
-		\begin{block}{\alert<.>{Beyond Window Capacity}\hfill Condition \romannum{1}, Keyframe Removal}<+->
+		\begin{block}{\alert<.|handout:0>{Beyond Window Capacity}\hfill Condition \romannum{1}, Keyframe Removal}<+->
 			Remove the earliest keyframe out of the sliding window if the capacity is exceeded.
 			\begin{equation}
 				\vert \mathcal{W} \vert < \tau_3
 			\end{equation}
 		\end{block}
 		\vspace*{\fill}
-		\begin{block}{\alert<.>{Low Gaussian Overlap Coefficient}\hfill Condition \romannum{2}, Keyframe Removal}<+->
+		\begin{block}{\alert<.|handout:0>{Low Gaussian Overlap Coefficient}\hfill Condition \romannum{2}, Keyframe Removal}<+->
 			Remove the previous keyframe if the ``Gaussian overlap coefficient'' between the previous frame and the new keyframe drops below a threshold.
 			\begin{equation}
 				\frac{\vert \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert}{\min \left(\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \vert, \vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert\right)} < \tau_4
@@ -486,7 +481,7 @@
 		\setlength{\itemsep}{1.5ex}
 		\item<+-> \alert<.>{When} do we need ``Gaussian insertion''?
 	\end{itemize}
-	\begin{block}{\alert<.>{Keyframing}\hfill Condition \romannum{1}, Gaussian Insertion}<+->
+	\begin{block}{\alert<.|handout:0>{Keyframing}\hfill Condition \romannum{1}, Gaussian Insertion}<+->
 		\par Insertion is triggered for every new keyframe.
 	\end{block}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
@@ -503,17 +498,17 @@
 			\end{itemize}
 	\end{itemize}
 	\vspace*{\fill}
-	\begin{block}{\alert<.>{If Depth Available}\hfill Gaussian Initialization}<+->
+	\begin{block}{\alert<.|handout:0>{If Depth Available}\hfill Gaussian Initialization}<+->
 		Back-project in a per-pixel, per-Gaussian approach.
 	\end{block}
 	\vspace*{\fill}
-	\begin{block}{\alert<.>{If Depth Unavailable}\hfill Gaussian Initialization}<+->
+	\begin{block}{\alert<.|handout:0>{If Depth Unavailable}\hfill Gaussian Initialization}<+->
 		Leverage the rendered depth map.
 		\vspace*{1.5ex}
 		\begin{itemize}[<+->]
 			\setlength{\itemsep}{1.5ex}
-			\item \alert<.>{for pixels with depth:} use the rendered depth and assign a ``low'' covariance.
-			\item \alert<.>{for pixels w/o depth:} use the median of rendered depth and assign a ``high'' covariance.
+			\item \alert<.|handout:0>{for pixels with depth:} use the rendered depth and assign a ``low'' covariance.
+			\item \alert<.|handout:0>{for pixels w/o depth:} use the median of rendered depth and assign a ``high'' covariance.
 		\end{itemize}
 	\end{block}
 	\blfootnote{
@@ -533,11 +528,11 @@
 			\end{itemize}
 	\end{itemize}
 	\vspace*{\fill}
-	\begin{block}{\alert<.>{Low Gaussian Opacity} \hfill Condition \romannum{1}, Gaussian Pruning}<+->
+	\begin{block}{\alert<.|handout:0>{Low Gaussian Opacity} \hfill Condition \romannum{1}, Gaussian Pruning}<+->
 		The Gaussians with a ``low'' opacity are pruned.
 	\end{block}
 	\vspace*{\fill}
-	\begin{block}{\alert<.>{Low Gaussian Covisibility} \hfill Condition \romannum{2}, Gaussian Pruning}<+->
+	\begin{block}{\alert<.|handout:0>{Low Gaussian Covisibility} \hfill Condition \romannum{2}, Gaussian Pruning}<+->
 		For ``just'' inserted Gaussians but unobserved by ``some other'' keyframes, are pruned out.
 	\end{block}
 	\blfootnote{If no pruning, although the majority of incorrect Gaussians vanish quickly in following optimization, there are some survivals.}
@@ -577,8 +572,8 @@
 			\vspace*{1.5ex}
 			\begin{itemize}
 				\setlength{\itemsep}{1.5ex}
-				\item<+-> \alert<.>{Local Mapping}: Optimize newly inserted 3D Gaussians.
-				\item<+-> \alert<.>{Global Mapping}: Reconstruct a 3D-coherent structure.
+				\item<+-> \alert<.|handout:0>{Local Mapping}: Optimize newly inserted 3D Gaussians.
+				\item<+-> \alert<.|handout:0>{Global Mapping}: Reconstruct a 3D-coherent structure.
 			\end{itemize}
 	\end{itemize}
 	\blfootnote{
@@ -592,7 +587,7 @@
 \end{Frame}
 
 \begin{Frame}{Mapping: Bundle Adjustment \& Random Recall}
-	\begin{block}<+->{\alert<.>{Bundle Adjustment}}
+	\begin{block}<+->{\alert<.|handout:0>{Bundle Adjustment}}
 		\begin{figure}[htbp]
 			\centering
 			\resetcolorseries[1]{marknode-color-series}
@@ -607,7 +602,7 @@
 		\vspace*{-1.5ex}
 	\end{block}
 	\vspace*{\fill}
-	\begin{block}<+->{\alert<.>{Random Recall} \hfill A trick for global mapping}
+	\begin{block}<+->{\alert<.|handout:0>{Random Recall} \hfill A trick for global mapping}
 		\vspace*{0.5ex}
 		\par Besides \(\mathcal{W}\), ``some'' randomly selected past keyframes are also leveraged in BA to avoid forgetting the global map.
 	\end{block}
@@ -621,12 +616,12 @@
 			\vspace*{1.5ex}
 			\begin{itemize}
 				\setlength{\itemsep}{1.5ex}
-				\item<+-> \alert<.>{Observation:} isotropic Gaussians behave better than anisotrophic.
-				\item<+-> \alert<.>{Analysis:} no constraints on the elongation along the viewing ray direction, \textbf{even with depth}.
+				\item<+-> \alert<.|handout:0>{Observation:} isotropic Gaussians behave better than anisotrophic.
+				\item<+-> \alert<.|handout:0>{Analysis:} no constraints on the elongation along the viewing ray direction, \textbf{even with depth}.
 			\end{itemize}
 	\end{itemize}
 	\vspace*{\fill}
-	\begin{block}{Isotropic Regularization}
+	\begin{block}<+->{\alert<.|handout:0>{Isotropic Regularization}}
 		\vspace*{0.5ex}
 		\begin{equation}
 			\mathcal{L}_{iso} = \sum_{i=1}^{\vert \mathcal{G} \vert} \Vert \mathbf{s}_i - \bar{\mathbf{s}}_i \Vert_1, \quad\text{where } \bar{\mathbf{s}}_i = \frac{1}{3} \left( s_i^{x} + s_i^{y} + s_i^{z} \right).
