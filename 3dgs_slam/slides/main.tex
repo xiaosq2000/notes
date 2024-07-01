@@ -80,7 +80,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% color %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \definecolorseries{marknode-color-series}{hsb}{last}[hsb]{0.0,0.12,0.95}[hsb]{0.95,0.12,0.95}
-\definecolorseries{annotation-color-series}{hsb}{last}[hsb]{0.0,0.8,0.65}[hsb]{0.95,0.8,0.65}
+\definecolorseries{annotation-color-series}{hsb}{last}[hsb]{0.0,0.85,0.6}[hsb]{0.95,0.85,0.6}
 \resetcolorseries[8]{marknode-color-series}
 \resetcolorseries[8]{annotation-color-series}
 
@@ -120,7 +120,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% graphics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \usepackage{graphicx} % pre-loaded by beamer
-\graphicspath{{./images}}
+\graphicspath{{../images}}
 
 \usepackage{forest} % mindmap
 
@@ -294,7 +294,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[backref=true, natbib=true, backend=biber, style=authoryear-icomp, useprefix=true, style=ieee]{biblatex}
 \AtBeginBibliography{\scriptsize}
-\addbibresource{reference.bib}
+\addbibresource{../references/reference.bib}
+\addbibresource{../references/nerf-slam.bib}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -311,7 +312,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% meta info %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{SLAM \& 3D Gaussian Splatting}
+\title{NeRF/3DGS-based SLAM}
 \subtitle{Literature Review}
 \author{Shuqi XIAO}
 % \logo{
@@ -330,6 +331,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
+% {
+% \setbeamercolor{background canvas}{bg=}
+% \includepdf[pages=1]{images/cover_figure.pdf}
+% }
+
 \maketitle
 
 \begin{frame}{Outline}
@@ -337,6 +343,8 @@
 \end{frame}
 
 \section{Overview}
+\subsection{NeRF-based SLAM}
+\subsection{3DGS-based SLAM}
 \begin{Frame}{Timeline}
 	\colorlet{accepted}{OliveGreen}
 	\begin{tikzpicture}
@@ -392,6 +400,9 @@
 	\blfootnote{\textcolor{accepted}{accepted to top conferences}}
 \end{Frame}
 
+% \input{weekly_report.tex}
+
+\input{co-slam.tex}
 \input{monogs.tex}
 
 \appendix

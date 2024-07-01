@@ -1,4 +1,17 @@
-*/*
-!*/*.tex
-!*/*.bib
-!*/*.pdf
+**/*.aux
+**/*.bbl
+**/*.bcf
+**/*.blg
+**/*.fdb_latexmk
+**/*.fls
+**/*.log
+**/*.nav
+**/*.out
+**/*.run.xml
+**/*.snm
+**/*.synctex.gz
+**/*.toc
+# private information
+**/cover_figure.pdf
+**/weekly-report*
+**/weekly_report*

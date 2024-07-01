@@ -23,7 +23,8 @@
 			draw=ForestGreen,
 		},
 }
-\begin{Frame}{Overview \romannum{2}}
+
+\begin{Frame}{Taxonomy}
 	\centering
 	\resizebox{0.85\textwidth}{!}{
 		\begin{forest}
@@ -122,27 +123,27 @@
 			\begin{forest} for tree={my tree}
 				[
 				Tracking
-				[
-				``Inverse Rendering''
-				[
-				Analytical Jacobians Derivation,key
-				]
-				[
-				Photometric RGB \& Depth Loss,convention
-				]
-				[
-				Optimizable Exposure,trick
-				]
-				[
-				Penalization on non-edge/low-opacity pixels,trick
-				]
-				]
+					[
+						Inverse Rendering
+							[
+								Analytical Jacobians Derivation,key
+							]
+							[
+								Photometric RGB \& Depth Loss,convention
+							]
+							[
+								Optimizable Exposure,trick
+							]
+							[
+								Penalization on non-edge/low-opacity pixels,trick
+							]
+					]
 				]
 			\end{forest}
 		}
 	\end{figure}
 	\vspace*{\fill}
-	\par Track camera poses,
+	\only<+->{\par Track camera poses by inverse rendering,}
 	\vspace*{1.5ex}
 	\begin{itemize}[<+->]
 		\setlength{\itemsep}{1.5ex}
@@ -160,59 +161,65 @@
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
 
-\begin{Frame}{Tracking: A Review of 3DGS}
+\begin{Frame}{Tracking: Derivation of Jacobians \romannum{1}}
 	\vspace*{-5em}
-	\par The projection from ``ellipsoids'' to ``ellipses'' in 3DGS,
-	\begin{equation}
-		\mathcal{N}\left(\mu_w, \Sigma_w\right) \overset{\pi}{\mapsto} \mathcal{N}\left(\mu_i, \Sigma_i\right),
-	\end{equation}
-	is achieved by,
-	\begin{overprint}[\textheight]
-		\begin{figure}[htbp]
-			\centering
-			\begin{minipage}[c]{0.35\linewidth}
+	\begin{overprint}[0.3\textheight]
+		\only<1->{\par Firstly, let's review the \alert<1>{projection} of 3D Gaussians.}
+		\begin{onlyenv}<2->
+			\begin{equation}
+				\mathcal{N}\left(\mu_w, \Sigma_w\right) \overset{\pi}{\mapsto} \mathcal{N}\left(\mu_i, \Sigma_i\right)
+			\end{equation}
+		\end{onlyenv}
+		\only<3->{\par is achieved by}
+	\end{overprint}
+	\begin{figure}[htbp]
+		\centering
+		\begin{minipage}[c]{0.35\linewidth}
+			\begin{onlyenv}<3->
 				\resetcolorseries[4]{marknode-color-series}
 				\resetcolorseries[4]{annotation-color-series}
 				\begin{align}
-					\alt<5->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mu_{i}\)}}}{\mu_{i}}
+					\alt<7->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mu_{i}\)}}}{\mu_{i}}
 					=
-					\alt<4->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\pi\)}}}{\pi}
+					\alt<6->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\pi\)}}}{\pi}
 					\left(
-					\alt<3->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{T}_{cw}\)}}}{\mathbf{T}_{cw}}
+					\alt<5->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{T}_{cw}\)}}}{\mathbf{T}_{cw}}
 					\cdot
-					\alt<2->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mu_{w}\)}}}{\mu_{w}}
+					\alt<4->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mu_{w}\)}}}{\mu_{w}}
 					\right)
 				\end{align}
 				\begin{annotatedEquationEnv}
-					\only<2->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{P}^3\), 3D(world) mean}{east}}
-					\only<3->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SE}(3)\), camera pose}{east}}
-					\only<4->{\annotatedEquation{colorseries}{n2}{south}{0em}{-5em}{north west}{annotation-color-series}{projection}{east}}
-					\only<5->{\annotatedEquation{colorseries}{n3}{south}{0}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{P}^2\), 2D(image) mean}{east}}
+					\only<4->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{P}^3\), 3D(world) mean}{east}}
+					\only<5->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SE}(3)\), camera pose}{east}}
+					\only<6->{\annotatedEquation{colorseries}{n2}{south}{0em}{-5em}{north west}{annotation-color-series}{projection}{east}}
+					\only<7->{\annotatedEquation{colorseries}{n3}{south}{0}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{P}^2\), 2D(image) mean}{east}}
 				\end{annotatedEquationEnv}
-			\end{minipage}
-			\begin{minipage}[c]{0.60\linewidth}
+			\end{onlyenv}
+		\end{minipage}
+		\begin{minipage}[c]{0.60\linewidth}
+			\begin{onlyenv}<3->
 				\resetcolorseries[4]{marknode-color-series}
 				\resetcolorseries[4]{annotation-color-series}
 				\begin{align}
-					\alt<9->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\Sigma_{i}\)}}}{\Sigma_{i}}
+					\alt<11->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\Sigma_{i}\)}}}{\Sigma_{i}}
 					=
-					\alt<8->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathbf{J}_{\pi}\)}}}{\mathbf{J}_{\pi}}
-					\alt<7->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{R}_{cw}\)}}}{\mathbf{R}_{cw}}
-					\alt<6->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\Sigma_{w}\)}}}{\Sigma_{w}}  \mathbf{R}_{cw}^{\mathrm{T}} \mathbf{J}_{\pi}^{\mathrm{T}}
+					\alt<10->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathbf{J}_{\pi}\)}}}{\mathbf{J}_{\pi}}
+					\alt<9->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{R}_{cw}\)}}}{\mathbf{R}_{cw}}
+					\alt<8->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\Sigma_{w}\)}}}{\Sigma_{w}}  \mathbf{R}_{cw}^{\mathrm{T}} \mathbf{J}_{\pi}^{\mathrm{T}}
 				\end{align}
 				\begin{annotatedEquationEnv}
-					\only<6->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{3\times 3}\), 3D(world) covariance}{east}}
-					\only<7->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SO(3)}\), rotation component of \(\mathbf{T}_{cw}\)}{east}}
-					\only<8->{\annotatedEquation{colorseries}{n2}{south}{0em}{-5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 3}\), Jacobian of the linear approximation of \(\pi\)}{east}}
-					\only<9->{\annotatedEquation{colorseries}{n3}{south}{0em}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 2}\), 2D(image) covariance}{east}}
+					\only<8->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{3\times 3}\), 3D(world) covariance}{east}}
+					\only<9->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SO(3)}\), rotation component of \(\mathbf{T}_{cw}\)}{east}}
+					\only<10->{\annotatedEquation{colorseries}{n2}{south}{0em}{-5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 3}\), Jacobian of the linear approximation of \(\pi\)}{east}}
+					\only<11->{\annotatedEquation{colorseries}{n3}{south}{0em}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 2}\), 2D(image) covariance}{east}}
 				\end{annotatedEquationEnv}
-			\end{minipage}
-		\end{figure}
-	\end{overprint}
+			\end{onlyenv}
+		\end{minipage}
+	\end{figure}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
 
-\begin{Frame}{Tracking: Derivation of Jacobians \romannum{1}}
+\begin{Frame}{Tracking: Derivation of Jacobians \romannum{2}}
 	\par The chain rule,
 	\begin{alignat}{1}
 		\frac{\partial \mu_i}{\partial \mathbf{T}_{cw}}    & = \frac{\partial \mu_i}{\partial \mu_c} \frac{\partial \mu_c}{\partial \mathbf{T}_{cw}}                                                                                                                                                                               \\
@@ -387,83 +394,97 @@
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
 
-\begin{Frame}{Keyframe Management: Registration}
+\begin{Frame}{Keyframe Management: Registration \romannum{1}}
+	\blfootnote{In practice, \(\sf \tau_{1} = 0.95\).}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 	\begin{overprint}[\textheight]
 		\par If \alert<+>{any} of the following conditions \alert<.>{is true}...
 		\vspace*{\fill}
-		\resetcolorseries[6]{marknode-color-series}
-		\resetcolorseries[6]{annotation-color-series}
 		\begin{block}<+->{\alert<.|handout:0>{Small Gaussian Covisibility}\hfill Condition \romannum{1}, Keyframe Registration}
 			Gaussian covisibility between the current frame and the previous keyframe drops below a threshold.
 			\begin{figure}[htbp]
 				\centering
-				\begin{onlyenv}<.>
-					\vspace*{-2em}
-					\begin{equation*}
-						\frac{\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right)\)}} \vert}{\vert\operatorname{v}\left(\mathcal{G}, \tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathcal{F}_{i}\)}}\right) \cup \operatorname{v}\left(\mathcal{G}, \tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathcal{F}_{j}\)}}\right) \vert} < \tau_1
-					\end{equation*}
-					\begin{annotatedEquationEnv}
-						\annotatedEquation{colorseries}{n0}{north}{0em}{1em}{south west}{annotation-color-series}{\(\subset \mathcal{G}\), \textbf{visible} Gaussians from frame \(j\)}{east}
-						\annotatedEquation{colorseries}{n1}{south}{0em}{-0.5em}{north east}{annotation-color-series}{the previous keyframe}{west}
-						\annotatedEquation{colorseries}{n2}{south}{0em}{-0.5em}{north west}{annotation-color-series}{the current frame}{east}
-					\end{annotatedEquationEnv}
-				\end{onlyenv}
-				\begin{onlyenv}<+-|handout:0>
-					\vspace*{-2em}
-					\begin{equation}
-						\frac{\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert}{\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cup \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert} < \tau_1
-					\end{equation}
-					\vspace*{-2em}
-				\end{onlyenv}
-			\end{figure}
-		\end{block}
-		\vspace*{\fill}
-		\begin{block}<.->{\alert<.|handout:0>{Large Relative Translation}\hfill Condition \romannum{2}, Keyframe Registration}
-			Translation from the previous keyframe w.r.t. to the median depth reaches a threshold.
-			\begin{figure}[htbp]
-				\centering
-				\vspace*{-2em}
-				\begin{onlyenv}<.>
-					\begin{equation*}
-						\frac{\Vert \mathbf{t}_{\mathcal{F}_i \mathcal{F}_j} \Vert_2}{\bar{D}_{\mathcal{F}_i \mathcal{F}_j}} > \tau_2, \quad \bar{D}_{\mathcal{F}_i \mathcal{F}_j} = \frac{1}{2 \tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(H\)}} \tikzmarknode{n5}{\colorbox{marknode-color-series!![5]}{\(W\)}}} \sum^{\{\mathcal{F}_i,\mathcal{F}_j\}} \sum_{h=0}^{H} \sum_{w=0}^{W} \tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(d(h,w)\)}}
-					\end{equation*}
-					\begin{annotatedEquationEnv}
-						\annotatedEquation{colorseries}{n3}{south}{0}{-0.5em}{north west}{annotation-color-series}{depth of pixel \((h,w)\)}{east}
-						\annotatedEquation{colorseries}{n4}{south}{0}{-0.5em}{north east}{annotation-color-series}{image height}{west}
-						\annotatedEquation{colorseries}{n5}{south}{0}{-0.5em}{north west}{annotation-color-series}{image width}{east}
-					\end{annotatedEquationEnv}
-				\end{onlyenv}
-				\begin{onlyenv}<+-|handout:0>
-					\begin{equation}
-						\frac{\Vert \mathbf{t}_{\mathcal{F}_i \mathcal{F}_j} \Vert_2}{\bar{D}_{\mathcal{F}_i \mathcal{F}_j}} > \tau_2, \quad \bar{D}_{\mathcal{F}_i \mathcal{F}_j} = \frac{1}{2 H W} \sum^{\{\mathcal{F}_i,\mathcal{F}_j\}} \sum_{h=0}^{H} \sum_{w=0}^{W} d(h,w)
-					\end{equation}
-					\vspace*{-2em}
-				\end{onlyenv}
+				\resetcolorseries[3]{marknode-color-series}
+				\resetcolorseries[3]{annotation-color-series}
+				\begin{align}
+					\frac{\left\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right)
+					\cap
+					\alt<3->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right)\)}}}{\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right)}\right\vert}
+					{\left\vert\operatorname{v}\left(\mathcal{G}, \alt<4->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathcal{F}_{i}\)}}}{\mathcal{F}_{i}}\right) \cup \operatorname{v}\left(\mathcal{G}, \alt<5->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathcal{F}_{j}\)}}}{\mathcal{F}_{j}}\right) \right\vert} < \tau_1
+				\end{align}
+				\begin{annotatedEquationEnv}
+					\only<3->{\annotatedEquation{colorseries}{n0}{north}{0em}{1em}{south west}{annotation-color-series}{\(\subset \mathcal{G}\), \textbf{visible} Gaussians from frame \(j\)}{east}}
+					\only<4->{\annotatedEquation{colorseries}{n1}{south}{0em}{-0.5em}{north east}{annotation-color-series}{the previous keyframe}{west}}
+					\only<5->{\annotatedEquation{colorseries}{n2}{south}{0em}{-0.5em}{north west}{annotation-color-series}{the current frame}{east}}
+				\end{annotatedEquationEnv}
 			\end{figure}
 		\end{block}
 	\end{overprint}
 \end{Frame}
 
-\begin{Frame}{Keyframe Management: Removal}
+\begin{Frame}{Keyframe Management: Registration \romannum{2}}
+	\blfootnote{In practice, \(\sf \tau_{2}=0.04\). Additionally, evaluate the Gaussian covisibility only if the relative translation is not too small \((\sf > 0.02)\) for efficiency.}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
-	\begin{overprint}[\textheight]
-		\par If \alert<+>{any} of the following conditions \alert<.>{is true}...
-		\vspace*{\fill}
-		\begin{block}{\alert<.|handout:0>{Beyond Window Capacity}\hfill Condition \romannum{1}, Keyframe Removal}<+->
-			Remove the earliest keyframe out of the sliding window if the capacity is exceeded.
-			\begin{equation}
-				\vert \mathcal{W} \vert < \tau_3
-			\end{equation}
-		\end{block}
-		\vspace*{\fill}
-		\begin{block}{\alert<.|handout:0>{Low Gaussian Overlap Coefficient}\hfill Condition \romannum{2}, Keyframe Removal}<+->
-			Remove the previous keyframe if the ``Gaussian overlap coefficient'' between the previous frame and the new keyframe drops below a threshold.
+	\begin{block}{\alert<1|handout:0>{Large Relative Translation}\hfill Condition \romannum{2}, Keyframe Registration}
+		\par Translation from the previous keyframe w.r.t. to the median depth reaches a threshold.
+		\begin{figure}[htbp]
+			\centering
+			\resetcolorseries[5]{marknode-color-series}
+			\resetcolorseries[5]{annotation-color-series}
+			\begin{align}
+				\frac{ \left\Vert
+				\alt<2->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mathbf{t}_{\mathcal{F}_i \mathcal{F}_j}\)}}}{\mathbf{t}_{\mathcal{F}_i \mathcal{F}_j}}
+				\right\Vert_2}
+				{\alt<3->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\bar{D}_{\mathcal{F}_i \mathcal{F}_j}\)}}}{\bar{D}_{\mathcal{F}_i \mathcal{F}_j}}} > \tau_2
+				, \quad
+				\bar{D}_{\mathcal{F}_i \mathcal{F}_j}
+				=
+				\frac{1}{2
+				\alt<5->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(H\)}}}{H}
+				\alt<6->{\tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(W\)}}}{W}
+				}
+				\sum^{\{\mathcal{F}_i,\mathcal{F}_j\}} \sum_{h=0}^{H} \sum_{w=0}^{W}
+				\alt<4->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(d(h,w)\)}}}{d(h,w)}
+			\end{align}
+			\begin{annotatedEquationEnv}
+				\only<2->{\annotatedEquation{colorseries}{n0}{north}{0em}{0.5em}{south west}{annotation-color-series}{\(\in \mathbb{R}^3 \), translation from \(\mathcal{F}_i\) to \(\mathcal{F}_j\)}{east}}
+				\only<3->{\annotatedEquation{colorseries}{n1}{south}{0em}{-0.5em}{north east}{annotation-color-series}{\(\in \mathbb{R} \), the median depth}{west}}
+				\only<4->{\annotatedEquation{colorseries}{n2}{south}{0}{-0.5em}{north west}{annotation-color-series}{depth of pixel \((h,w)\)}{east}}
+				\only<5->{\annotatedEquation{colorseries}{n3}{south}{0}{-0.5em}{north east}{annotation-color-series}{image height}{west}}
+				\only<6->{\annotatedEquation{colorseries}{n4}{south}{0}{-0.5em}{north west}{annotation-color-series}{image width}{east}}
+			\end{annotatedEquationEnv}
+		\end{figure}
+	\end{block}
+\end{Frame}
+
+\begin{Frame}{Keyframe Management: Removal \romannum{1}}
+	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
+	\par If \alert<+>{any} of the following conditions \alert<.>{is true}...
+	\vspace*{\fill}
+	\begin{block}{\alert<.|handout:0>{Beyond Window Capacity}\hfill Condition \romannum{1}, Keyframe Removal}<+->
+		Remove \alert<+|handout:0>{one} of previous keyframes \visible<+->{that \alert<.|handout:0>{minimize} the impact on the \alert<.|handout:0>{overall baseline length}.}
+		\visible<+->{\begin{align}
+				\mathcal{F}^{\ast} & = \underset{\mathcal{F}\in \mathcal{W}}{\arg\max}\;\operatorname{l}\Big(\mathcal{W}\;\backslash \big\{ \mathcal{F}\big\}\Big)
+				\visible<+->{,\quad \operatorname{l}\left(\mathcal{W}\right) = \sum_{i=1}^{\left\vert \mathcal{W} \right\vert}\sum_{j=1}^{i} \left\Vert \mathbf{t}_{\mathcal{F}_i \mathcal{F}_j} \right\Vert }
+			\end{align}}
+		\visible<+->{\alert<.|handout:0>{\par Remark:} for the best multi-view constraints.}
+	\end{block}
+	\vspace*{\fill}
+\end{Frame}
+
+\begin{Frame}{Keyframe Management: Removal \romannum{2}}
+	\begin{block}<+->{\alert<.|handout:0>{Low Gaussian Overlap Coefficient}\hfill Condition \romannum{2}, Keyframe Removal}
+		Remove \alert<+|handout:0>{multiple} previous keyframes if the ``Gaussian overlap coefficient'' drops \alert<+>{below} a threshold.
+		\visible<+->{
 			\begin{equation}
 				\frac{\vert \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert}{\min \left(\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \vert, \vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert\right)} < \tau_4
 			\end{equation}
-		\end{block}
-	\end{overprint}
+		}
+		\visible<+->{\par \alert<.|handout:0>{Remark:} not observing the same area.}
+	\end{block}
+	\blfootnote{\href{https://en.wikipedia.org/wiki/Overlap_coefficient}{Szymkiewicz–Simpson coefficient}}
+	\blfootnote{In practice, \(\sf \tau_{4} = 0.4.\)}
+	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
 
 \begin{Frame}{Gaussian Management: Insertion}
@@ -520,23 +541,26 @@
 \begin{Frame}{Gaussian Management: Pruning}
 	\begin{itemize}
 		\setlength{\itemsep}{1.5ex}
-		\item<+-> \alert<.>{Why} do we need ``Gaussian Pruning'' \textbf{if depth unavailable}?
+		\item<+-> \alert<.>{Why} do we need ``Gaussian Pruning''?
 			\vspace*{1.5ex}
 			\begin{itemize}
 				\setlength{\itemsep}{1.5ex}
-				\item<+-> Too many \alert<.>{incorrect/unstable} newly inserted Gaussians.
+				\item<+-> if depth \alert<.>{unavailable}, too many \alert<.>{incorrect} newly inserted Gaussians.
 			\end{itemize}
 	\end{itemize}
 	\vspace*{\fill}
 	\begin{block}{\alert<.|handout:0>{Low Gaussian Opacity} \hfill Condition \romannum{1}, Gaussian Pruning}<+->
-		The Gaussians with a ``low'' opacity are pruned.
+		Low opacity Gaussians are pruned.
+		\begin{equation}
+			\{\mathcal{G}_i \in \mathcal{G}\;\vert\;\alpha(\mathcal{G}_i) < \tau_{\alpha} \}
+		\end{equation}
 	\end{block}
 	\vspace*{\fill}
 	\begin{block}{\alert<.|handout:0>{Low Gaussian Covisibility} \hfill Condition \romannum{2}, Gaussian Pruning}<+->
 		For ``just'' inserted Gaussians but unobserved by ``some other'' keyframes, are pruned out.
 	\end{block}
 	\blfootnote{If no pruning, although the majority of incorrect Gaussians vanish quickly in following optimization, there are some survivals.}
-	\blfootnote{In practice, the opacity threshold is \(\sf 0.7\).}
+	\blfootnote{In practice, \(\sf \tau_{\alpha}=0.7\).}
 	\blfootnote{In practice, the pruned Gaussians are inserted in the last 3 keyframes and unobserved by any other 3 keyframes in the sliding window.}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
@@ -572,8 +596,8 @@
 			\vspace*{1.5ex}
 			\begin{itemize}
 				\setlength{\itemsep}{1.5ex}
-				\item<+-> \alert<.|handout:0>{Local Mapping}: Optimize newly inserted 3D Gaussians.
-				\item<+-> \alert<.|handout:0>{Global Mapping}: Reconstruct a 3D-coherent structure.
+				\item<+-> \alert<.|handout:0>{Local}: Optimize newly inserted 3D Gaussians.
+				\item<+-> \alert<.|handout:0>{Global}: Reconstruct a globally 3D-coherent structure.
 			\end{itemize}
 	\end{itemize}
 	\blfootnote{
@@ -587,45 +611,78 @@
 \end{Frame}
 
 \begin{Frame}{Mapping: Bundle Adjustment \& Random Recall}
-	\begin{block}<+->{\alert<.|handout:0>{Bundle Adjustment}}
+	\begin{block}<1->{\alert<1|handout:0>{Bundle Adjustment}}
+		\vspace*{-1em}
 		\begin{figure}[htbp]
 			\centering
-			\resetcolorseries[1]{marknode-color-series}
-			\resetcolorseries[1]{annotation-color-series}
+			\resetcolorseries[4]{marknode-color-series}
+			\resetcolorseries[4]{annotation-color-series}
 			\begin{equation}
-				\underset{\mathcal{G}, \{\mathbf{T}_{cw}({\mathcal{F}_k})\vert \mathcal{F}_k\in \mathcal{W}\}}{\operatorname{argmin}} \sum_{\mathcal{F}_k}^{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\scriptsize\(\mathcal{W}\)}}} \mathcal{L}_{pho}\left({\mathcal{F}_k}\right)
+				\underset{
+				\alt<2->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\scriptsize \(\mathcal{G}\)}}}{\mathcal{G}},
+				\alt<3->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\scriptsize \(\{\mathbf{T}_{cw}({\mathcal{F}_k})\vert \mathcal{F}_k\in \mathcal{W}\}\)}}}{\{\mathbf{T}_{cw}({\mathcal{F}_k})\vert \mathcal{F}_k\in \mathcal{W}\}}
+				}{
+				\operatorname{argmin}
+				}
+				\sum_{\mathcal{F}_k}^{
+					\mathcal{W}
+				}
+				\mathcal{L}_{pho}\left({\mathcal{F}_k}\right)
 			\end{equation}
 			\begin{annotatedEquationEnv}
-				\annotatedEquation{colorseries}{n0}{north}{0em}{+0.5em}{south west}{annotation-color-series}{keyframes in the sliding window}{east}
+				\only<2->{\annotatedEquation{colorseries}{n0}{south}{0em}{-0.5em}{north east}{annotation-color-series}{3D Gaussians}{west}}
+				\only<3->{\annotatedEquation{colorseries}{n1}{south}{0em}{-0.5em}{north west}{annotation-color-series}{camera poses of keyframes in the sliding window}{east}}
 			\end{annotatedEquationEnv}
 		\end{figure}
-		\vspace*{-1.5ex}
 	\end{block}
-	\vspace*{\fill}
-	\begin{block}<+->{\alert<.|handout:0>{Random Recall} \hfill A trick for global mapping}
-		\vspace*{0.5ex}
-		\par Besides \(\mathcal{W}\), ``some'' randomly selected past keyframes are also leveraged in BA to avoid forgetting the global map.
-	\end{block}
+	% \vspace*{\fill}
+	% \begin{block}<+->{\alert<.|handout:0>{Random Recall} \hfill A trick for global mapping}
+	% 	\vspace*{0.5ex}
+	% 	\par Besides \(\mathcal{W}\), ``some'' randomly selected past keyframes are also leveraged in BA to avoid forgetting the global map.
+	% \end{block}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
 
 \begin{Frame}{Mapping: Isotropic Regularization}
-	\begin{itemize}
+	\begin{itemize}[<+->]
 		\setlength{\itemsep}{1.5ex}
-		\item<+-> \alert<.>{Why} do we need ``isotropic regularization''?
-			\vspace*{1.5ex}
-			\begin{itemize}
-				\setlength{\itemsep}{1.5ex}
-				\item<+-> \alert<.|handout:0>{Observation:} isotropic Gaussians behave better than anisotrophic.
-				\item<+-> \alert<.|handout:0>{Analysis:} no constraints on the elongation along the viewing ray direction, \textbf{even with depth}.
-			\end{itemize}
+		\item \alert<.>{Why} do we need ``isotropic regularization''?
+		      \vspace*{1.5ex}
+		      \begin{itemize}
+			      \setlength{\itemsep}{1.5ex}
+			      \item \alert<.|handout:0>{Observation:} isotropic Gaussians behave better than anisotrophic.
+			      \item \alert<.|handout:0>{Analysis:} no constraints on the elongation along the viewing ray direction, \textbf{even with depth}.
+		      \end{itemize}
 	\end{itemize}
 	\vspace*{\fill}
-	\begin{block}<+->{\alert<.|handout:0>{Isotropic Regularization}}
-		\vspace*{0.5ex}
-		\begin{equation}
-			\mathcal{L}_{iso} = \sum_{i=1}^{\vert \mathcal{G} \vert} \Vert \mathbf{s}_i - \bar{\mathbf{s}}_i \Vert_1, \quad\text{where } \bar{\mathbf{s}}_i = \frac{1}{3} \left( s_i^{x} + s_i^{y} + s_i^{z} \right).
-		\end{equation}
+	\begin{block}<4->{\alert<.|handout:0>{Isotropic Regularization}}
+		\vspace*{1em}
+		\begin{figure}[htbp]
+			\resetcolorseries[4]{marknode-color-series}
+			\resetcolorseries[4]{annotation-color-series}
+			\centering
+			\begin{equation}
+				\mathcal{L}_{iso} = \sum_{i=1}^{
+				\alt<5->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\scriptsize \(\vert \mathcal{G} \vert\)}}}{\vert \mathcal{G} \vert}
+				}
+				\Vert
+				\alt<6->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{s}(\mathcal{G}_i)\)}}}{\mathbf{s}(\mathcal{G}_i)}
+				-
+				\alt<7->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\bar{\mathbf{s}}(\mathcal{G}_i)\)}}}{\bar{\mathbf{s}}(\mathcal{G}_i)}
+				\Vert_1
+				,\quad
+				\visible<7->{\bar{\mathbf{s}}(\mathcal{G}_i) = \begin{bmatrix}
+						\left( s(\mathcal{G}_i)^{x} + s(\mathcal{G}_i)^{y} + s(\mathcal{G}_i)^{z} \right) / 3 \\
+						\left( s(\mathcal{G}_i)^{x} + s(\mathcal{G}_i)^{y} + s(\mathcal{G}_i)^{z} \right) / 3 \\
+						\left( s(\mathcal{G}_i)^{x} + s(\mathcal{G}_i)^{y} + s(\mathcal{G}_i)^{z} \right) / 3 \\
+					\end{bmatrix}}
+			\end{equation}
+			\begin{annotatedEquationEnv}
+				\only<5->{\annotatedEquation{colorseries}{n0}{north}{0em}{3em}{south west}{annotation-color-series}{\(\in \mathbb{N}\), total number of Gaussians}{east}}
+				\only<6->{\annotatedEquation{colorseries}{n1}{north}{0em}{3em}{south west}{annotation-color-series}{\(\in \mathbb{R}^3\), scale of \(i\)-th Gaussian}{east}}
+				\only<7->{\annotatedEquation{colorseries}{n2}{north}{0em}{1.5em}{south west}{annotation-color-series}{\(\in \mathbb{R}^3\), averaged scale of \(i\)-th Gaussian}{east}}
+			\end{annotatedEquationEnv}
+		\end{figure}
 	\end{block}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
