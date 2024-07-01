@@ -294,8 +294,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[backref=true, natbib=true, backend=biber, style=authoryear-icomp, useprefix=true, style=ieee]{biblatex}
 \AtBeginBibliography{\scriptsize}
-\addbibresource{../references/reference.bib}
-\addbibresource{../references/nerf-slam.bib}
+\addbibresource[glob=true]{../references/*.bib}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -312,8 +311,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% meta info %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{NeRF/3DGS-based SLAM}
-\subtitle{Literature Review}
+\title{3DGS-based SLAM}
+\subtitle{Research Notes \& Literature Review}
 \author{Shuqi XIAO}
 % \logo{
 %     \includegraphics[width=1.5cm]{example-image}
@@ -343,8 +342,6 @@
 \end{frame}
 
 \section{Overview}
-\subsection{NeRF-based SLAM}
-\subsection{3DGS-based SLAM}
 \begin{Frame}{Timeline}
 	\colorlet{accepted}{OliveGreen}
 	\begin{tikzpicture}
@@ -401,8 +398,8 @@
 \end{Frame}
 
 % \input{weekly_report.tex}
+% \input{co-slam.tex}
 
-\input{co-slam.tex}
 \input{monogs.tex}
 
 \appendix
