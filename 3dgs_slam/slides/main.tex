@@ -7,7 +7,7 @@
     % handout
 ]{beamer}
 \usetheme[
-    % subsectionpage=progressbar,
+    subsectionpage=progressbar,
     progressbar=frametitle,
     block=fill
 ]{moloch}
@@ -15,7 +15,7 @@
 
 \usepackage{pgfpages}
 % \pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
-% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
+% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=4mm]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% personal modification of the moloch/metropolis theme %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,6 +25,7 @@
 }{\vspace*{\fill}\end{frame}}
 
 % inner theme
+\setbeamercovered{transparent}
 \useinnertheme{rectangles}
 
 % color palette
@@ -120,7 +121,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% graphics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \usepackage{graphicx} % pre-loaded by beamer
-\graphicspath{{../images}}
+     \graphicspath{{../images}{../images/semantic-3dgs}}
 
 \usepackage{forest} % mindmap
 
@@ -311,7 +312,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% meta info %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{3DGS-based SLAM}
+\title{Semantic \& Neural Rendering \& SLAM}
 \subtitle{Research Notes \& Literature Review}
 \author{Shuqi XIAO}
 % \logo{
@@ -341,72 +342,15 @@
 	\tableofcontents
 \end{frame}
 
-\section{Overview}
-\begin{Frame}{Timeline}
-	\colorlet{accepted}{OliveGreen}
-	\begin{tikzpicture}
-		\usetikzlibrary{calc}
+\input{3dgs-slam/overview.tex}
+\input{3dgs-slam/monogs.tex}
+\input{semantic-3dgs/overview.tex}
+\input{semantic-3dgs/feature-3dgs.tex}
+\input{semantic-3dgs/langsplat.tex}
+\input{semantic-3dgs/clip-gs.tex}
 
-		\pgfmathsetmacro{\dy}{0.3cm/1pt};
-		\pgfmathsetmacro{\nodeNum}{3};
-		\pgfmathsetmacro{\sepNum}{\nodeNum-1};
-		\pgfmathsetmacro{\length}{0.8*\linewidth};
-		\pgfmathsetmacro{\edgeLength}{1cm/1pt};
-		\pgfmathsetmacro{\dx}{(\length-\edgeLength-\edgeLength)/\sepNum};
-		\pgfmathsetmacro{\xShift}{0};
-
-		\tikzset{
-			note/.style={
-					anchor=north, align=center, text width=\dx, yshift=-\dy/3, font={\scriptsize}
-				},
-			time/.style={
-					anchor=south, font={\scriptsize\bf}
-				}
-		};
-
-		\coordinate (start) at (0 pt,0 pt);
-		\coordinate (end) at (\length pt,0 pt);
-		\draw [line width=1.5pt,-stealth] (start) -- (end);
-
-		\foreach \counter in {0,...,\sepNum} {
-				\coordinate (s\counter) at (\edgeLength+\counter*\dx pt,0);
-				\coordinate (t\counter) at ($(s\counter)+(0,\dy pt)$);
-				\draw [line width=1.5pt] (s\counter) -- (t\counter);
-			}
-
-		\node [time] at (t0.north) {
-			11/2023 - 12/2024
-		};
-		\node [note] at (s0.south) {
-			\textcolor{accepted}{SplaTAM}~\autocite{keetha_splatam_2024} \\[1ex]
-			\textcolor{accepted}{GS-SLAM}~\autocite{yan_gs-slam_2023} \\[1ex]
-			Gaussian-SLAM~\autocite{yugay_gaussian-slam_2024} \\[1ex]
-			\textcolor{accepted}{MonoGS}~\autocite{matsuki_gaussian_2024} \\[1ex]
-		};
-		\node [time] at (t1.north) {
-			01/2024 - 04/2024
-		};
-		\node [note] at (s1.south) {
-		};
-		\node [time] at (t2.north) {
-			05/2024 - 06/2024
-		};
-		\node [note] at (s2.south) {
-		};
-	\end{tikzpicture}
-	\blfootnote{\textcolor{accepted}{accepted to top conferences}}
-\end{Frame}
-
-% \input{weekly_report.tex}
-% \input{co-slam.tex}
-
-\input{monogs.tex}
-
-\appendix
-
-\section{\appendixname}
-
-\subsection{References}
+\appendix % \section{\appendixname}
+\section{References} % \subsection{References}
 
 \begin{frame}[allowframebreaks]
 	\frametitle{References}

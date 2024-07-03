@@ -1,0 +1,614 @@
+@misc{yeGaussianGroupingSegment2023,
+    title = {Gaussian Grouping: Segment and Edit Anything in 3D Scenes},
+    url = {http://arxiv.org/abs/2312.00732},
+    shorttitle = {Gaussian Grouping},
+    abstract = {The recent Gaussian Splatting achieves high-quality and
+                real-time novel-view synthesis of the 3D scenes. However, it is
+                solely concentrated on the appearance and geometry modeling,
+                while lacking in fine-grained object-level scene understanding.
+                To address this issue, we propose Gaussian Grouping, which
+                extends Gaussian Splatting to jointly reconstruct and segment
+                anything in open-world 3D scenes. We augment each Gaussian with a
+                compact Identity Encoding, allowing the Gaussians to be grouped
+                according to their object instance or stuff membership in the 3D
+                scene. Instead of resorting to expensive 3D labels, we supervise
+                the Identity Encodings during the differentiable rendering by
+                leveraging the 2D mask predictions by {SAM}, along with
+                introduced 3D spatial consistency regularization. Comparing to
+                the implicit {NeRF} representation, we show that the discrete and
+                grouped 3D Gaussians can reconstruct, segment and edit anything
+                in 3D with high visual quality, fine granularity and efficiency.
+                Based on Gaussian Grouping, we further propose a local Gaussian
+                Editing scheme, which shows efficacy in versatile scene editing
+                applications, including 3D object removal, inpainting,
+                colorization and scene recomposition. Our code and models will be
+                at https://github.com/lkeab/gaussian-grouping.},
+    number = {{arXiv}:2312.00732},
+    publisher = {{arXiv}},
+    author = {Ye, Mingqiao and Danelljan, Martin and Yu, Fisher and Ke, Lei},
+    urldate = {2024-01-02},
+    date = {2023-12-01},
+    eprinttype = {arxiv},
+    eprint = {2312.00732 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Artificial Intelligence},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/YJA8UYZM/Ye et al. -
+            2023 - Gaussian Grouping Segment and Edit Anything in
+            3D.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/FCBHCE4Y/2312.html:text/html},
+}
+
+@misc{qinLangSplat3DLanguage2023,
+    title = {{LangSplat}: 3D Language Gaussian Splatting},
+    url = {http://arxiv.org/abs/2312.16084},
+    shorttitle = {{LangSplat}},
+    abstract = {Human lives in a 3D world and commonly uses natural language to
+                interact with a 3D scene. Modeling a 3D language field to support
+                open-ended language queries in 3D has gained increasing attention
+                recently. This paper introduces {LangSplat}, which constructs a
+                3D language field that enables precise and efficient
+                open-vocabulary querying within 3D spaces. Unlike existing
+                methods that ground {CLIP} language embeddings in a {NeRF} model,
+                {LangSplat} advances the field by utilizing a collection of 3D
+                Gaussians, each encoding language features distilled from {CLIP},
+                to represent the language field. By employing a tile-based
+                splatting technique for rendering language features, we
+                circumvent the costly rendering process inherent in {NeRF}.
+                Instead of directly learning {CLIP} embeddings, {LangSplat} first
+                trains a scene-wise language autoencoder and then learns language
+                features on the scene-specific latent space, thereby alleviating
+                substantial memory demands imposed by explicit modeling. Existing
+                methods struggle with imprecise and vague 3D language fields,
+                which fail to discern clear boundaries between objects. We delve
+                into this issue and propose to learn hierarchical semantics using
+                {SAM}, thereby eliminating the need for extensively querying the
+                language field across various scales and the regularization of {
+                DINO} features. Extensive experiments on open-vocabulary 3D
+                object localization and semantic segmentation demonstrate that {
+                LangSplat} significantly outperforms the previous
+                state-of-the-art method {LERF} by a large margin. Notably, {
+                LangSplat} is extremely efficient, achieving a \{{\textbackslash}
+                speed\} \${\textbackslash}times\$ speedup compared to {LERF} at
+                the resolution of 1440 \${\textbackslash}times\$ 1080. We
+                strongly recommend readers to check out our video results at
+                https://langsplat.github.io},
+    number = {{arXiv}:2312.16084},
+    publisher = {{arXiv}},
+    author = {Qin, Minghan and Li, Wanhua and Zhou, Jiawei and Wang, Haoqian and
+              Pfister, Hanspeter},
+    urldate = {2024-02-23},
+    date = {2023-12-26},
+    eprinttype = {arxiv},
+    eprint = {2312.16084 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/I224DLIK/Qin et al. -
+            2023 - LangSplat 3D Language Gaussian
+            Splatting.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/IT9H5UWF/2312.html:text/html},
+}
+
+@misc{cenSegmentAny3D2023,
+    title = {Segment Any 3D Gaussians},
+    url = {http://arxiv.org/abs/2312.00860},
+    abstract = {Interactive 3D segmentation in radiance fields is an appealing
+                task since its importance in 3D scene understanding and
+                manipulation. However, existing methods face challenges in either
+                achieving fine-grained, multi-granularity segmentation or
+                contending with substantial computational overhead, inhibiting
+                real-time interaction. In this paper, we introduce Segment Any 3D
+                {GAussians} ({SAGA}), a novel 3D interactive segmentation
+                approach that seamlessly blends a 2D segmentation foundation
+                model with 3D Gaussian Splatting (3DGS), a recent breakthrough of
+                radiance fields. {SAGA} efficiently embeds multi-granularity 2D
+                segmentation results generated by the segmentation foundation
+                model into 3D Gaussian point features through well-designed
+                contrastive training. Evaluation on existing benchmarks
+                demonstrates that {SAGA} can achieve competitive performance with
+                state-of-the-art methods. Moreover, {SAGA} achieves
+                multi-granularity segmentation and accommodates various prompts,
+                including points, scribbles, and 2D masks. Notably, {SAGA} can
+                finish the 3D segmentation within milliseconds, achieving nearly
+                1000x acceleration compared to previous {SOTA}. The project page
+                is at https://jumpat.github.io/{SAGA}.},
+    number = {{arXiv}:2312.00860},
+    publisher = {{arXiv}},
+    author = {Cen, Jiazhong and Fang, Jiemin and Yang, Chen and Xie, Lingxi and
+              Zhang, Xiaopeng and Shen, Wei and Tian, Qi},
+    urldate = {2024-03-12},
+    date = {2023-12-01},
+    eprinttype = {arxiv},
+    eprint = {2312.00860 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/BACS7IEH/Cen et al. -
+            2023 - Segment Any 3D Gaussians.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/BUAGFDR5/2312.html:text/html},
+}
+
+@misc{zhouFeature3DGSSupercharging2024apr,
+    title = {Feature 3DGS: Supercharging 3D Gaussian Splatting to Enable
+             Distilled Feature Fields},
+    url = {http://arxiv.org/abs/2312.03203},
+    shorttitle = {Feature 3DGS},
+    abstract = {3D scene representations have gained immense popularity in
+                recent years. Methods that use Neural Radiance fields are
+                versatile for traditional tasks such as novel view synthesis. In
+                recent times, some work has emerged that aims to extend the
+                functionality of {NeRF} beyond view synthesis, for semantically
+                aware tasks such as editing and segmentation using 3D feature
+                field distillation from 2D foundation models. However, these
+                methods have two major limitations: (a) they are limited by the
+                rendering speed of {NeRF} pipelines, and (b) implicitly
+                represented feature fields suffer from continuity artifacts
+                reducing feature quality. Recently, 3D Gaussian Splatting has
+                shown state-of-the-art performance on real-time radiance field
+                rendering. In this work, we go one step further: in addition to
+                radiance field rendering, we enable 3D Gaussian splatting on
+                arbitrary-dimension semantic features via 2D foundation model
+                distillation. This translation is not straightforward: naively
+                incorporating feature fields in the 3DGS framework encounters
+                significant challenges, notably the disparities in spatial
+                resolution and channel consistency between {RGB} images and
+                feature maps. We propose architectural and training changes to
+                efficiently avert this problem. Our proposed method is general,
+                and our experiments showcase novel view semantic segmentation,
+                language-guided editing and segment anything through learning
+                feature fields from state-of-the-art 2D foundation models such as
+                {SAM} and {CLIP}-{LSeg}. Across experiments, our distillation
+                method is able to provide comparable or better results, while
+                being significantly faster to both train and render. Additionally
+                , to the best of our knowledge, we are the first method to enable
+                point and bounding-box prompting for radiance field manipulation,
+                by leveraging the {SAM} model. Project website at:
+                https://feature-3dgs.github.io/},
+    number = {{arXiv}:2312.03203},
+    publisher = {{arXiv}},
+    author = {Zhou, Shijie and Chang, Haoran and Jiang, Sicheng and Fan, Zhiwen
+              and Zhu, Zehao and Xu, Dejia and Chari, Pradyumna and You, Suya and
+              Wang, Zhangyang and Kadambi, Achuta},
+    urldate = {2024-05-22},
+    date = {2024-04-08},
+    eprinttype = {arxiv},
+    eprint = {2312.03203 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/2KD3CSNG/Zhou et al. -
+            2024 - Feature 3DGS Supercharging 3D Gaussian Splatting
+            .pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/MJ6X957K/2312.html:text/html},
+}
+
+    
+@misc{liaoCLIPGSCLIPInformedGaussian2024apr,
+    title = {{CLIP}-{GS}: {CLIP}-Informed Gaussian Splatting for Real-time and
+             View-consistent 3D Semantic Understanding},
+    url = {http://arxiv.org/abs/2404.14249},
+    shorttitle = {{CLIP}-{GS}},
+    abstract = {The recent 3D Gaussian Splatting ({GS}) exhibits high-quality
+                and real-time synthesis of novel views in 3D scenes. Currently,
+                it primarily focuses on geometry and appearance modeling, while
+                lacking the semantic understanding of scenes. To bridge this gap,
+                we present {CLIP}-{GS}, which integrates semantics from
+                Contrastive Language-Image Pre-Training ({CLIP}) into Gaussian
+                Splatting to efficiently comprehend 3D environments without
+                annotated semantic data. In specific, rather than
+                straightforwardly learning and rendering high-dimensional
+                semantic features of 3D Gaussians, which significantly diminishes
+                the efficiency, we propose a Semantic Attribute Compactness ({SAC
+                }) approach. {SAC} exploits the inherent unified semantics within
+                objects to learn compact yet effective semantic representations
+                of 3D Gaussians, enabling highly efficient rendering ({
+                \textgreater}100 {FPS}). Additionally, to address the semantic
+                ambiguity, caused by utilizing view-inconsistent 2D {CLIP}
+                semantics to supervise Gaussians, we introduce a 3D Coherent
+                Self-training (3DCS) strategy, resorting to the multi-view
+                consistency originated from the 3D model. 3DCS imposes cross-view
+                semantic consistency constraints by leveraging refined,
+                self-predicted pseudo-labels derived from the trained 3D Gaussian
+                model, thereby enhancing precise and view-consistent segmentation
+                results. Extensive experiments demonstrate that our method
+                remarkably outperforms existing state-of-the-art approaches,
+                achieving improvements of 17.29\% and 20.81\% in {mIoU} metric on
+                Replica and {ScanNet} datasets, respectively, while maintaining
+                real-time rendering speed. Furthermore, our approach exhibits
+                superior performance even with sparse input data, verifying the
+                robustness of our method.},
+    number = {{arXiv}:2404.14249},
+    publisher = {{arXiv}},
+    author = {Liao, Guibiao and Li, Jiankun and Bao, Zhenyu and Ye, Xiaoqing and
+              Wang, Jingdong and Li, Qing and Liu, Kanglin},
+    urldate = {2024-05-20},
+    date = {2024-04-22},
+    eprinttype = {arxiv},
+    eprint = {2404.14249 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/82EHXBCZ/Liao et al. -
+            2024 - CLIP-GS CLIP-Informed Gaussian Splatting for
+            Real.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/7S7CDHSQ/2404.html:text/html},
+}
+
+
+@misc{jurcaRTGS2RealTimeGeneralizable2024may,
+    title = {{RT}-{GS}2: Real-Time Generalizable Semantic Segmentation for 3D
+             Gaussian Representations of Radiance Fields},
+    url = {http://arxiv.org/abs/2405.18033},
+    shorttitle = {{RT}-{GS}2},
+    abstract = {Gaussian Splatting has revolutionized the world of novel view
+                synthesis by achieving high rendering performance in real-time.
+                Recently, studies have focused on enriching these 3D
+                representations with semantic information for downstream tasks.
+                In this paper, we introduce {RT}-{GS}2, the first generalizable
+                semantic segmentation method employing Gaussian Splatting. While
+                existing Gaussian Splatting-based approaches rely on
+                scene-specific training, {RT}-{GS}2 demonstrates the ability to
+                generalize to unseen scenes. Our method adopts a new approach by
+                first extracting view-independent 3D Gaussian features in a
+                self-supervised manner, followed by a novel View-Dependent /
+                View-Independent ({VDVI}) feature fusion to enhance semantic
+                consistency over different views. Extensive experimentation on
+                three different datasets showcases {RT}-{GS}2's superiority over
+                the state-of-the-art methods in semantic segmentation quality,
+                exemplified by a 8.01\% increase in {mIoU} on the Replica
+                dataset. Moreover, our method achieves real-time performance of
+                27.03 {FPS}, marking an astonishing 901 times speedup compared to
+                existing approaches. This work represents a significant
+                advancement in the field by introducing, to the best of our
+                knowledge, the first real-time generalizable semantic
+                segmentation method for 3D Gaussian representations of radiance
+                fields.},
+    number = {{arXiv}:2405.18033},
+    publisher = {{arXiv}},
+    author = {Jurca, Mihnea-Bogdan and Royen, Remco and Giosan, Ion and Munteanu
+              , Adrian},
+    urldate = {2024-06-08},
+    date = {2024-05-28},
+    eprinttype = {arxiv},
+    eprint = {2405.18033 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/WLHJ7GY6/Jurca et al.
+            - 2024 - RT-GS2 Real-Time Generalizable Semantic
+            Segmentat.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/I27RU5Y5/2405.html:text/html},
+}
+    
+@misc{jiFastLGSSpeedingLanguage2024jun,
+    title = {{FastLGS}: Speeding up Language Embedded Gaussians with Feature
+             Grid Mapping},
+    url = {http://arxiv.org/abs/2406.01916},
+    shorttitle = {{FastLGS}},
+    abstract = {The semantically interactive radiance field has always been an
+                appealing task for its potential to facilitate user-friendly and
+                automated real-world 3D scene understanding applications. However
+                , it is a challenging task to achieve high quality, efficiency
+                and zero-shot ability at the same time with semantics in radiance
+                fields. In this work, we present {FastLGS}, an approach that
+                supports real-time open-vocabulary query within 3D Gaussian
+                Splatting (3DGS) under high resolution. We propose the semantic
+                feature grid to save multi-view {CLIP} features which are
+                extracted based on Segment Anything Model ({SAM}) masks, and map
+                the grids to low dimensional features for semantic field training
+                through 3DGS. Once trained, we can restore pixel-aligned {CLIP}
+                embeddings through feature grids from rendered features for
+                open-vocabulary queries. Comparisons with other state-of-the-art
+                methods prove that {FastLGS} can achieve the first place
+                performance concerning both speed and accuracy, where {FastLGS}
+                is 98x faster than {LERF} and 4x faster than {LangSplat}.
+                Meanwhile, experiments show that {FastLGS} is adaptive and
+                compatible with many downstream tasks, such as 3D segmentation
+                and 3D object inpainting, which can be easily applied to other 3D
+                manipulation systems.},
+    number = {{arXiv}:2406.01916},
+    publisher = {{arXiv}},
+    author = {Ji, Yuzhou and Zhu, He and Tang, Junshu and Liu, Wuyi and Zhang,
+              Zhizhong and Xie, Yuan and Ma, Lizhuang and Tan, Xin},
+    urldate = {2024-06-08},
+    date = {2024-06-03},
+    eprinttype = {arxiv},
+    eprint = {2406.01916 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/JX3BPRFL/Ji et al. -
+            2024 - FastLGS Speeding up Language Embedded Gaussians
+            w.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/PWZTHB5Y/2406.html:text/html},
+}
+
+
+@misc{shiLanguageEmbedded3D2023nov,
+    title = {Language Embedded 3D Gaussians for Open-Vocabulary Scene
+             Understanding},
+    url = {http://arxiv.org/abs/2311.18482},
+    abstract = {Open-vocabulary querying in 3D space is challenging but
+                essential for scene understanding tasks such as object
+                localization and segmentation. Language-embedded scene
+                representations have made progress by incorporating language
+                features into 3D spaces. However, their efficacy heavily depends
+                on neural networks that are resource-intensive in training and
+                rendering. Although recent 3D Gaussians offer efficient and
+                high-quality novel view synthesis, directly embedding language
+                features in them leads to prohibitive memory usage and decreased
+                performance. In this work, we introduce Language Embedded 3D
+                Gaussians, a novel scene representation for open-vocabulary query
+                tasks. Instead of embedding high-dimensional raw semantic
+                features on 3D Gaussians, we propose a dedicated quantization
+                scheme that drastically alleviates the memory requirement, and a
+                novel embedding procedure that achieves smoother yet high
+                accuracy query, countering the multi-view feature inconsistencies
+                and the high-frequency inductive bias in point-based
+                representations. Our comprehensive experiments show that our
+                representation achieves the best visual quality and language
+                querying accuracy across current language-embedded
+                representations, while maintaining real-time rendering frame
+                rates on a single desktop {GPU}.},
+    number = {{arXiv}:2311.18482},
+    publisher = {{arXiv}},
+    author = {Shi, Jin-Chuan and Wang, Miao and Duan, Hao-Bin and Guan, Shao-Hua
+              },
+    urldate = {2024-06-08},
+    date = {2023-11-30},
+    eprinttype = {arxiv},
+    eprint = {2311.18482 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Graphics},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/ZS59YDKI/Shi et al. -
+            2023 - Language Embedded 3D Gaussians for
+            Open-Vocabulary.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/62YH3V7R/2311.html:text/html},
+}
+
+@misc{lan2DGuided3DGaussian2023dec,
+    title = {2D-Guided 3D Gaussian Segmentation},
+    url = {http://arxiv.org/abs/2312.16047},
+    abstract = {Recently, 3D Gaussian, as an explicit 3D representation method,
+                has demonstrated strong competitiveness over {NeRF} (Neural
+                Radiance Fields) in terms of expressing complex scenes and
+                training duration. These advantages signal a wide range of
+                applications for 3D Gaussians in 3D understanding and editing.
+                Meanwhile, the segmentation of 3D Gaussians is still in its
+                infancy. The existing segmentation methods are not only
+                cumbersome but also incapable of segmenting multiple objects
+                simultaneously in a short amount of time. In response, this paper
+                introduces a 3D Gaussian segmentation method implemented with 2D
+                segmentation as supervision. This approach uses input 2D
+                segmentation maps to guide the learning of the added 3D Gaussian
+                semantic information, while nearest neighbor clustering and
+                statistical filtering refine the segmentation results.
+                Experiments show that our concise method can achieve comparable
+                performances on {mIOU} and {mAcc} for multi-object segmentation
+                as previous single-object segmentation methods.},
+    number = {{arXiv}:2312.16047},
+    publisher = {{arXiv}},
+    author = {Lan, Kun and Li, Haoran and Shi, Haolin and Wu, Wenjun and Liao,
+              Yong and Wang, Lin and Zhou, Pengyuan},
+    urldate = {2024-06-08},
+    date = {2023-12-26},
+    eprinttype = {arxiv},
+    eprint = {2312.16047 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/CXUL2X2K/Lan et al. -
+            2023 - 2D-Guided 3D Gaussian
+            Segmentation.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/GMJHETKR/2312.html:text/html},
+}
+    
+@misc{qiuFeatureSplattingLanguageDriven2024apr,
+    title = {Feature Splatting: Language-Driven Physics-Based Scene Synthesis
+             and Editing},
+    url = {http://arxiv.org/abs/2404.01223},
+    shorttitle = {Feature Splatting},
+    abstract = {Scene representations using 3D Gaussian primitives have produced
+                excellent results in modeling the appearance of static and
+                dynamic 3D scenes. Many graphics applications, however, demand
+                the ability to manipulate both the appearance and the physical
+                properties of objects. We introduce Feature Splatting, an
+                approach that unifies physics-based dynamic scene synthesis with
+                rich semantics from vision language foundation models that are
+                grounded by natural language. Our first contribution is a way to
+                distill high-quality, object-centric vision-language features
+                into 3D Gaussians, that enables semi-automatic scene
+                decomposition using text queries. Our second contribution is a
+                way to synthesize physics-based dynamics from an otherwise static
+                scene using a particle-based simulator, in which material
+                properties are assigned automatically via text queries. We ablate
+                key techniques used in this pipeline, to illustrate the challenge
+                and opportunities in using feature-carrying 3D Gaussians as a
+                unified format for appearance, geometry, material properties and
+                semantics grounded on natural language. Project website:
+                https://feature-splatting.github.io/},
+    number = {{arXiv}:2404.01223},
+    publisher = {{arXiv}},
+    author = {Qiu, Ri-Zhao and Yang, Ge and Zeng, Weijia and Wang, Xiaolong},
+    urldate = {2024-06-08},
+    date = {2024-04-01},
+    eprinttype = {arxiv},
+    eprint = {2404.01223 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Graphics, Computer Science - Artificial
+                Intelligence, Computer Science - Machine Learning},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/9LWFQ4DM/Qiu et al. -
+            2024 - Feature Splatting Language-Driven Physics-Based
+            S.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/NAA2FRWL/2404.html:text/html},
+}
+
+@misc{douCoSSegGaussiansCompactSwift2024jan,
+    title = {{CoSSegGaussians}: Compact and Swift Scene Segmenting 3D Gaussians
+             with Dual Feature Fusion},
+    url = {http://arxiv.org/abs/2401.05925},
+    shorttitle = {{CoSSegGaussians}},
+    abstract = {We propose Compact and Swift Segmenting 3D Gaussians({
+                CoSSegGaussians}), a method for compact 3D-consistent scene
+                segmentation at fast rendering speed with only {RGB} images
+                input. Previous {NeRF}-based segmentation methods have relied on
+                time-consuming neural scene optimization. While recent 3D
+                Gaussian Splatting has notably improved speed, existing
+                Gaussian-based segmentation methods struggle to produce compact
+                masks, especially in zero-shot segmentation. This issue probably
+                stems from their straightforward assignment of learnable
+                parameters to each Gaussian, resulting in a lack of robustness
+                against cross-view inconsistent 2D machine-generated labels. Our
+                method aims to address this problem by employing Dual Feature
+                Fusion Network as Gaussians' segmentation field. Specifically, we
+                first optimize 3D Gaussians under {RGB} supervision. After
+                Gaussian Locating, {DINO} features extracted from images are
+                applied through explicit unprojection, which are further
+                incorporated with spatial features from the efficient point cloud
+                processing network. Feature aggregation is utilized to fuse them
+                in a global-to-local strategy for compact segmentation features.
+                Experimental results show that our model outperforms baselines on
+                both semantic and panoptic zero-shot segmentation task, meanwhile
+                consumes less than 10\% inference time compared to {NeRF}-based
+                methods. Code and more results will be available at
+                https://David-Dou.github.io/{CoSSegGaussians}},
+    number = {{arXiv}:2401.05925},
+    publisher = {{arXiv}},
+    author = {Dou, Bin and Zhang, Tianyu and Ma, Yongjia and Wang, Zhaohui and
+              Yuan, Zejian},
+    urldate = {2024-06-08},
+    date = {2024-01-30},
+    eprinttype = {arxiv},
+    eprint = {2401.05925 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition,
+                Computer Science - Artificial Intelligence},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/KC69SC46/Dou et al. -
+            2024 - CoSSegGaussians Compact and Swift Scene
+            Segmentin.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/353KAC8B/2401.html:text/html},
+}
+
+@misc{guoSemanticGaussiansOpenVocabulary2024mar,
+    title = {Semantic Gaussians: Open-Vocabulary Scene Understanding with 3D
+             Gaussian Splatting},
+    url = {http://arxiv.org/abs/2403.15624},
+    shorttitle = {Semantic Gaussians},
+    abstract = {Open-vocabulary 3D scene understanding presents a significant
+                challenge in computer vision, withwide-ranging applications in
+                embodied agents and augmented reality systems. Previous
+                approaches haveadopted Neural Radiance Fields ({NeRFs}) to
+                analyze 3D scenes. In this paper, we introduce {SemanticGaussians
+                }, a novel open-vocabulary scene understanding approach based on
+                3D Gaussian Splatting. Our keyidea is distilling pre-trained 2D
+                semantics into 3D Gaussians. We design a versatile projection
+                approachthat maps various 2Dsemantic features from pre-trained
+                image encoders into a novel semantic component of 3D Gaussians,
+                withoutthe additional training required by {NeRFs}. We further
+                build a 3D semantic network that directly predictsthe semantic
+                component from raw 3D Gaussians for fast inference. We explore
+                several applications {ofSemantic} Gaussians: semantic
+                segmentation on {ScanNet}-20, where our approach attains a 4.2\%
+                {mIoU} and 4.0\%{mAcc} improvement over prior open-vocabulary
+                scene understanding counterparts; object part segmentation,
+                sceneediting, and spatial-temporal segmentation with better
+                qualitative results over 2D and 3D baselines,highlighting its
+                versatility and effectiveness on supporting diverse downstream
+                tasks.},
+    number = {{arXiv}:2403.15624},
+    publisher = {{arXiv}},
+    author = {Guo, Jun and Ma, Xiaojian and Fan, Yue and Liu, Huaping and Li,
+              Qing},
+    urldate = {2024-05-20},
+    date = {2024-03-22},
+    eprinttype = {arxiv},
+    eprint = {2403.15624 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/K63WVRVI/Guo et al. -
+            2024 - Semantic Gaussians Open-Vocabulary Scene
+            Understa.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/2F89DVN6/2403.html:text/html},
+}
+
+    
+@misc{quGOIFind3D2024may,
+    title = {{GOI}: Find 3D Gaussians of Interest with an Optimizable
+             Open-vocabulary Semantic-space Hyperplane},
+    url = {http://arxiv.org/abs/2405.17596},
+    shorttitle = {{GOI}},
+    abstract = {3D open-vocabulary scene understanding, crucial for advancing
+                augmented reality and robotic applications, involves interpreting
+                and locating specific regions within a 3D space as directed by
+                natural language instructions. To this end, we introduce {GOI}, a
+                framework that integrates semantic features from 2D
+                vision-language foundation models into 3D Gaussian Splatting
+                (3DGS) and identifies 3D Gaussians of Interest using an
+                Optimizable Semantic-space Hyperplane. Our approach includes an
+                efficient compression method that utilizes scene priors to
+                condense noisy high-dimensional semantic features into compact
+                low-dimensional vectors, which are subsequently embedded in 3DGS.
+                During the open-vocabulary querying process, we adopt a distinct
+                approach compared to existing methods, which depend on a manually
+                set fixed empirical threshold to select regions based on their
+                semantic feature distance to the query text embedding. This
+                traditional approach often lacks universal accuracy, leading to
+                challenges in precisely identifying specific target areas.
+                Instead, our method treats the feature selection process as a
+                hyperplane division within the feature space, retaining only
+                those features that are highly relevant to the query. We leverage
+                off-the-shelf 2D Referring Expression Segmentation ({RES}) models
+                to fine-tune the semantic-space hyperplane, enabling a more
+                precise distinction between target regions and others. This
+                fine-tuning substantially improves the accuracy of
+                open-vocabulary queries, ensuring the precise localization of
+                pertinent 3D Gaussians. Extensive experiments demonstrate {GOI}'s
+                superiority over previous state-of-the-art methods. Our project
+                page is available at https://goi-hyperplane.github.io/ .},
+    number = {{arXiv}:2405.17596},
+    publisher = {{arXiv}},
+    author = {Qu, Yansong and Dai, Shaohui and Li, Xinyang and Lin, Jianghang
+              and Cao, Liujuan and Zhang, Shengchuan and Ji, Rongrong},
+    urldate = {2024-06-08},
+    date = {2024-05-27},
+    eprinttype = {arxiv},
+    eprint = {2405.17596 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/DBACIDPZ/Qu et al. -
+            2024 - GOI Find 3D Gaussians of Interest with an
+            Optimiz.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/W484ZYKP/2405.html:text/html},
+}
+
+    
+@misc{xiongSAGSSemanticAwareGaussian2024may,
+    title = {{SA}-{GS}: Semantic-Aware Gaussian Splatting for Large Scene
+             Reconstruction with Geometry Constrain},
+    url = {http://arxiv.org/abs/2405.16923},
+    shorttitle = {{SA}-{GS}},
+    abstract = {With the emergence of Gaussian Splats, recent efforts have
+                focused on large-scale scene geometric reconstruction. However,
+                most of these efforts either concentrate on memory reduction or
+                spatial space division, neglecting information in the semantic
+                space. In this paper, we propose a novel method, named {SA}-{GS},
+                for fine-grained 3D geometry reconstruction using semantic-aware
+                3D Gaussian Splats. Specifically, we leverage prior information
+                stored in large vision models such as {SAM} and {DINO} to
+                generate semantic masks. We then introduce a geometric complexity
+                measurement function to serve as soft regularization, guiding the
+                shape of each Gaussian Splat within specific semantic areas.
+                Additionally, we present a method that estimates the expected
+                number of Gaussian Splats in different semantic areas,
+                effectively providing a lower bound for Gaussian Splats in these
+                areas. Subsequently, we extract the point cloud using a novel
+                probability density-based extraction method, transforming
+                Gaussian Splats into a point cloud crucial for downstream tasks.
+                Our method also offers the potential for detailed semantic
+                inquiries while maintaining high image-based reconstruction
+                results. We provide extensive experiments on publicly available
+                large-scale scene reconstruction datasets with highly accurate
+                point clouds as ground truth and our novel dataset. Our results
+                demonstrate the superiority of our method over current
+                state-of-the-art Gaussian Splats reconstruction methods by a
+                significant margin in terms of geometric-based measurement
+                metrics. Code and additional results will soon be available on
+                our project page.},
+    number = {{arXiv}:2405.16923},
+    publisher = {{arXiv}},
+    author = {Xiong, Butian and Ye, Xiaoyu and Tse, Tze Ho Elden and Han, Kai
+              and Cui, Shuguang and Li, Zhen},
+    urldate = {2024-06-08},
+    date = {2024-05-28},
+    eprinttype = {arxiv},
+    eprint = {2405.16923 [cs]},
+    keywords = {Computer Science - Computer Vision and Pattern Recognition},
+    file = {arXiv Fulltext PDF:/home/shuqi/Zotero/storage/2T5852YZ/Xiong et al.
+            - 2024 - SA-GS Semantic-Aware Gaussian Splatting for
+            Large.pdf:application/pdf;arXiv.org
+            Snapshot:/home/shuqi/Zotero/storage/29BC7P5D/2405.html:text/html},
+}
+

@@ -1,10 +1,7 @@
 %!Tex Root=**/main.tex
 
-\section{MonoGS}
-
-\subsection{Methodology}
-
-\begin{Frame}{Overview \romannum{1}}
+\subsection{MonoGS}
+\begin{Frame}{Framework}
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=\linewidth]{monogs/overview.png}
@@ -24,7 +21,7 @@
 		},
 }
 
-\begin{Frame}{Taxonomy}
+\begin{Frame}{Taxonomy of Methodology}
 	\centering
 	\resizebox{0.85\textwidth}{!}{
 		\begin{forest}
@@ -36,7 +33,7 @@
 						[
 							Tracking,for children={visible on=<2->}
 								[
-									``Inverse Rendering'',for children={visible on=<3->}
+									Inverse Rendering,for children={visible on=<3->}
 										[
 											Analytical Jacobians Derivation,key
 										]
@@ -115,6 +112,7 @@
 	}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
+
 
 \begin{Frame}{Tracking: Overview}
 	\begin{figure}[htbp]
@@ -612,7 +610,7 @@
 
 \begin{Frame}{Mapping: Bundle Adjustment \& Random Recall}
 	\begin{block}<1->{\alert<1|handout:0>{Bundle Adjustment}}
-		\vspace*{-1em}
+		\vspace*{-1.5em}
 		\begin{figure}[htbp]
 			\centering
 			\resetcolorseries[4]{marknode-color-series}
@@ -635,11 +633,10 @@
 			\end{annotatedEquationEnv}
 		\end{figure}
 	\end{block}
-	% \vspace*{\fill}
-	% \begin{block}<+->{\alert<.|handout:0>{Random Recall} \hfill A trick for global mapping}
-	% 	\vspace*{0.5ex}
-	% 	\par Besides \(\mathcal{W}\), ``some'' randomly selected past keyframes are also leveraged in BA to avoid forgetting the global map.
-	% \end{block}
+	\vspace*{\fill}
+	\begin{block}<4->{\alert<4|handout:0>{Random Recall}}
+		\par Besides \(\mathcal{W}\), ``some'' randomly selected historical keyframes are also leveraged in BA to avoid forgetting the global map.
+	\end{block}
 	\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}
 \end{Frame}
 
@@ -688,7 +685,7 @@
 \end{Frame}
 
 \begin{Frame}{Mapping: Conclusion}
-	\begin{block}{The Overall Optimization for Mapping}
+	\begin{block}{Overall Optimization for Mapping}
 		\begin{equation}
 			\underset{\mathcal{G}, \{\mathbf{T}_{cw}({\mathcal{F}_k})\vert \mathcal{F}_k\in \mathcal{W}^{+}\}}{\operatorname{argmin}} \sum_{\mathcal{F}_k}^{\mathcal{W}^{+}} \mathcal{L}_{pho}\left({\mathcal{F}_k}\right) + \lambda_{iso} \mathcal{L}_{iso}
 		\end{equation}
