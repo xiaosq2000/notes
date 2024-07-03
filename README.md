@@ -5,7 +5,7 @@ Some notes and slides are made when I try to learn everything with the Feynman T
 ## What is inside this repo?
 
 Research notes & literature review,
-- 3DGS-based SLAM [(PDF)](https://github.com/xiaosq2000/notes/blob/main/3dgs_slam/slides/main.pdf)
+- Semantic & Neural Rendering & SLAM [(PDF)](https://github.com/xiaosq2000/notes/blob/main/novel_slam/slides/main.pdf)
 
 A series of rigorous but painless introductions of some theoretical stuff for roboticists is currently a work in progress,
 - Measure, Probability and Stochastic Process [(PDF)](https://github.com/xiaosq2000/notes/blob/main/measure_probability_and_stochastic_process/main.pdf)
