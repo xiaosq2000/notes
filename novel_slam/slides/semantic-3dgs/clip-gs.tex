@@ -1,6 +1,10 @@
-\subsection{CLIP-GS}
+\mode<article>{\section{CLIP-GS}}
+\mode<presentation>{\subsection{CLIP-GS}}
 
-\begin{Frame}{Key Insight}
+\begin{frame}
+    \Frametitle{Overview}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2404.14249}{(arXiv 04/2024) CLIP-GS: CLIP-informed Gaussian Splatting for Real-time and View-consistent 3D Semantic Understanding}}}
+    \mode<article>{\par Figure~\ref{fig:clip-gs-overview} is the tagged framework figure of CLIP-GS~\autocite{liaoCLIPGSCLIPInformedGaussian2024apr}.}
 	\begin{figure}[htbp]
 		\centering
 		\begin{annotatedFigureEnv}
@@ -8,15 +12,17 @@
 			\only<2|handout:1>{\annotatedFigure{0.41,0.57}{1,0.99}{1}{0.41,1.03}}
 			\only<3|handout:1>{\annotatedFigure{0.41,0.10}{1,0.55}{2}{0.41,0.58}}
 		\end{annotatedFigureEnv}
-		\caption{Overview of CLIP-GS}
+		\vspace*{0.5ex}
+		\caption{Overview of CLIP-GS}\label{fig:clip-gs-overview}
 	\end{figure}
-	\begin{enumerate}
-		\setlength{\itemsep}{1.5ex}
-		\item<2-> \alert<2>{Efficiency:} unify semantic features within an object by leveraging \alert<2>{SAM}.
-		\item<3-> \alert<3>{Consistency:} supervise consecutive frames by \alert<3>{video segmentation}.
-	\end{enumerate}
-	\blfootnote{\href{http://arxiv.org/abs/2404.14249}{(arXiv 04/2024) CLIP-GS: CLIP-informed Gaussian Splatting for Real-time and View-consistent 3D Semantic Understanding}}
-\end{Frame}
+	\begin{block}{Key Insights}
+		\begin{enumerate}
+			\setlength{\itemsep}{1.5ex}
+			\item<2-> \alert<2>{Efficiency:} unify semantic features within an object by leveraging \alert<2>{SAM}.
+			\item<3-> \alert<3>{Consistency:} supervise consecutive frames by \alert<3>{video segmentation}.
+		\end{enumerate}
+	\end{block}
+\end{frame}
 
 % \begin{frame}{Methodology: SAC \romannum{1} \hspace{0pt plus 1filll} \small Related Work \(\triangleright\) Semantic 3DGS \(\triangleright\) CLIP-GS}
 % 	\colorlet{0_color}{cyan}

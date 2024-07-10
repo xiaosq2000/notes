@@ -1,59 +1,61 @@
 %!Tex Root=**/main.tex
 
-\section{3DGS-based SLAM}
-\begin{Frame}{Timeline}
-	\colorlet{accepted}{OliveGreen}
-	\begin{tikzpicture}
-		\usetikzlibrary{calc}
+\mode<article>{\chapter{3DGS SLAM}}
+\mode<presentation>{\section{3DGS SLAM}}
 
-		\pgfmathsetmacro{\dy}{0.3cm/1pt};
-		\pgfmathsetmacro{\nodeNum}{3};
-		\pgfmathsetmacro{\sepNum}{\nodeNum-1};
-		\pgfmathsetmacro{\length}{0.8*\linewidth};
-		\pgfmathsetmacro{\edgeLength}{1cm/1pt};
-		\pgfmathsetmacro{\dx}{(\length-\edgeLength-\edgeLength)/\sepNum};
-		\pgfmathsetmacro{\xShift}{0};
+\mode<article>{\section{Overview}}
+\mode<presentation>{\subsection{Overview}}
 
-		\tikzset{
-			note/.style={
-					anchor=north, align=center, text width=\dx, yshift=-\dy/3, font={\scriptsize}
-				},
-			time/.style={
-					anchor=south, font={\scriptsize\bf}
+\begin{frame}\Frametitle{Research Background}
+	\colorlet{accepted}{ForestGreen}
+	\mode<article>{\par Figure~\ref{fig:3dgs-slam-timeline} shows the timeline of 3DGS SLAM research.}
+	\begin{figure}[htbp]
+		\centering
+		\begin{tikzpicture}
+			\usetikzlibrary{calc}
+			\usetikzlibrary{positioning}
+
+			\pgfmathsetmacro{\dy}{0.3cm/1pt};
+			\pgfmathsetmacro{\nodeNum}{3};
+			\pgfmathsetmacro{\sepNum}{\nodeNum-1};
+			\pgfmathsetmacro{\length}{0.8*\linewidth};
+			\pgfmathsetmacro{\edgeLength}{1cm/1pt};
+			\pgfmathsetmacro{\dx}{(\length-\edgeLength-\edgeLength)/\sepNum};
+			\pgfmathsetmacro{\xShift}{0};
+
+			\mode<article>{\tikzset{
+					node distance=1.5ex,
+					note/.style={ anchor=north, align=center, text width=\dx, yshift=-\dy/3, font={\small\sffamily} },
+					time/.style={ anchor=south, font={\small\sffamily} },
+				}}
+
+			\mode<presentation>{\tikzset{
+					node distance=1.5ex,
+					note/.style={ anchor=north, align=center, text width=\dx, yshift=-\dy/3, font={\scriptsize\sffamily} },
+					time/.style={ anchor=south, font={\scriptsize\sffamily} },
+				}}
+
+			\coordinate (start) at (0 pt,0 pt);
+			\coordinate (end) at (\length pt,0 pt);
+			\draw [line width=1.5pt,-stealth] (start) -- (end);
+
+			\foreach \counter in {0,...,\sepNum} {
+					\coordinate (s\counter) at (\edgeLength+\counter*\dx pt,0);
+					\coordinate (t\counter) at ($(s\counter)+(0,\dy pt)$);
+					\draw [line width=1.5pt] (s\counter) -- (t\counter);
 				}
-		};
 
-		\coordinate (start) at (0 pt,0 pt);
-		\coordinate (end) at (\length pt,0 pt);
-		\draw [line width=1.5pt,-stealth] (start) -- (end);
-
-		\foreach \counter in {0,...,\sepNum} {
-				\coordinate (s\counter) at (\edgeLength+\counter*\dx pt,0);
-				\coordinate (t\counter) at ($(s\counter)+(0,\dy pt)$);
-				\draw [line width=1.5pt] (s\counter) -- (t\counter);
-			}
-
-		\node [time] at (t0.north) {
-			11/2023 - 12/2024
-		};
-		\node [note] at (s0.south) {
-			\textcolor{accepted}{SplaTAM}~\autocite{keetha_splatam_2024} \\[1ex]
-			\textcolor{accepted}{GS-SLAM}~\autocite{yan_gs-slam_2023} \\[1ex]
-			Gaussian-SLAM~\autocite{yugay_gaussian-slam_2024} \\[1ex]
-			\textcolor{accepted}{MonoGS}~\autocite{matsuki_gaussian_2024} \\[1ex]
-		};
-		\node [time] at (t1.north) {
-			01/2024 - 04/2024
-		};
-		\node [note] at (s1.south) {
-		};
-		\node [time] at (t2.north) {
-			05/2024 - 06/2024
-		};
-		\node [note] at (s2.south) {
-		};
-	\end{tikzpicture}
-	\blfootnote{\textcolor{accepted}{accepted to top conferences}}
-\end{Frame}
-
-
+			\node [time] at (t0.north) { 11/2023 - 12/2024 };
+			\node [note, below of= s0] (s0_1) { \textcolor{accepted}{SplaTAM}~\autocite{keetha_splatam_2024} };
+			\node [note, below of= s0_1] (s0_2) { \textcolor{accepted}{GS-SLAM}~\autocite{yan_gs-slam_2023} };
+			\node [note, below of= s0_2] (s0_3) { Gaussian-SLAM~\autocite{yugay_gaussian-slam_2024} };
+			\node [note, below of= s0_3] (s0_4) {\textcolor{accepted}{MonoGS}~\autocite{matsuki_gaussian_2024}};
+			\node [time] at (t1.north) { 01/2024 - 04/2024 };
+			\node [note, below of=s1] (s1_1) {\textcolor{accepted}{RTG-SLAM}~\autocite{peng_rtg-slam_2024}};
+			\node [time] at (t2.north) { 05/2024 - 06/2024 };
+		\end{tikzpicture}
+		\vspace*{0.5ex}
+		\caption[Timeline of 3DGS SLAM research]{Timeline of 3DGS SLAM research (\textcolor{accepted}{accepted})}
+		\label{fig:3dgs-slam-timeline}
+	\end{figure}
+\end{frame}

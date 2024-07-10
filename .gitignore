@@ -11,6 +11,7 @@
 **/*.snm
 **/*.synctex.gz
 **/*.toc
+**/*.lof
 # private information
 **/cover_figure.pdf
 **/weekly-report*

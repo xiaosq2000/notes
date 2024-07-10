@@ -1,81 +1,16 @@
-%!Tex Root=**/main.tex
-
-\documentclass[
-    10pt,
-    aspectratio=1610,
-    xcolor={dvipsnames,pst},
-    % handout
-]{beamer}
-\usetheme[
-    subsectionpage=progressbar,
-    progressbar=frametitle,
-    block=fill
-]{moloch}
-% \mode<presentation>
-
-\usepackage{pgfpages}
-% \pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
-% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=4mm]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%% personal modification of the moloch/metropolis theme %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% frametitle with right-aligned "section, subsection"
-\newenvironment{Frame}[1]{
-    \begin{frame}{#1 \hspace{0pt plus 1filll} \scriptsize \(\triangleleft\)\;\subsecname\;\(\triangleleft\)\;\secname}\vspace*{\fill}
-}{\vspace*{\fill}\end{frame}}
-
-% inner theme
-\setbeamercovered{transparent}
-\useinnertheme{rectangles}
-
-% color palette
-\definecolor{um-blue}{HTML}{002855}
-\definecolor{um-gold}{HTML}{84754E}
-\definecolor{um-red}{HTML}{Ef3340}
-\definecolor{um-yellow}{HTML}{84754E}
-% color theme
-\colorlet{color-frametitle}{um-blue}
-\colorlet{color-progressbar}{um-gold}
-
-\setbeamercolor{frametitle}{fg=black!2, bg=color-frametitle}
-\setbeamercolor{progress bar}{fg=color-progressbar, bg=color-progressbar!20}
-\setbeamercolor{item projected}{fg=black!2, bg=color-progressbar}
-\setbeamercolor{itemize item}{fg=color-progressbar}
-
-% make progress bar's width larger
-\makeatletter
-\setlength{\moloch@titleseparator@linewidth}{2.5pt}
-\setlength{\moloch@progressonsectionpage@linewidth}{2.5pt}
-\setlength{\moloch@progressinheadfoot@linewidth}{2.5pt}
-\makeatother
-
-% make footnotesize smaller
-\let\oldfootnotesize\footnotesize
-\renewcommand*{\footnotesize}{\oldfootnotesize\tiny}
-
-% footnote without counter
-\newcommand\blfootnote[1]{%
-  \begingroup
-  \renewcommand\thefootnote{}\footnote{#1}%
-  \addtocounter{footnote}{-1}%
-  \endgroup
-}
-
-% footnotetext without counter
-\newcommand\blfootnotetext[1]{%
-  \begingroup
-  \renewcommand\thefootnotetext{}\footnotetext{#1}%
-  \addtocounter{footnotetext}{-1}%
-  \endgroup
-}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% fonts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{xeCJK}
-\setCJKmainfont{思源宋体}
-\setCJKsansfont{思源黑体}
-\setCJKmonofont{思源等宽}
+    \setCJKmainfont{思源宋体}
+    \setCJKsansfont{思源黑体}
+    \setCJKmonofont{思源等宽}
+
+\mode<article>{
+    \setmainfont{Source Serif 4}
+    \setsansfont{Source Sans 3}
+    \setmonofont{Source Code Pro}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% color %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,23 +44,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% caption %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{caption}
-\captionsetup{font={scriptsize},
-              labelfont={scriptsize},
-              textfont={scriptsize},
-              % hypcap=false,
-              % format=hang,
-              % margin=1cm
-             }
+
+\alt<presentation>{
+    \captionsetup{
+        font={scriptsize},
+        labelfont={scriptsize},
+        textfont={scriptsize},
+        % hypcap=false,
+        % format=hang,
+        % margin=1cm
+  }}{
+    \captionsetup{
+        font={small},
+        labelfont={small},
+        textfont={small},
+        % hypcap=false,
+        % format=hang,
+        % margin=1cm
+      }
+  }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% graphics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \usepackage{graphicx} % pre-loaded by beamer
-     \graphicspath{{../images}{../images/semantic-3dgs}}
-
-\usepackage{forest} % mindmap
-
-% \usetikzlibrary{calc,tikzmark,arrows.meta,fit,positioning,decorations.markings}
+\graphicspath{{../images}{../images/semantic-3dgs}{../images/3dgs}{../images/3dgs-slam}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%% equation annotation by TikZ %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,14 +85,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newenvironment{annotatedEquationEnv}{
     \begin{tikzpicture}[
-        overlay, remember picture,
+        remember picture,
+        overlay,
         >=stealth, <-,
-        nodes={align=left,inner ysep=1pt},
+        nodes={align=left,inner ysep=1pt,font={\sffamily}},
     ]
 }
 {
     \end{tikzpicture}
 }
+
 \newcommand*{\annotatedEquation}[9]{%
      \IfEqCase{#1}{%
         {color}{%
@@ -207,12 +152,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Taxonomy by TikZ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ref: https://tex.stackexchange.com/a/112471/240783
-% ref: https://tex.stackexchange.com/a/357412/240783
+% ref: https://tex.stackexchange.com/a/112471
+% ref: https://tex.stackexchange.com/a/357412
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{forest}
 \usetikzlibrary{shadows}
+% make forest and shadows overlay-aware
 \makeatletter
-\def\tikzopacityregister{.2} % the opacity of the shadows
+\def\tikzopacityregister{.15} % the opacity of the shadows
 \tikzset{
   opacity/.append code={
     \pgfmathsetmacro\tikzopacityregister{#1*\tikzopacityregister}
@@ -228,8 +175,6 @@
             text=black,
             draw=lightgray!50,
             fill=lightgray!20,
-            % inner color=lightgray!5,
-            % outer color=lightgray!20,
             thick,
             minimum width=12mm,
             minimum height=6mm,
@@ -239,17 +184,25 @@
             font={\sffamily},
             drop shadow,
         },
-    invisible/.style={opacity=0,text opacity=0},
+    invisible/.style={opacity=0.15,text opacity=0.15},
     visible on/.style={alt=#1{}{invisible}},
+    invisible on/.style={alt=#1{invisible}{}},,
     alt/.code args={<#1>#2#3}{%
       \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
     },
 }
+% a horizontal taxonomy tree
 \forestset{
     visible on/.style={
         for tree={
             /tikz/visible on={#1},
             edge+={/tikz/visible on={#1}},
+        }
+    },
+    invisible on/.style={
+        for tree={
+            /tikz/invisible on={#1},
+            edge+={/tikz/invisible on={#1}},
         }
     },
     my tree/.style={
@@ -276,6 +229,9 @@
 \usepackage{pdfpages}
 \usepackage{svg}
 \usepackage{animate}
+\usepackage{pgfpages}
+% \pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=4mm]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% others %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -294,69 +250,114 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[backref=true, natbib=true, backend=biber, style=authoryear-icomp, useprefix=true, style=ieee]{biblatex}
-\AtBeginBibliography{\scriptsize}
+\mode<presentation>{\AtBeginBibliography{\scriptsize}}
 \addbibresource[glob=true]{../references/*.bib}
 
 \usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=.,
-    anchorcolor=.,
-    filecolor=.,
-    menucolor=.,
-    runcolor=.,
-    urlcolor=cyan,
-    citecolor=cyan,
+\alt<presentation>{
+    \hypersetup{
+        colorlinks=true,
+        linkcolor=.,
+        anchorcolor=.,
+        filecolor=.,
+        menucolor=.,
+        runcolor=.,
+        urlcolor=Cyan,
+        citecolor=Cyan,
+    }
+}{
+    \hypersetup{
+        colorlinks=true,
+        linkcolor=Purple,
+        anchorcolor=.,
+        filecolor=.,
+        menucolor=.,
+        runcolor=.,
+        urlcolor=Cyan,
+        citecolor=Cyan,
+    }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% meta info %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% title page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Semantic \& Neural Rendering \& SLAM}
-\subtitle{Research Notes \& Literature Review}
-\author{Shuqi XIAO}
-% \logo{
-%     \includegraphics[width=1.5cm]{example-image}
-% }
-% \titlegraphic{
-%     \begin{tikzpicture}[remember picture, overlay]
-%         \usetikzlibrary{calc}
-%         \node [anchor=north east] at ($(current page.north east)+(-2.5em,-2.5em)$) {
-%             \includegraphics[width=3cm]{example-image}
-%         };
-%     \end{tikzpicture}
-% }
+
+\alt<presentation>{
+    \title{Research Notes}
+    \subtitle{Novel SLAM (Semantic \& Nerual Rendering)}
+    \author{Shuqi XIAO}
+    \date{}
+    % \logo{
+    %     \includegraphics[width=1.5cm]{example-image}
+    % }
+    % \titlegraphic{
+    %     \begin{tikzpicture}[remember picture, overlay]
+    %         \usetikzlibrary{calc}
+    %         \node [anchor=north east] at ($(current page.north east)+(-2.5em,-2.5em)$) {
+    %             \includegraphics[width=3cm]{example-image}
+    %         };
+    %     \end{tikzpicture}
+    % }
+}{
+    \pretitle{\vfill\begin{center}\Huge\bfseries\scshape}
+    \title{Research Notes}
+    \posttitle{\par\vskip1em{\normalfont\large\scshape Novel SLAM (Semantic \& Nerual Rendering) \par\vfill}\end{center}\vfill}
+    \author{Shuqi XIAO}
+    \date{}
+    % \predate{\vfill\begin{center}\large}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
-% {
-% \setbeamercolor{background canvas}{bg=}
-% \includepdf[pages=1]{images/cover_figure.pdf}
+% \mode<presentation>{
+% 	\setbeamercolor{background canvas}{bg=}
+% 	\includepdf[pages=1]{images/cover_figure.pdf}
 % }
 
-\maketitle
+\mode<article>{\frontmatter}
 
-\begin{frame}{Outline}
-	\tableofcontents
-\end{frame}
+\alt<presentation>{
+	\maketitle
+}{
+	\begin{titlingpage}
+		\maketitle
+	\end{titlingpage}
+}
 
-\input{3dgs-slam/overview.tex}
-\input{3dgs-slam/monogs.tex}
+\alt<presentation>{
+	\begin{frame}[c]{Outline}
+		\tableofcontents
+	\end{frame}
+}{
+	\tableofcontents*
+	\listoffigures*
+	% \listoftables*
+}
+
+\mode<article>{\mainmatter}
+
+% \input{3dgs/3dgs.tex}
+
 \input{semantic-3dgs/overview.tex}
 \input{semantic-3dgs/feature-3dgs.tex}
 \input{semantic-3dgs/langsplat.tex}
 \input{semantic-3dgs/clip-gs.tex}
 
-\appendix % \section{\appendixname}
-\section{References} % \subsection{References}
+\input{3dgs-slam/overview.tex}
+\input{3dgs-slam/monogs.tex}
+\input{3dgs-slam/rtg-slam.tex}
 
+\appendix % \section{\appendixname}
+
+\alt<presentation>{\section{References}}{\chapter{References}}
 \begin{frame}[allowframebreaks]
-	\frametitle{References}
+	\mode<presentation>{\frametitle{References}}
 	% \nocite{*}
 	\printbibliography[heading=none]
 \end{frame}
 
-\end{document}
+\mode<article>{\backmatter}
 
+\end{document}
