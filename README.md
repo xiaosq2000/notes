@@ -5,7 +5,7 @@
 
 <!-- Some notes and slides are made when I try to learn everything with the Feynman Technique, i.e., pretend to be a teacher and a student simultaneously. I am willing to share them here. -->
 ## Research Notes & Literature Review
-- Semantic & Neural Rendering & SLAM [(PDF)](https://github.com/xiaosq2000/notes/blob/main/novel_slam/slides/main.pdf)
+- Novel SLAM (Semantic & Neural Rendering) [(notes)](https://github.com/xiaosq2000/notes/blob/main/novel_slam/slides/main.article.pdf)[(slides)](https://github.com/xiaosq2000/notes/blob/main/novel_slam/slides/main.beamer.pdf)
 
 ## Foundations
 A series of rigorous but painless introductions of some theoretical stuff related with robotics,
