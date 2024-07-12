@@ -13,7 +13,7 @@
 			\only<2->{\annotatedFigure{0.45,-0.05}{0.57,0.25}{2}{0.45,0.25}}
 		\end{annotatedFigureEnv}
 		\vspace*{0.5ex}
-		\caption{Overview of Feature 3DGS}
+        \caption{Overview of Feature 3DGS~\autocite{zhouFeature3DGSSupercharging2024apr}}
 		\label{fig:feature-3DGS-overview}
 	\end{figure}
 	\mode<presentation>{\vspace*{\fill}}
@@ -292,11 +292,9 @@
 		\begin{enumerate}[<+->]
 			\mode<presentation>{\setlength{\itemsep}{1.5ex}}
 			\item \alert<.>{Compactness:} to embed Gaussians with more compact vectors, \(\dim = D^{\,\prime} < D\).
-			\item \alert<.>{Alignment:} to align the dimensionalities using a lightweight decoder.
+			\item \alert<.>{Alignment:} to align the dimensionalities using a lightweight decoder.\footnote{Lightweight decoder: In practice, a \(1\times 1\) convolutional layer or a fully-connected layer.}
 		\end{enumerate}
 	\end{block}
-	\blfootnote{In practice, \(D^{\,\prime} = 128\).}
-	\blfootnote{Lightweight decoder: In practice, a \(1\times 1\) convolutional layer or a fully-connected layer.}
 	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.03203}{(CVPR Highlight, 2024) Feature 3DGS: Supercharging 3D Gaussian Splatting to Enable Distilled Feature Fields}}}
 \end{frame}
 

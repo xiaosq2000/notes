@@ -7,9 +7,11 @@
     \setCJKmonofont{思源等宽}
 
 \mode<article>{
-    \setmainfont{Source Serif 4}
-    \setsansfont{Source Sans 3}
-    \setmonofont{Source Code Pro}
+    % \setmainfont{Source Serif 4}
+    % \setsansfont{Source Sans 3}
+    % \setmonofont{Source Code Pro}
+    \setmainfont{TeX Gyre Pagella}
+    \setsansfont{TeX Gyre Heros}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,7 +90,7 @@
         remember picture,
         overlay,
         >=stealth, <-,
-        nodes={align=left,inner ysep=1pt,font={\sffamily}},
+        nodes={align=left,inner ysep=1pt},
     ]
 }
 {
@@ -128,13 +130,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand*\annotatedFigureImpl[8]{
     \draw [#5, ultra thick] (#1) rectangle (#2);
-    \node at (#4) [fill=#6, thick, shape=rectangle, draw=#7, inner sep=2.5pt, font=\small\sffamily, text=#8] { #3 };
+    \node at (#4) [fill=#6, thick, shape=rectangle, draw=#7, inner sep=2.5pt, font=\small, text=#8] { #3 };
 }
 \newcommand*\annotatedFigure[4]{
     \annotatedFigureImpl{#1}{#2}{#3}{#4}{color-progressbar}{color-progressbar}{color-progressbar}{black!2}
 }
 \newcommand*\annotatedFigureText[4]{
-    \node[draw=none, anchor=south west, text=#2, inner sep=0, text width=#3\linewidth,font=\sffamily] at (#1) {#4};
+    \node[draw=none, anchor=south west, text=#2, inner sep=0, text width=#3\linewidth] at (#1) {#4};
 }
 \newenvironment{annotatedFigureEnv}[1]{
     \centering
@@ -181,7 +183,7 @@
             rounded corners=3,
             text height=1.5ex,
             text depth=0ex,
-            font={\sffamily},
+            % font={\sffamily},
             drop shadow,
         },
     invisible/.style={opacity=0.15,text opacity=0.15},
@@ -247,11 +249,20 @@
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% reference, footnote, hyperlink %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[backref=true, natbib=true, backend=biber, style=authoryear-icomp, useprefix=true, style=ieee]{biblatex}
 \mode<presentation>{\AtBeginBibliography{\scriptsize}}
+% TODO: my neovim (vimtex plugin) fails to auto-complete if using glob.
 \addbibresource[glob=true]{../references/*.bib}
+
+% not using "local" footnotes in "tcolorbox"
+\usepackage{footnote}
+\BeforeBeginEnvironment{tcolorbox}{\savenotes}
+\AfterEndEnvironment{tcolorbox}{\spewnotes}
+% footnote with back-reference
+% TODO: the package "footnotebackref" is not working
+\usepackage{footnotebackref}
 
 \usepackage{hyperref}
 \alt<presentation>{
@@ -262,19 +273,19 @@
         filecolor=.,
         menucolor=.,
         runcolor=.,
-        urlcolor=Cyan,
-        citecolor=Cyan,
+        urlcolor=Blue,
+        citecolor=Purple,
     }
 }{
     \hypersetup{
         colorlinks=true,
-        linkcolor=Purple,
+        linkcolor=Green,
         anchorcolor=.,
         filecolor=.,
         menucolor=.,
         runcolor=.,
-        urlcolor=Cyan,
-        citecolor=Cyan,
+        urlcolor=Blue,
+        citecolor=Purple,
     }
 }
 
@@ -338,7 +349,7 @@
 
 \mode<article>{\mainmatter}
 
-% \input{3dgs/3dgs.tex}
+\input{3dgs/3dgs.tex}
 
 \input{semantic-3dgs/overview.tex}
 \input{semantic-3dgs/feature-3dgs.tex}
@@ -350,8 +361,9 @@
 \input{3dgs-slam/rtg-slam.tex}
 
 \appendix % \section{\appendixname}
-
-\alt<presentation>{\section{References}}{\chapter{References}}
+\mode<article>{\chapter{Mathematics}}
+\input{appendix/ray-plane-intersection.tex}
+\alt<article>{\chapter{References}}{\section{References}}
 \begin{frame}[allowframebreaks]
 	\mode<presentation>{\frametitle{References}}
 	% \nocite{*}

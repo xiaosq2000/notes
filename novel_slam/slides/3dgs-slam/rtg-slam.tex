@@ -1,34 +1,36 @@
 \mode<article>{\section{RTG-SLAM}} \mode<presentation>{\subsection{RTG-SLAM}}
 
 \mode<article>{\subsection{Overview}}
-\begin{frame}\mode<presentation>{\Frametitle{Overview}}
-	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2404.19706}{(SIGGRAPH 2024) RTG-SLAM: Real-time 3D Reconstruction at Scale using Gaussian Splatting}}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Overview}}
+	Figure~\ref{fig:rtg-slam-overview} is the framework figure in RTG-SLAM~\autocite{peng_rtg-slam_2024}.
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=\linewidth]{rtg-slam-overview.png}
-		\caption{Overview of RTG-SLAM}
+		\smallskip
+		\caption{Overview of RTG-SLAM~\autocite{peng_rtg-slam_2024}}
 		\label{fig:rtg-slam-overview}
 	\end{figure}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2404.19706}{(SIGGRAPH 2024) RTG-SLAM: Real-time 3D Reconstruction at Scale using Gaussian Splatting}}}
 \end{frame}
 
 \mode<article>{\subsection{Compact Gaussian Representation}}
 \begin{frame}\mode<presentation>{\Frametitle{Compact Gaussian Representation \romannum{1}}}
 	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2404.19706}{(SIGGRAPH 2024) RTG-SLAM: Real-time 3D Reconstruction at Scale using Gaussian Splatting}}}
 	\mode<article>{
-		\par The \alert{compact} 3D Gaussian-based scene representation in RTG-SLAM~\autocite{peng_rtg-slam_2024} can be denoted by equation~\ref{eq:rtg-slam-compact-gaussian}, where the colorful annotations are different from the original 3D Gaussian representation~\autocite{kerbl3Dgaussians}.
+		\par The \alert{compact} 3D Gaussian-based scene representation in RTG-SLAM~\autocite{peng_rtg-slam_2024} can be denoted by equation~\ref{eq:rtg-slam-compact-gaussian}, where the attributes that differ from the original 3D Gaussian representation~\autocite{kerbl3Dgaussians} (equation~\ref{eq:3dgs-representation}) are annotated colorfully.
 	}
 	\begin{block}{Compact Gaussian Representation}
 		\resetcolorseries[5]{marknode-color-series}
 		\resetcolorseries[5]{annotation-color-series}
-		\colorlet{marknode-convention}{Gray!20}
-		\colorlet{annotation-convention}{Gray}
-		\vspace*{1.5em}
+		\colorlet{marknode-convention}{black!20}
+		\colorlet{annotation-convention}{black}
 		\begin{equation}
 			\label{eq:rtg-slam-compact-gaussian}
 			\tikzmarknode{n-convention-0}{\colorbox{marknode-convention}{\(\mathcal{S}\)}}  = \left\{ \mathcal{G}_i \vert i = 0,1,\cdots,N \right\}
 			,\text{ where }
 			\mathcal{G}_i = \left\{
-			\tikzmarknode{n-convention-1}{\colorbox{marknode-convention}{\(\mathbf{x}\)}},
+			\tikzmarknode{n-convention-1}{\colorbox{marknode-convention}{\(\mathbf{p}\)}},
 			\tikzmarknode{n-convention-2}{\colorbox{marknode-convention}{\(\mathbf{q}\)}},
 			\tikzmarknode{n-convention-3}{\colorbox{marknode-convention}{\(\mathbf{s}\)}},
 			\tikzmarknode{n-convention-4}{\colorbox{marknode-convention}{\(\mathbf{c}\)}},
@@ -39,62 +41,81 @@
 			\right\}
 		\end{equation}
 		\begin{annotatedEquationEnv}
-			\annotatedEquation{color}{n-convention-0}{north}{0em}{1.5em}{south west}{annotation-convention}{scene}{east}
-			\annotatedEquation{color}{n-convention-1}{south}{0em}{-1em}{north east}{annotation-convention}{\(\in \mathbb{R}^3\), position}{west}
-			\annotatedEquation{color}{n-convention-2}{south}{0em}{-2.5em}{north east}{annotation-convention}{\(\in \mathrm{SO}(3)\), rotation}{west}
-			\annotatedEquation{color}{n-convention-3}{south}{0em}{-4em}{north east}{annotation-convention}{\(\in \mathbb{R}^3\), scale}{west}
-			\annotatedEquation{color}{n-convention-4}{south}{0em}{-5.5em}{north east}{annotation-convention}{\(\in \mathbb{R}^{3n}\), color}{west}
-			\annotatedEquation{colorseries}{n0}{south}{0em}{-7em}{north east}{annotation-color-series}{\(0.99\vee0.1\), ``boolean'' opacity}{west}
-			\annotatedEquation{colorseries}{n1}{south}{0em}{-8.5em}{north east}{annotation-color-series}{\(\in \mathbb{R}^3\), normal vector}{west}
-			\annotatedEquation{colorseries}{n2}{south}{0em}{-10em}{north east}{annotation-color-series}{confidence}{west}
-			\annotatedEquation{colorseries}{n3}{south}{0em}{-11.5em}{north east}{annotation-color-series}{\(\in \mathbb{R}\), initialization timestamp}{west}
+			\annotatedEquation{color}{n-convention-0}{south}{0em}{-1em}{north west}{annotation-convention}{scene}{east}
+			\annotatedEquation{color}{n-convention-1}{south}{0em}{-1em}{north east}{annotation-convention}{\(\in \mathbb{R}^3\), position (mean)}{west}
+			\annotatedEquation{color}{n-convention-2}{south}{0em}{-2em}{north east}{annotation-convention}{\(\in \mathrm{SO}(3)\), rotation (component of covariance)}{west}
+			\annotatedEquation{color}{n-convention-3}{south}{0em}{-3.5em}{north east}{annotation-convention}{\(\in \mathbb{R}^3\), scale (component of covariance)}{west}
+			\annotatedEquation{color}{n-convention-4}{south}{0em}{-4.75em}{north east}{annotation-convention}{\(\in \mathbb{R}^{3n}\), color (spherical harmonics)}{west}
+			\annotatedEquation{colorseries}{n0}{south}{0em}{-6em}{north east}{annotation-color-series}{\(\in\{0.99,0.1\}\), ``boolean'' opacity}{west}
+			\annotatedEquation{colorseries}{n1}{south}{0em}{-7.25em}{north east}{annotation-color-series}{\(\in \mathbb{R}^3\), normal vector}{west}
+			\annotatedEquation{colorseries}{n2}{south}{0em}{-8.25em}{north east}{annotation-color-series}{\(\in (0,1)\), confidence}{west}
+			\annotatedEquation{colorseries}{n3}{south}{0em}{-9.75em}{north east}{annotation-color-series}{\(\in \mathbb{R}\), initialization timestamp}{west}
 		\end{annotatedEquationEnv}
-		\vspace*{11.5em}
+		\vspace*{9.75em}
 	\end{block}
-\end{frame}
-
-\begin{frame}\mode<presentation>{\Frametitle{A Review of 3D Gaussian Splattings \romannum{1}}}
-	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2404.19706}{(SIGGRAPH 2024) RTG-SLAM: Real-time 3D Reconstruction at Scale using Gaussian Splatting}}}
 	\mode<article>{
-		\par The appearance (RGB) rendering is basically the same as the original 3DGS. For the current frame, the Gaussians are sorted from front to back and re-indexed from \(0\) to \(N\), and then alpha-blending (equation~\ref{eq:alpha-blending}) is leveraged for image formation.
+		\par The core of compactness is the simplified opacity. The Gaussians are forced to be either \alert{opaque} to fit the geometry and dominant color or \alert<all>{nearly transparent} to fit the residual color.
+		\par The Gaussians are treated as surfel as well. \(\mathbf{n}\) is defined as the direction of the smallest eigenvector of covariance.
 	}
-	\begin{block}{\(\boldsymbol\alpha\)-blending\hfill Image Formation Model}
-		\vspace*{6.5em}
-		\resetcolorseries[6]{marknode-color-series}
-		\resetcolorseries[6]{annotation-color-series}
-		\begin{equation}\label{eq:alpha-blending}
-			\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\hat{\mathbf{C}}\)}}
-			(
-			\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{u}\)}}
-			)
-			=
-			\sum_{
-				i
-				=0}^{
-			\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\scriptsize \(N\)}}
-			}
-			\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mathbf{c}_i\)}}
-			\tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(p_i\)}}
-			(\mathbf{u})
-			\alpha_i
-			\tikzmarknode{n5}{\colorbox{marknode-color-series!![5]}{\(\displaystyle \prod_{j=0}^{i-1} (1-p_j(\mathbf{u})\alpha_j)\)}}
-		\end{equation}
-		\begin{annotatedEquationEnv}
-			\annotatedEquation{colorseries}{n0}{north}{0em}{6.5em}{south west}{annotation-color-series}{\(\mathbb{R}^{2} \mapsto \mathbb{R}^{3}\), the rendered RGB image}{east}
-			\annotatedEquation{colorseries}{n1}{north}{0em}{5.5em}{south west}{annotation-color-series}{\(= \begin{bmatrix}
-				h & w
-			\end{bmatrix}^{\mathrm{T}}\), a pixel}{east}
-			\annotatedEquation{colorseries}{n2}{north}{0em}{3em}{south west}{annotation-color-series}{the number of sorted and visible 3D Gaussians}{east}
-			\annotatedEquation{colorseries}{n3}{south}{0em}{-4em}{north west}{annotation-color-series}{color of \(i\)-th Gaussian}{east}
-			\annotatedEquation{colorseries}{n4}{south}{0em}{-1.5em}{north west}{annotation-color-series}{\(\mathbb{R}^{2} \mapsto [0,1]\), probability distribution of \\ \(i\)-th splatted(2D) Gaussian}{east}
-			\annotatedEquation{colorseries}{n5}{north}{0em}{1em}{south west}{annotation-color-series}{\(T_i \in \mathbb{R}\), \\transmittance for \(i\)-th Gaussian}{east}
-		\end{annotatedEquationEnv}
-		\vspace*{4em}
-	\end{block}
 \end{frame}
 
-\begin{frame}
-	\mode<presentation>{\Frametitle{A Review of 3D Gaussian Splattings \romannum{2}}}
+\begin{frame}<all>[c]
+	\mode<all>{\Frametitle{Appearance Rendering Pipeline}}
+	\mode<article>{
+		\par The appearance rendering pipeline (RGB image) is essentially the same as described in section~\ref{sec:3dgs-rendering-pipeline} of the original 3DGS~\autocite{kerbl3Dgaussians}, except for the accelerated alpha-blending with alpha forced to be \(1\).
+		\par The compactness of 3D Gaussian opacity can greatly decrease the total number of Gaussians to fit appearance.
+	}
 	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2404.19706}{(SIGGRAPH 2024) RTG-SLAM: Real-time 3D Reconstruction at Scale using Gaussian Splatting}}}
 \end{frame}
 
+\begin{frame}<all>[c]
+	\mode<all>{\Frametitle{Geometry Rendering Pipeline}}
+	\mode<article>{
+		\par The geometry rendering pipeline (depth image) is crucial. Note that all con-current work of RTG-SLAM~\cite{peng_rtg-slam_2024} render depth in the same way as color. However, if a vanilla alpha-blending is applied for depth rendering, we can never fit a plane since limited number of Gaussians can only produce varying depth values as illustrated in figure~\ref{fig:rtg-slam-depth-rendering}.
+	}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.6\textwidth]{rtg-slam-depth-rendering.png}
+		\smallskip
+		\caption{3DGS Depth Rendering: Conventional Alpha-blending v.s. RTG-SLAM}
+		\label{fig:rtg-slam-depth-rendering}
+	\end{figure}
+	\mode<article>{
+		\par In RTG-SLAM, depth images are rendered in the same way as surfels.
+		Fortunately, in the original appearance rendering pipeline, visible Gaussians are culled and front-to-back sorted.
+        \par The depth (equation~\ref{eq:rtg-slam-surfel-depth}) can be easily obtained by the ray-plane intersection formula (appendix~\ref{appendix:ray-plane-intersection}). The ray is described in equation \par \textcolor{red}{\Large TODO}
+		\begin{block}{Surfel within Gaussian}
+			For the first ``reliable'' Gaussian, equation~\ref{eq:rtg-slam-surfel} is the implicit representation of the surfel in the world coordinates.
+			\resetcolorseries[5]{marknode-color-series}
+			\resetcolorseries[5]{annotation-color-series}
+			\begin{equation}
+				\label{eq:rtg-slam-surfel}
+				\left\langle
+				\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mathbf{n}\)}}
+				,
+				\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{r}\)}}
+				\right\rangle
+				+
+				\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\beta\)}}
+				= 0 \text{, where }\left\langle \left(
+				\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mathbf{p}\)}}
+				-
+				\tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(\mathbf{t}\)}}
+				\right), \mathbf{n} \right\rangle + \beta = 0. \\
+			\end{equation}
+			\vspace*{4.5em}
+			\begin{annotatedEquationEnv}
+				\annotatedEquation{colorseries}{n0}{south}{0em}{-0.5em}{north east}{annotation-color-series}{\(\in \mathbb{R}^{3}, \Vert \mathbf{n} \Vert = 1\),\\ normal vector of the Gaussian}{west}
+				\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north east}{annotation-color-series}{\(\in \mathbb{R}^{3}\), any point on the surfel}{west}
+				\annotatedEquation{colorseries}{n2}{south}{0em}{-4.5em}{north east}{annotation-color-series}{\(\in \mathbb{R}\), offset of the surfel}{west}
+				\annotatedEquation{colorseries}{n3}{south}{0em}{-2em}{north west}{annotation-color-series}{position of the Gaussian}{east}
+				\annotatedEquation{colorseries}{n4}{south}{0em}{-0.5em}{north west}{annotation-color-series}{translation component of the camera's pose}{east}
+			\end{annotatedEquationEnv}
+		\end{block}
+		\begin{equation}
+			\label{eq:rtg-slam-surfel-depth}
+			\theta = \frac{\langle(\mathbf{p} - \mathbf{t}) , \mathbf{n}\rangle}{\langle \mathbf{R} \mathbf{K}^{-1} \dot{\mathbf{u}}, \mathbf{n} \rangle}
+		\end{equation}
+	}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2404.19706}{(SIGGRAPH 2024) RTG-SLAM: Real-time 3D Reconstruction at Scale using Gaussian Splatting}}}
+\end{frame}

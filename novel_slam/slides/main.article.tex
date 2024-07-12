@@ -1,6 +1,6 @@
 %! Tex Root=./main.article.tex
 \documentclass[
-	a4paper,11pt,
+	a4paper,10pt,
 	twoside,openright
 ]{memoir}
 \DisemulatePackage{enumitem} % for beamer compatability
@@ -55,9 +55,13 @@
 	}
 }
 
-% footnote with back-reference
-% TODO: the package "footnotebackref" is not working
-% \usepackage{footnotebackref}
+% footnote style for memoir
+\footmarkstyle{%
+  \makebox[\parindent][l]{\textsuperscript{#1}}%
+}
+\setlength{\footmarkwidth}{0pt}
+\setlength{\footmarksep}  {0pt}
+\setlength{\footparindent}{\parindent}
 
 % footnote without counter
 \newcommand\blfootnote[1]{%
