@@ -1,0 +1,70 @@
+\documentclass[
+	ignorenonframetext
+	10pt,
+	aspectratio=1610,
+	xcolor={dvipsnames,pst},
+	handout
+]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% personal modification of the moloch/metropolis theme %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% color palette
+\definecolor{um-blue}{HTML}{002855}
+\definecolor{um-gold}{HTML}{84754E}
+\definecolor{um-red}{HTML}{Ef3340}
+\definecolor{um-yellow}{HTML}{84754E}
+
+\colorlet{color-frametitle}{um-blue}
+\colorlet{color-progressbar}{um-gold}
+
+% a modern version of metropolis
+\usetheme[
+	subsectionpage=progressbar,
+	progressbar=frametitle,
+	block=fill
+]{moloch}
+
+% frametitle with right-aligned "section, subsection"
+\newcommand*\Frametitle[1]{\frametitle{#1\hspace{0pt plus 1filll}\scriptsize\(\triangleleft\)\;\subsecname\;\(\triangleleft\)\;\secname}}
+
+% let covered contents be a little transparent
+% the default behavior is a sudden pop-up
+\setbeamercovered{transparent}
+
+% inner theme
+\useinnertheme{rectangles}
+
+\setbeamercolor{frametitle}{fg=black!2, bg=color-frametitle}
+\setbeamercolor{progress bar}{fg=color-progressbar, bg=color-progressbar!20}
+\setbeamercolor{item projected}{fg=black!2, bg=color-progressbar}
+\setbeamercolor{itemize item}{fg=color-progressbar}
+
+% make progress bar's width larger
+\makeatletter
+\setlength{\moloch@titleseparator@linewidth}{2.5pt}
+\setlength{\moloch@progressonsectionpage@linewidth}{2.5pt}
+\setlength{\moloch@progressinheadfoot@linewidth}{2.5pt}
+\makeatother
+
+% make footnotesize smaller
+\let\oldfootnotesize\footnotesize
+\renewcommand*{\footnotesize}{\oldfootnotesize\tiny}
+
+% footnote without counter
+\newcommand\blfootnote[1]{%
+	\begingroup
+	\renewcommand\thefootnote{}\footnote{#1}%
+	\addtocounter{footnote}{-1}%
+	\endgroup
+}
+
+% footnotetext without counter
+\newcommand\blfootnotetext[1]{%
+	\begingroup
+	\renewcommand\thefootnotetext{}\footnotetext{#1}%
+	\addtocounter{footnotetext}{-1}%
+	\endgroup
+}
+
+\input{main.tex}

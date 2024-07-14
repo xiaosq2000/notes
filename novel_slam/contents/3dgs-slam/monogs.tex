@@ -1,0 +1,732 @@
+%!Tex Root=**/main.tex
+
+\alt<presentation>{\subsection{MonoGS}}{\section{MonoGS}}
+
+\begin{frame}
+	\Frametitle{Overview}
+	\mode<article>{
+		\par Figure~\ref{fig:monogs-overview} is the framework figure in MonoGS~\autocite{matsuki_gaussian_2024} and figure~\ref{fig:monogs-taxonomy} is a more detailed taxonomy, where methods are tagged \textcolor{OrangeRed}{crucial}, \textcolor{Cerulean}{conventional} or \textcolor{ForestGreen}{tricky}.
+	}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\linewidth]{monogs/overview.png}
+		\smallskip
+		\caption{Overview of MonoGS~\autocite{matsuki_gaussian_2024}}
+		\label{fig:monogs-overview}
+	\end{figure}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\tikzset{
+	key/.style={
+			draw=OrangeRed,
+		},
+	convention/.style={
+			draw=Cerulean,
+		},
+	trick/.style={
+			draw=ForestGreen,
+		},
+}
+
+\begin{frame}
+	\mode<presentation>{\Frametitle{Taxonomy}}
+	\begin{figure}[htbp]
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{forest}
+				for tree={my tree}
+				[
+				MonoGS
+					[
+						Visual Odometry,for children={visible on=<1->}
+							[
+								Tracking,for children={visible on=<2->}
+									[
+										Inverse Rendering,for children={visible on=<3->}
+											[
+												Analytical Jacobians Derivation,key
+											]
+											[
+												Photometric RGB \& Depth Loss,convention
+											]
+											[
+												Optimizable Exposure,trick
+											]
+											[
+												Penalization on non-edge/low-opacity pixels,trick
+											]
+									]
+							]
+							[
+								Mapping,for children={visible on=<2->}
+									[
+										Bundle Adjustment,for children={visible on=<3->}
+											[
+												Photometric RGB \& Depth Loss,convention
+											]
+											[
+												Isotropic Regularization,key
+											]
+											[
+												Random Recall,trick
+											]
+									]
+							]
+					]
+					[
+						Online Pipeline,for children={visible on=<1->}
+							[
+								Keyframe Management,for children={visible on=<2->}
+									[
+										Registration,for children={visible on=<3->}
+											[
+												Gaussian Covisibility,key
+											]
+											[
+												Relative Translation,convention
+											]
+									]
+									[
+										Removal,for children={visible on=<3->}
+											[
+												Gaussian Overlap Coefficient,key
+											]
+									]
+							]
+							[
+								Gaussian Management,for children={visible on=<2->}
+									[
+										Insertion,for children={visible on=<3->}
+											[
+												Keyframing,convention
+											]
+									]
+									[
+										Pruning,for children={visible on=<3->}
+											[
+												Gaussian Covisibility,key
+											]
+									]
+							]
+					]
+				]
+			\end{forest}
+		}
+		\smallskip
+		\caption{Taxonomy of MonoGS~\autocite{matsuki_gaussian_2024}}
+		\label{fig:monogs-taxonomy}
+	\end{figure}
+	\mode<presentation>{
+		\resizebox{0.08\textwidth}{!}{
+			\begin{tikzpicture}[visible on=<3->]
+				\node [my node for tree, draw=ForestGreen] (trick node) {trick};
+				\node [my node for tree, draw=OrangeRed, above of = trick node] {key method};
+				\node [my node for tree, draw=Cerulean, below of = trick node] (convention) {convention};
+			\end{tikzpicture}
+		}
+	}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsection{Tracking} \subsubsection{Overview}}
+
+\begin{frame}\mode<presentation>{\Frametitle{Tracking: Overview}}
+	\alt<article>{
+		\begin{center}
+			\par \resizebox{0.9\textwidth}{!}{
+				\begin{forest} for tree={my tree}
+					[
+					Tracking
+						[
+							Inverse Rendering
+								[
+									Analytical Jacobians Derivation,key
+								]
+								[
+									Photometric RGB \& Depth Loss,convention
+								]
+								[
+									Optimizable Exposure,trick
+								]
+								[
+									Penalization on non-edge/low-opacity pixels,trick
+								]
+						]
+					]
+				\end{forest}
+			}
+		\end{center}
+		\smallskip
+		\par Track camera poses by inverse rendering,
+		\begin{itemize}
+			\item through the extended differentiable rendering pipeline,
+			\item by a direct optimization against fixed 3D Gaussians,
+			\item with some tricks to be more adaptive to brightness and more robust to noise.
+		\end{itemize}
+	}{
+		\uncover<+->{\par Track camera poses by inverse rendering.}
+		\begin{itemize}[<+->]
+			\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+			\item \textcolor{OrangeRed}{through the extended differentiable rendering pipeline},
+			\item \textcolor{Cerulean}{by a direct optimization against fixed 3D Gaussians,}
+			\item \textcolor{ForestGreen}{with some tricks to be more adaptive and robust.}
+		\end{itemize}
+		\mode<presentation>{\blfootnote{
+				\begin{tikzpicture}
+					\node [inner sep=1pt, rounded corners=1.5, draw=ForestGreen] (trick node) {trick};
+					\node [inner sep=1pt, rounded corners=1.5, draw=OrangeRed, left of = trick node] {key method};
+					\node [inner sep=1pt, rounded corners=1.5, draw=Cerulean, right of = trick node] (convention) {convention};
+				\end{tikzpicture}
+			}}
+
+	}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Analytical Derivation of Differentiation}}
+
+\begin{frame}
+	\mode<presentation>{ \Frametitle{Analytical Derivation of Differentiation \romannum{1}} }
+	\par Let's review the \alert<1>{projection} of 3D Gaussians (equation~\ref{eq:projection-of-3dgs}),
+	\begin{align}\label{eq:projection-of-3dgs}
+		\mathcal{N}\left(\mu_w, \Sigma_w\right) \overset{\pi}{\mapsto} \mathcal{N}\left(\mu_i, \Sigma_i\right),
+	\end{align}
+	\mode<article>{by checking out equations~\ref{eq:feature-3dgs-projection-mean} and \ref{eq:feature-3dgs-projection-covariance}.}
+	\mode<presentation>{
+		\begin{figure}[htbp]
+			\par \alert<.>{Projection}: from 3D ellipsoids to 2D ellipses. \mode<article>{(equation~\ref{eq:feature-3dgs-projection-mean} and~\ref{eq:feature-3dgs-projection-covariance})}
+			\begin{minipage}[t]{0.45\linewidth}
+				\resetcolorseries[4]{marknode-color-series}
+				\resetcolorseries[4]{annotation-color-series}
+				\begin{align*}
+					\alt<5->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\mu_{i}\)}}}{\mu_{i}}
+					=
+					\alt<4->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\pi\)}}}{\pi}
+					\left(
+					\alt<3->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{T}_{cw}\)}}}{\mathbf{T}_{cw}}
+					\cdot
+					\alt<2->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mu_{w}\)}}}{\mu_{w}}
+					\right)
+				\end{align*}
+				\begin{annotatedEquationEnv}
+					\only<2->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{P}^3\), 3D(world) mean}{east}}
+					\only<3->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathrm{SE}(3)\), camera pose}{east}}
+					\only<4->{\annotatedEquation{colorseries}{n2}{south}{0em}{-5em}{north west}{annotation-color-series}{projection}{east}}
+					\only<5->{\annotatedEquation{colorseries}{n3}{south}{0}{-7em}{north west}{annotation-color-series}{\(\in \mathbb{P}^2\), 2D(image) mean}{east}}
+				\end{annotatedEquationEnv}
+			\end{minipage}
+			\hspace*{\fill}
+			\begin{minipage}[t]{0.50\linewidth}
+				\resetcolorseries[4]{marknode-color-series}
+				\resetcolorseries[4]{annotation-color-series}
+				\begin{align*}
+					\alt<9->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(\Sigma_{i}\)}}}{\Sigma_{i}}
+					=
+					\alt<8->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathbf{J}_{\pi}\)}}}{\mathbf{J}_{\pi}}
+					\alt<7->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{R}_{cw}\)}}}{\mathbf{R}_{cw}}
+					\alt<6->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\Sigma_{w}\)}}}{\Sigma_{w}}  \mathbf{R}_{cw}^{\mathrm{T}} \mathbf{J}_{\pi}^{\mathrm{T}}
+				\end{align*}
+				\begin{annotatedEquationEnv}
+					\only<6->{\annotatedEquation{colorseries}{n0}{south}{0em}{-1em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{3\times 3}\),\\3D(world) covariance}{east}}
+					\only<7->{\annotatedEquation{colorseries}{n1}{south}{0em}{-3.5em}{north west}{annotation-color-series}{\(\in \mathrm{SO(3)}\),\\rotation component of \(\mathbf{T}_{cw}\)}{east}}
+					\only<8->{\annotatedEquation{colorseries}{n2}{south}{0em}{-6em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 3}\), Jacobian of the \\linear approximation of \(\pi\)}{east}}
+					\only<9->{\annotatedEquation{colorseries}{n3}{south}{0em}{-8.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^{2\times 2}\), 2D(image) covariance}{east}}
+				\end{annotatedEquationEnv}
+			\end{minipage}
+			\vspace*{8.5em}
+		\end{figure}
+	}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\begin{frame}
+	\mode<presentation>{\Frametitle{Analytical Derivation of Differentiation}}
+	\par By the chain rule,
+	\begin{alignat}{1}
+		\frac{\partial \mu_i}{\partial \mathbf{T}_{cw}}    & = \frac{\partial \mu_i}{\partial \mu_c} \frac{\partial \mu_c}{\partial \mathbf{T}_{cw}}                                                                                                                                                                               \\
+		\frac{\partial \Sigma_i}{\partial \mathbf{T}_{cw}} & = \frac{\partial \Sigma_i}{\partial \mathbf{J}_{\pi}} \frac{\partial \mathbf{J}_{\pi}}{\partial \mu_c} \frac{\partial \mu_c}{\partial \mathbf{T}_{cw}} + \frac{\partial \Sigma_i}{\partial \mathbf{R}_{cw}} \frac{\partial \mathbf{R}_{cw}}{\partial \mathbf{T}_{cw}}
+	\end{alignat}
+	\pause
+	\par By Lie Algebra,
+	\begin{alignat}{1}
+		\frac{\partial \mu_c}{\partial \mathbf{T}_{cw}}           & = \begin{bmatrix}
+			                                                              \mathbf{I} & -\mu_{c}^{\times}
+		                                                              \end{bmatrix}               \\
+		\frac{\partial \mathbf{R}_{cw}}{\partial \mathbf{T}_{cw}} & = \begin{bmatrix}
+			                                                              \mathbf{0} & - \mathbf{R}_{cw}^{\times}(:,1) \\
+			                                                              \mathbf{0} & - \mathbf{R}_{cw}^{\times}(:,2) \\
+			                                                              \mathbf{0} & - \mathbf{R}_{cw}^{\times}(:,3) \\
+		                                                              \end{bmatrix}
+	\end{alignat}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsection{Keyframe Management}}
+
+\mode<article>{\subsubsection{Prerequistes}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Keyframe Management: Prerequistes}}
+	\begin{enumerate}
+		\setlength{\itemsep}{3ex}
+		\item<+-> \alert<.>{What} is keyframing/keyframe management?
+			\mode<presentation>{\vspace*{1.5ex}}
+			\begin{itemize}
+				\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+				\item<+-> A strategy of \alert<.>{selecting} and \alert<.>{utilizing} a \alert<.>{crucial subset} of frames.
+			\end{itemize}
+		\item<+-> \alert<.>{Why} do we need keyframing?
+			\mode<presentation>{\vspace*{1.5ex}}
+			\begin{itemize}
+				\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+				\item<+-> \alert<.>{Infeasible} to optimize jointly on all frames online.
+					\mode<presentation>{\vspace*{1.5ex}}
+					\visible<+->{\par (a \alert<.>{trade-off} between efficiency and accuracy/robustness/...)}
+			\end{itemize}
+		\item<+-> \alert<.>{How} should we select keyframes?
+			\mode<presentation>{\vspace*{1.5ex}}
+			\begin{itemize}
+				\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+				\item<+-> \alert<.>{non-redundant} and observing the \alert<.>{same area}.
+				\item<+-> spanning a \alert<.>{wide baseline} for better multi-view constraints.
+			\end{itemize}
+	\end{enumerate}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Overview}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Keyframe Management: Overview}}
+	\begin{figure}[htbp]
+		\centering
+		\resizebox{0.8\textwidth}{!}{
+			\begin{forest}
+				for tree={my tree}
+				[
+				Online Pipeline
+					[
+						Keyframe Management
+							[
+								Registration
+									[
+										Gaussian Covisibility,key
+									]
+									[
+										Relative Translation,convention
+									]
+							]
+							[
+								Removal
+									[
+										Gaussian Overlap Coefficient,key
+									]
+							]
+					]
+					[
+						Gaussian Management, invisible, for children={invisible on=<1->}
+							[
+								Insertion
+									[
+										Keyframing,convention
+									]
+							]
+							[
+								Pruning
+									[
+										Gaussian Covisibility,key
+									]
+							]
+					]
+				]
+			\end{forest}
+		}
+	\end{figure}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{itemize}[<+->]
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item \alert<.|handout:0>{Classic} strategies, e.g. covisibility \& overlap, from DSO~\autocite{engel2016dso}.
+		\item \alert<.|handout:0>{Off-the-shelf} occlusion-aware Gaussian visibility is leveraged to construct metrics.
+	\end{itemize}
+	\mode<presentation>{\blfootnote{
+			\begin{tikzpicture}
+				\node [inner sep=1pt, rounded corners=1.5, draw=ForestGreen] (trick node) {trick};
+				\node [inner sep=1pt, rounded corners=1.5, draw=OrangeRed, left of = trick node] {key method};
+				\node [inner sep=1pt, rounded corners=1.5, draw=Cerulean, right of = trick node] (convention) {convention};
+			\end{tikzpicture}
+		}}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/1607.02565}{(arXiv, 2016) DSO: Direct Sparse Odometry}}}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Keyframe Registration}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Keyframe Management: Registration \romannum{1}}}
+	\begin{overprint}[\textheight]
+		\par If \alert<+>{any} of the following conditions \alert<.>{is true}, the current frame is selected as a new keyframe.
+		\mode<presentation>{\vspace*{\fill}}
+		\begin{block}<+->{\alert<.|handout:0>{Small Gaussian Covisibility}\hfill Condition \romannum{1}}
+			Gaussian covisibility between the current frame and the previous keyframe drops below a threshold.\footnote{In practice, \(\tau_{1} = 0.95\).}
+			\resetcolorseries[3]{marknode-color-series}
+			\resetcolorseries[3]{annotation-color-series}
+			\vspace*{1em}
+			\begin{align}
+				\frac{\left\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right)
+				\cap
+				\alt<3->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right)\)}}}{\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right)}\right\vert}
+				{\left\vert\operatorname{v}\left(\mathcal{G}, \alt<4->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathcal{F}_{i}\)}}}{\mathcal{F}_{i}}\right) \cup \operatorname{v}\left(\mathcal{G}, \alt<5->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\mathcal{F}_{j}\)}}}{\mathcal{F}_{j}}\right) \right\vert} < \tau_1
+			\end{align}
+			\begin{annotatedEquationEnv}
+				\only<3->{\annotatedEquation{colorseries}{n0}{north}{0em}{1em}{south west}{annotation-color-series}{\(\subset \mathcal{G}\), \textbf{visible} Gaussians from frame \(j\)}{east}}
+				\only<4->{\annotatedEquation{colorseries}{n1}{south}{0em}{-0.5em}{north east}{annotation-color-series}{the previous keyframe}{west}}
+				\only<5->{\annotatedEquation{colorseries}{n2}{south}{0em}{-0.5em}{north west}{annotation-color-series}{the current frame}{east}}
+			\end{annotatedEquationEnv}
+			\vspace*{0.5em}
+		\end{block}
+	\end{overprint}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\begin{frame}\mode<presentation>{\Frametitle{Keyframe Management: Registration \romannum{2}}}
+	\begin{block}{\alert<1|handout:0>{Large Relative Translation}\hfill Condition \romannum{2}}
+		\par Translation from the previous keyframe w.r.t. to the median depth reaches a threshold.
+		\footnote{In practice, \(\tau_{2}=0.04\). Additionally, evaluate the Gaussian covisibility only if the relative translation is not too small \((> 0.02)\) for efficiency.}
+		\resetcolorseries[5]{marknode-color-series}
+		\resetcolorseries[5]{annotation-color-series}
+		\vspace*{0.5em}
+		\begin{align}
+			\frac{ \left\Vert
+			\alt<2->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\(\mathbf{t}_{\mathcal{F}_i \mathcal{F}_j}\)}}}{\mathbf{t}_{\mathcal{F}_i \mathcal{F}_j}}
+			\right\Vert_2}
+			{\alt<3->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\bar{D}_{\mathcal{F}_i \mathcal{F}_j}\)}}}{\bar{D}_{\mathcal{F}_i \mathcal{F}_j}}} > \tau_2
+			, \quad
+			\bar{D}_{\mathcal{F}_i \mathcal{F}_j}
+			=
+			\frac{1}{2
+			\alt<5->{\tikzmarknode{n3}{\colorbox{marknode-color-series!![3]}{\(H\)}}}{H}
+			\alt<6->{\tikzmarknode{n4}{\colorbox{marknode-color-series!![4]}{\(W\)}}}{W}
+			}
+			\sum^{\{\mathcal{F}_i,\mathcal{F}_j\}} \sum_{h=0}^{H} \sum_{w=0}^{W}
+			\alt<4->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(d(h,w)\)}}}{d(h,w)}
+		\end{align}
+		\begin{annotatedEquationEnv}
+			\only<2->{\annotatedEquation{colorseries}{n0}{north}{0em}{0.5em}{south west}{annotation-color-series}{\(\in \mathbb{R}^3 \), translation from \(\mathcal{F}_i\) to \(\mathcal{F}_j\)}{east}}
+			\only<3->{\annotatedEquation{colorseries}{n1}{south}{0em}{-1.5em}{north west}{annotation-color-series}{\(\in \mathbb{R} \), the median depth}{east}}
+			\only<4->{\annotatedEquation{colorseries}{n2}{south}{0}{-0.5em}{north west}{annotation-color-series}{depth \\of pixel \((h,w)\)}{east}}
+			\only<5->{\annotatedEquation{colorseries}{n3}{south}{0}{-0.5em}{north east}{annotation-color-series}{image height}{west}}
+			\only<6->{\annotatedEquation{colorseries}{n4}{south}{0}{-0.5em}{north west}{annotation-color-series}{image width}{east}}
+		\end{annotatedEquationEnv}
+		\vspace*{1.5em}
+	\end{block}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Keyframe Removal}}
+\begin{frame}\mode<presentation>{\Frametitle{Keyframe Management: Removal \romannum{1}}}
+	\par If \alert<+>{any} of the following conditions \alert<.>{is true}, one or more keyframes are removed from the keyframe buffer (a sliding window).
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{block}{\alert<.|handout:0>{Beyond Window Capacity}\hfill Condition \romannum{1}}<+->
+		Remove \alert<+|handout:0>{one} of previous keyframes \uncover<+->{that \alert<.|handout:0>{minimize} the impact on the \alert<.|handout:0>{overall baseline length}.}
+		\uncover<+->{\begin{align}
+				\mathcal{F}^{\ast} & = \underset{\mathcal{F}\in \mathcal{W}}{\arg\max}\;\operatorname{l}\Big(\mathcal{W}\;\backslash \big\{ \mathcal{F}\big\}\Big)
+				\uncover<+->{,\quad \operatorname{l}\left(\mathcal{W}\right) = \sum_{i=1}^{\left\vert \mathcal{W} \right\vert}\sum_{j=1}^{i} \left\Vert \mathbf{t}_{\mathcal{F}_i \mathcal{F}_j} \right\Vert }
+			\end{align}}
+	\end{block}
+	\mode<presentation>{\vspace*{\fill}}
+	\uncover<+->{\alert<.|handout:0>{\par Remark:} for the best multi-view constraints.}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\begin{frame}\mode<presentation>{\Frametitle{Keyframe Management: Removal \romannum{2}}}
+	\begin{block}<+->{\alert<.|handout:0>{Low Gaussian Overlap Coefficient}\hfill Condition \romannum{2}}
+		\uncover<+->{\par Remove \alert<.|handout:0>{multiple} previous keyframes}\uncover<+->{ if the ``Gaussian overlap coefficient'' drops \alert<.|handout:0>{below} a threshold.\footnote{\href{https://en.wikipedia.org/wiki/Overlap_coefficient}{Szymkiewicz–Simpson coefficient}}
+		\footnote{In practice, \(\tau_{4} = 0.4.\)}}
+		\uncover<+->{
+			\begin{equation}
+				\frac{\vert \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \cap \operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert}{\min \left(\vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{i}\right) \vert, \vert\operatorname{v}\left(\mathcal{G}, \mathcal{F}_{j}\right) \vert\right)} < \tau_4
+			\end{equation}
+		}
+	\end{block}
+	\mode<presentation>{\vspace*{\fill}}
+	\uncover<+->{\par \alert<.|handout:0>{Remark:} not observing the same area anymore.}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsection{Gaussian Management} \subsubsection{Overview}}
+\begin{frame}\mode<presentation>{\Frametitle{Gaussian Management: Overview}}
+	\begin{center}
+		\resizebox{0.9\textwidth}{!}{
+			\begin{forest}
+				for tree={my tree}
+				[
+				Online Pipeline
+					[
+						Keyframe Management, invisible, for children={invisible on=<1->}
+							[
+								Registration
+									[
+										Gaussian Covisibility,key
+									]
+									[
+										Relative Translation,convention
+									]
+							]
+							[
+								Removal
+									[
+										Gaussian Overlap Coefficient,key
+									]
+							]
+					]
+					[
+						Gaussian Management
+							[
+								Insertion
+									[
+										Keyframing,convention
+									]
+							]
+							[
+								Pruning
+									[
+										Gaussian Covisibility,key
+									]
+							]
+					]
+				]
+			\end{forest}
+		}
+	\end{center}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{itemize}[<+->]
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item \alert<.>{Insertion:} triggered by \alert<.>{keyframing}, followed by \alert<.>{Gaussian initialization}.
+		\item \alert<.>{Pruning:} to remove unstable/incorrect Gaussians by covisibility in a monocular setting.
+	\end{itemize}
+	\mode<presentation>{\blfootnote{
+			\begin{tikzpicture}
+				\node [inner sep=1pt, rounded corners=1.5, draw=ForestGreen] (trick node) {trick};
+				\node [inner sep=1pt, rounded corners=1.5, draw=OrangeRed, left of = trick node] {key method};
+				\node [inner sep=1pt, rounded corners=1.5, draw=Cerulean, right of = trick node] (convention) {convention};
+			\end{tikzpicture}
+		}}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/1607.02565}{(arXiv, 2016) DSO: Direct Sparse Odometry}}}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Gaussian Insertion}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Gaussian Management: Insertion}}
+	\begin{itemize}
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item<+-> \alert<.>{Why} do we need ``Gaussian insertion''?
+			\mode<presentation>{\vspace*{1.5ex}}
+			\begin{itemize}
+				\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+				\item<+-> \alert<.>{SLAM} is for robotic exploration.
+			\end{itemize}
+	\end{itemize}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{itemize}
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item<+-> \alert<.>{When} do we need ``Gaussian insertion''?
+	\end{itemize}
+	\begin{block}{\alert<.|handout:0>{Keyframing}\hfill Condition \romannum{1}}<+->
+		\par Insertion is triggered for every new keyframe.
+	\end{block}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Gaussian Initialization}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Gaussian Management: Initialization}}
+	\begin{itemize}
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item<+-> \alert<.>{How} do we insert Gaussians?
+			\mode<presentation>{\vspace*{1.5ex}}
+			\begin{itemize}
+				\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+				\item<+-> Gaussian insertion is Gaussian \alert<.>{initialization}.
+			\end{itemize}
+	\end{itemize}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{block}{\alert<.|handout:0>{If Depth Available}}<+->
+		Back-project in a per-pixel, per-Gaussian approach.
+	\end{block}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{block}{\alert<.|handout:0>{If Depth Unavailable}}<+->
+		Leverage the rendered depth map.
+		\footnote{
+			In practice, ``low'': \(0.2 \sigma \); ``high'': \(0.5 \sigma\), where \(\sigma\) is the standard deviation of the rendered depth map.
+		}
+		\mode<presentation>{\vspace*{1.5ex}}
+		\begin{itemize}[<+->]
+			\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+			\item \alert<.|handout:0>{for pixels with depth:} use the rendered depth and assign a ``low'' covariance.
+			\item \alert<.|handout:0>{for pixels w/o depth:} use the median of rendered depth and assign a ``high'' covariance.
+		\end{itemize}
+	\end{block}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Gaussian Pruning}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Gaussian Management: Pruning}}
+	\begin{itemize}
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item<+-> \alert<.>{Why} do we need ``Gaussian Pruning''?
+			\mode<presentation>{\vspace*{1.5ex}}
+			\begin{itemize}
+				\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+				\item<+-> if depth \alert<.>{unavailable}, too many \alert<.>{incorrect} newly inserted Gaussians.
+					\footnote{If no pruning, although the majority of incorrect Gaussians vanish quickly in following optimization, there are some survivals.}
+			\end{itemize}
+	\end{itemize}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{block}{\alert<.|handout:0>{Low Gaussian Opacity} \hfill Condition \romannum{1}}<+->
+		Low opacity Gaussians are pruned.
+		\footnote{In practice, \(\tau_{\alpha}=0.7\).}
+		\begin{equation}
+			\{\mathcal{G}_i \in \mathcal{G}\;\vert\;\alpha(\mathcal{G}_i) < \tau_{\alpha} \}
+		\end{equation}
+	\end{block}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{block}{\alert<.|handout:0>{Low Gaussian Covisibility} \hfill Condition \romannum{2}}<+->
+		``Just'' inserted Gaussians but unobserved by ``some other'' keyframes are pruned out.
+		\footnote{In practice, the pruned Gaussians are inserted in the last 3 keyframes and unobserved by any other 3 keyframes in the sliding window.}
+	\end{block}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsection{Mapping}}
+\mode<article>{\subsubsection{Overview}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Mapping: Overview}}
+	\begin{figure}[htbp]
+		\centering
+		\begin{forest}
+			for tree={my tree}
+			[
+			Mapping
+				[
+					Bundle Adjustment
+						[
+							Photometric RGB \& Depth Loss,convention
+						]
+						[
+							Isotropic Regularization,key
+						]
+						[
+							Random Recall,trick
+						]
+				]
+			]
+		\end{forest}
+	\end{figure}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{itemize}
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item<+-> \alert<.>{Why} do we need mapping in \textbf{3DGS} SLAM?
+			\mode<presentation>{\vspace*{1.5ex}}
+			\begin{itemize}
+				\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+				\item<+-> \alert<.|handout:0>{Local}: Optimize newly inserted 3D Gaussians.
+				\item<+-> \alert<.|handout:0>{Global}: Reconstruct a globally 3D-coherent structure.
+			\end{itemize}
+	\end{itemize}
+	\mode<presentation>{\blfootnote{
+			\begin{tikzpicture}
+				\node [inner sep=1pt, rounded corners=1.5, draw=ForestGreen] (trick node) {trick};
+				\node [inner sep=1pt, rounded corners=1.5, draw=OrangeRed, left of = trick node] {key method};
+				\node [inner sep=1pt, rounded corners=1.5, draw=Cerulean, right of = trick node] (convention) {convention};
+			\end{tikzpicture}
+		}}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Bundle Adjustment with Random Recall}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Mapping: Bundle Adjustment with Random Recall}}
+	\begin{block}<1->{\alert<1|handout:0>{Bundle Adjustment}}
+		\begin{center}
+			\resetcolorseries[4]{marknode-color-series}
+			\resetcolorseries[4]{annotation-color-series}
+			\begin{equation}
+				\underset{
+				\alt<2->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\scriptsize \(\mathcal{G}\)}}}{\mathcal{G}},
+				\alt<3->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\scriptsize \(\{\mathbf{T}_{cw}({\mathcal{F}_k})\vert \mathcal{F}_k\in \mathcal{W}\}\)}}}{\{\mathbf{T}_{cw}({\mathcal{F}_k})\vert \mathcal{F}_k\in \mathcal{W}\}}
+				}{
+				\operatorname{argmin}
+				}
+				\sum_{\mathcal{F}_k}^{
+					\mathcal{W}
+				}
+				\mathcal{L}_{pho}\left({\mathcal{F}_k}\right)
+			\end{equation}
+			\begin{annotatedEquationEnv}
+				\only<2->{\annotatedEquation{colorseries}{n0}{south}{0em}{-0.5em}{north east}{annotation-color-series}{3D Gaussians}{west}}
+				\only<3->{\annotatedEquation{colorseries}{n1}{south}{0em}{-0.5em}{north west}{annotation-color-series}{camera poses of keyframes in the sliding window}{east}}
+			\end{annotatedEquationEnv}
+			\vspace*{0.5em}
+		\end{center}
+	\end{block}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{block}<4->{\alert<4|handout:0>{Random Recall}}
+		\par Besides \(\mathcal{W}\), ``some'' randomly selected historical keyframes are also leveraged in BA to avoid forgetting the global map.
+	\end{block}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Isotropic Regularization}}
+\begin{frame}
+	\mode<presentation>{\Frametitle{Mapping: Isotropic Regularization}}
+	\begin{itemize}[<+->]
+		\mode<presentation>{\setlength{\itemsep}{1.5ex}}
+		\item \alert<.>{Why} do we need ``isotropic regularization''?
+		      \mode<presentation>{\vspace*{1.5ex}}
+		      \begin{itemize}
+			      \mode<presentation>{\setlength{\itemsep}{1.5ex}}
+			      \item \alert<.|handout:0>{Observation:} isotropic Gaussians behave better than anisotrophic.
+			      \item \alert<.|handout:0>{Analysis:} no constraints on the elongation along the viewing ray direction, \textbf{even with depth}.
+		      \end{itemize}
+	\end{itemize}
+	\mode<presentation>{\vspace*{\fill}}
+	\begin{block}<4->{\alert<.|handout:0>{Isotropic Regularization}}
+		\begin{center}
+			\resetcolorseries[4]{marknode-color-series}
+			\resetcolorseries[4]{annotation-color-series}
+			\vspace*{3em}
+			\begin{equation}
+				\mathcal{L}_{iso} = \sum_{i=1}^{
+				\alt<5->{\tikzmarknode{n0}{\colorbox{marknode-color-series!![0]}{\scriptsize \(\vert \mathcal{G} \vert\)}}}{\vert \mathcal{G} \vert}
+				}
+				\Vert
+				\alt<6->{\tikzmarknode{n1}{\colorbox{marknode-color-series!![1]}{\(\mathbf{s}(\mathcal{G}_i)\)}}}{\mathbf{s}(\mathcal{G}_i)}
+				-
+				\alt<7->{\tikzmarknode{n2}{\colorbox{marknode-color-series!![2]}{\(\bar{\mathbf{s}}(\mathcal{G}_i)\)}}}{\bar{\mathbf{s}}(\mathcal{G}_i)}
+				\Vert_1
+				,\quad
+				\uncover<7->{\bar{\mathbf{s}}(\mathcal{G}_i) = \begin{bmatrix}
+						\left( s(\mathcal{G}_i)^{x} + s(\mathcal{G}_i)^{y} + s(\mathcal{G}_i)^{z} \right) / 3 \\
+						\left( s(\mathcal{G}_i)^{x} + s(\mathcal{G}_i)^{y} + s(\mathcal{G}_i)^{z} \right) / 3 \\
+						\left( s(\mathcal{G}_i)^{x} + s(\mathcal{G}_i)^{y} + s(\mathcal{G}_i)^{z} \right) / 3 \\
+					\end{bmatrix}}
+			\end{equation}
+			\begin{annotatedEquationEnv}
+				\only<5->{\annotatedEquation{colorseries}{n0}{north}{0em}{3em}{south west}{annotation-color-series}{\(\in \mathbb{N}\), total number of Gaussians}{east}}
+				\only<6->{\annotatedEquation{colorseries}{n1}{north}{0em}{3em}{south west}{annotation-color-series}{\(\in \mathbb{R}^3\), scale of \(i\)-th Gaussian}{east}}
+				\only<7->{\annotatedEquation{colorseries}{n2}{north}{0em}{1.5em}{south west}{annotation-color-series}{\(\in \mathbb{R}^3\), averaged scale of \(i\)-th Gaussian}{east}}
+			\end{annotatedEquationEnv}
+		\end{center}
+	\end{block}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
+
+\mode<article>{\subsubsection{Summary}}
+\begin{frame}\mode<presentation>{\Frametitle{Mapping: Conclusion}}
+	\begin{block}{Optimization for Mapping}
+		\begin{equation}
+			\underset{\mathcal{G}, \{\mathbf{T}_{cw}({\mathcal{F}_k})\vert \mathcal{F}_k\in \mathcal{W}^{+}\}}{\operatorname{argmin}} \sum_{\mathcal{F}_k}^{\mathcal{W}^{+}} \mathcal{L}_{pho}\left({\mathcal{F}_k}\right) + \lambda_{iso} \mathcal{L}_{iso}
+		\end{equation}
+	\end{block}
+	\mode<presentation>{\blfootnote{\href{http://arxiv.org/abs/2312.06741}{(CVPR Highlight, 2024) MonoGS: Gaussian Splatting SLAM}}}
+\end{frame}
