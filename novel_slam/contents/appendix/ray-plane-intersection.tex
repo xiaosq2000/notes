@@ -1,7 +1,7 @@
 \mode<article>{\section{Ray-plane Intersection}\label{appendix:ray-plane-intersection}}
 \begin{frame}<all>[c]
 	\mode<presentation>{\Frametitle{Ray-plane Intersection}}
-	\par Let the ray and the plane be given parametrically by equation~\ref{eq:appendix-ray} and equation~\ref{eq:appendix-plane}.
+	\par Let a ray and a plane in \(\mathbb{R}^3\) be given parametrically by equation~\ref{eq:appendix-ray} and equation~\ref{eq:appendix-plane}.
 	\par
 	\begin{minipage}[t]{0.45\linewidth}
 		\resetcolorseries[4]{marknode-color-series}
@@ -18,10 +18,10 @@
 		\end{equation}
 		\vspace*{5em}
 		\begin{annotatedEquationEnv}
-			\annotatedEquation{colorseries}{n0}{south}{0em}{-0.5em}{north east}{annotation-color-series}{\(\in \mathbb{R}^3\), point on the ray}{west}
-			\annotatedEquation{colorseries}{n1}{south}{0em}{-4em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3\), initial point}{east}
-			\annotatedEquation{colorseries}{n2}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathbb{R}, t \geq 0\), length}{east}
-			\annotatedEquation{colorseries}{n3}{south}{0em}{-0.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3, \Vert \mathbf{v} \Vert = 1\), \\direction vector}{east}
+			\annotatedEquation{colorseries}{n0}{south}{0em}{-0.5em}{north east}{annotation-color-series}{\(\in \mathbb{R}^3\), a point on the ray}{west}
+			\annotatedEquation{colorseries}{n1}{south}{0em}{-4em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3\), the initial point}{east}
+			\annotatedEquation{colorseries}{n2}{south}{0em}{-3em}{north west}{annotation-color-series}{\(\in \mathbb{R}, t \geq 0\), a length parameter}{east}
+			\annotatedEquation{colorseries}{n3}{south}{0em}{-0.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3, \Vert \mathbf{v} \Vert = 1\), \\ the direction vector}{east}
 		\end{annotatedEquationEnv}
 	\end{minipage}
 	\begin{minipage}[t]{0.45\linewidth}
@@ -39,16 +39,18 @@
 			= 0.
 		\end{equation}
 		\begin{annotatedEquationEnv}
-			\annotatedEquation{colorseries}{n0}{south}{0em}{-3.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3\), normal vector}{east}
-			\annotatedEquation{colorseries}{n1}{south}{0em}{-2em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3\), point on the plane}{east}
-			\annotatedEquation{colorseries}{n2}{south}{0em}{-0.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}\), translation}{east}
+			\annotatedEquation{colorseries}{n0}{south}{0em}{-3.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3\), the normal vector}{east}
+			\annotatedEquation{colorseries}{n1}{south}{0em}{-2em}{north west}{annotation-color-series}{\(\in \mathbb{R}^3\), a point on the plane}{east}
+			\annotatedEquation{colorseries}{n2}{south}{0em}{-0.5em}{north west}{annotation-color-series}{\(\in \mathbb{R}\), the offset}{east}
 		\end{annotatedEquationEnv}
 	\end{minipage}
-	\par\noindent The ray-plane intersection occurs when \(\mathbf{q}\) satisfies the plane equation. Substituting and rearranging, we can acquire the length from the initial point of the ray and the intersection,
+	\par\noindent The ray-plane intersection occurs when \(\mathbf{q}\) satisfies the plane equation. Substituting and rearranging (equations~\ref{eq:ray-plane-intersection-substituting} and \ref{eq:ray-plane-intersection-rearranging}), we can acquire the length from the initial point of the ray and the intersection (equation~\ref{eq:ray-plane-intersection-length}).
 	\begin{align}
-		% \label{eq:}
+		\label{eq:ray-plane-intersection-substituting}
 		0 & = \langle \mathbf{n}, \left( \mathbf{p} + t \mathbf{v} \right) \rangle + d                    \\
+		\label{eq:ray-plane-intersection-rearranging}
 		0 & = \langle \mathbf{n}, \mathbf{p} \rangle + t \langle \mathbf{n},\mathbf{v} \rangle + d        \\
+		\label{eq:ray-plane-intersection-length}
 		t & = -\frac{d + \langle \mathbf{n}, \mathbf{p} \rangle}{\langle \mathbf{n}, \mathbf{v} \rangle}.
 	\end{align}
 \end{frame}

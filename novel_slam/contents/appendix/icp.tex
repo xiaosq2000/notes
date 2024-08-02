@@ -1,0 +1,49 @@
+\mode<article>{\section{Iterative Closest Point}}
+\mode<article>{
+	\par Classics \autocite{121791} never go out of style.
+}
+\mode<article>{\subsection{Mathematical Preliminaries}}
+\mode<article>{\subsubsection{Parametric Geometric Primitives}}
+
+\begin{frame}<all>[c]
+	\mode<presentation>{\frametitle{Line Segment}}
+	\mode<article>{\paragraph{Line Segment}}
+	A point \(\mathbf{r}\) on a line segment \(\mathbf{l}\) connecting \(\mathbf{r}_1\) and \(\mathbf{r}_2\) can be naturally given by equation~\ref{eq:icp-line-segment-equation},
+	\begin{equation}
+		\label{eq:icp-line-segment-equation}
+		\mathbf{l}:\mathbf{r} = \mathbf{r}_1 + t \frac{\mathbf{r}_2 - \mathbf{r}_1}{\operatorname{d}\left(\mathbf{r}_2, \mathbf{r}_1\right)}, \text{ where } t \in [0,\operatorname{d}\left(\mathbf{r}_2, \mathbf{r}_1\right)].
+	\end{equation}
+	Rearranging (equation~\ref{eq:icp-line-segment-equation-rearranging}) and reassigning variables,
+	\begin{equation}
+		\label{eq:icp-line-segment-equation-rearranging}
+		\mathbf{l}:\mathbf{r} = \frac{\operatorname{d}\left(\mathbf{r}_2, \mathbf{r}_1\right) - t}{\operatorname{d}\left(\mathbf{r}_2, \mathbf{r}_1\right)}\mathbf{r}_1 + \frac{t}{\operatorname{d}\left(\mathbf{r}_2, \mathbf{r}_1\right)} \mathbf{r}_2, \text{ where } t \in [0,\operatorname{d}\left(\mathbf{r}_2, \mathbf{r}_1\right)],
+	\end{equation}
+	we get equation~\ref{eq:icp-line-segment-equation-compact} as a more compact representation for \(\mathbf{l}\).
+	\begin{equation}
+		\label{eq:icp-line-segment-equation-compact}
+		\mathbf{l}: \mathbf{r} = u \mathbf{r}_1 + v \mathbf{r}_2 = 0,\text{ where } u\in[0,1],v\in[0,1],u+v=1,
+	\end{equation}
+	\mode<presentation>{\blfootnote{\href{https://graphics.stanford.edu/courses/cs164-09-spring/Handouts/paper_icp.pdf}{(T-PAMI 1992) ICP: A Method for Registration of 3-D Shapes}}}
+\end{frame}
+
+\begin{frame}<all>[c]
+	\mode<article>{\paragraph{Triangle}}
+    \href{https://en.wikipedia.org/wiki/Barycentric_coordinate_system}{Barycentric coordinate system}
+	\mode<presentation>{\blfootnote{\href{https://graphics.stanford.edu/courses/cs164-09-spring/Handouts/paper_icp.pdf}{(T-PAMI 1992) ICP: A Method for Registration of 3-D Shapes}}}
+\end{frame}
+
+\begin{frame}<all>[c]
+	\mode<presentation>{\Frametitle{Distances}}
+	\mode<article>{\subsubsection{Distances}}
+	\paragraph{point \& point set} The distance between a point \(\mathbf{p}\) and a set of points \(\mathcal{A}\) is defined as equation~\ref{eq:point-pointset-distance},
+	\begin{equation}
+		\label{eq:point-pointset-distance}
+		\operatorname{d}\left(\mathbf{p}, \mathcal{A}\right) := \min_{i} \operatorname{d}\left(\mathbf{p}, \mathbf{a}_i\right), \text{ where }  i \in \left\{0,1,\cdots,\vert\mathcal{A}\vert\right\}
+	\end{equation}
+	\mode<presentation>{\blfootnote{\href{https://graphics.stanford.edu/courses/cs164-09-spring/Handouts/paper_icp.pdf}{(T-PAMI 1992) ICP: A Method for Registration of 3-D Shapes}}}
+	\paragraph{point \& line segment} The distance between a point \(\mathbf{p}\) and a line segment connecting \(\mathbf{r}_1\) and \(\mathbf{r}_2\) is defined as equation~\ref{eq:point-line-segment-distance},
+	\begin{equation}
+		\label{eq:point-line-segment-distance}
+		\operatorname{d}\left(\mathbf{p}, \mathbf{l}\right) := \min_{u,v} \operatorname{d}\left(\mathbf{p}, u \mathbf{r}_1 + v \mathbf{r}_2 \right),\text{ where } u\in[0,1],v\in[0,1],u+v=1.
+	\end{equation}
+\end{frame}
